@@ -1,0 +1,188 @@
+[ng\:cloak], [ng-cloak], .ng-cloak{
+    display: none;
+}
+html,
+body {
+    height: 100%;
+    font: 13px Tahoma, Arial, Helvetica, Geneva, sans-serif;
+    background-image: url(/img/fon1.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+header>.container {
+    padding: 10px 0;
+    width: 95%;
+    height: 130px;
+    background: rgba(244, 244, 244, 0.5); /*white; */
+}
+.wrap > .container {
+    width: 95%;
+    min-height: 800px;
+    background: white;
+}
+.navbar-inverse {
+    background-image: -webkit-linear-gradient(top,#3c3c3c 0,#222 100%);
+    background-image: -o-linear-gradient(top,#3c3c3c 0,#222 100%);
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#3c3c3c),to(#222));
+    background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3c3c3c', endColorstr='#ff222222', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    background-repeat: repeat-x;
+}
+nav > .container { width: 100%;}
+.wrap {
+    height: auto;
+}
+.navbar {
+    margin-top: 10px;
+}
+/*
+.wrap > .container {
+    padding: 70px 15px 20px;
+} */
+
+footer.footer {
+    margin-bottom: 15px;
+}
+footer > .container {
+    width: 95%;
+    padding: 35px 10px;
+    background: rgba(0, 0, 0, 0.61);
+    color: white;
+    font-size: 14px;
+}
+.jumbotron {
+    text-align: center;
+    background-color: transparent;
+}
+
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+}
+
+.not-set {
+    color: #c55;
+    font-style: italic;
+}
+
+/* add sorting icons to gridview sort links */
+a.asc:after, a.desc:after {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    padding-left: 5px;
+}
+
+a.asc:after {
+    content: /*"\e113"*/ "\e151";
+}
+
+a.desc:after {
+    content: /*"\e114"*/ "\e152";
+}
+
+.sort-numerical a.asc:after {
+    content: "\e153";
+}
+
+.sort-numerical a.desc:after {
+    content: "\e154";
+}
+
+.sort-ordinal a.asc:after {
+    content: "\e155";
+}
+
+.sort-ordinal a.desc:after {
+    content: "\e156";
+}
+
+.grid-view th {
+    white-space: nowrap;
+}
+
+.hint-block {
+    display: block;
+    margin-top: 5px;
+    color: #999;
+}
+
+.error-summary {
+    color: #a94442;
+    background: #fdf7f7;
+    border-left: 3px solid #eed3d7;
+    padding: 10px 20px;
+    margin: 0 0 15px 0;
+}
+
+/* align the logout "link" (button in form) of the navbar */
+.nav li > form > button.logout {
+    padding: 15px;
+    border: none;
+}
+
+@media(max-width:767px) {
+    .nav li > form > button.logout {
+        display:block;
+        text-align: left;
+        width: 100%;
+        padding: 10px 15px;
+    }
+}
+
+.nav > li > form > button.logout:focus,
+.nav > li > form > button.logout:hover {
+    text-decoration: none;
+}
+
+.nav > li > form > button.logout:focus {
+    outline: none;
+}
+/**SideBar**/
+.col-md-1.sidebar{    
+    border: 1px dashed #59afe4;
+    min-height: 910px;
+    margin-bottom: 10px;
+    padding: 0;
+    padding-top: 0px;
+}
+.col-md-1.sidebar >a {text-decoration: none;}
+.mbox {
+    text-align: center;
+    padding: 5px;
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+.mbox > span {
+    display: block;
+    margin-top: 4px;
+}
+.mbox:hover {
+    background: #59afe4;
+    color: white;
+    text-decoration: none;
+}
+.mbox > .glyphicon {font-size: 24px;}
+
+/**Login**/
+.login-box {
+    position: relative;
+    top: 15%;
+    margin: 0 auto;
+    width: 45%;
+    background: ghostwhite;
+    padding: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    border: 1px dashed orangered;
+}
+.site-login {
+    margin: 0 10%;
+}
