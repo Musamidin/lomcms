@@ -18,14 +18,14 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title='Ювелирный магазин') ?></title>
+    <title><?= Html::encode($this->title='Ломбард') ?></title>
     <?php $this->head() ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
 
 <header>
-    <div class="container">
+    <div class="container navbar-fixed-top">
         asdas
     </div>
 </header>
@@ -38,7 +38,7 @@ AppAsset::register($this);
             //'brandLabel' => 'MyService.kg',
             //'brandUrl' => Yii::$app->homeUrl,
             'options' => [
-                'class' => 'navbar navbar-inverse',
+                'class' => 'navbar-fixed-top navbar navbar-inverse',
                 'id'=>'bs-example-navbar-collapse-9'
             ],
         ]);
@@ -48,7 +48,7 @@ AppAsset::register($this);
                 ['label' => 'Главная', 'url' => ['/site/index']],
                 ['label' => 'Отчет', 'url' => ['/report']]
             ],
-        ]);        
+        ]);
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right'],
             'items' => [
