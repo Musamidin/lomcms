@@ -17,10 +17,10 @@ use yii\bootstrap\ActiveForm;
 
     <div class="body-content">
     <br/>
-    <div class="row">
+    <!--div class="row">
       <div class="col-md-6">
         <div class="form-group has-feedback">
-          <input type="text" class="form-control" placeholder="Поиск по названию изделия..." ng-model="searchInput" id="searchId" ng-keyup="onSearch($event)" aria-required="true" aria-invalid="true"><span class="glyphicon glyphicon-search form-control-feedback"></span><!--ng-change="myFunc($event)" -->
+          <input type="text" class="form-control" placeholder="Поиск по названию изделия..." ng-model="searchInput" id="searchId" ng-keyup="onSearch($event)" aria-required="true" aria-invalid="true"><span class="glyphicon glyphicon-search form-control-feedback"></span>
         </div>
       </div>
       <div class="col-md-3">
@@ -32,7 +32,7 @@ use yii\bootstrap\ActiveForm;
          <input type="text" class="form-control" autofocus="autofocus" placeholder="Поиск по баркоду..." ng-model="searchBarcode" id="searchBarcode" ng-keyup="onBarcode($event)" aria-required="true" aria-invalid="true"><span class="glyphicon glyphicon-search form-control-feedback"></span>
         </div>
       </div>
-    </div>
+    </div-->
 </p>
         <table class="table table-hover">
           <head>
