@@ -10,15 +10,11 @@ body {
     background-attachment: fixed;
     background-size: cover;
 }
-.topLine{
-    width: 95%;
-    margin-top: 50px;
-}
 header>.container {
     padding: 10px 0;
     width: 95%;
     height: 130px;
-    background: rgba(0, 0, 0, 0.48);
+    background: rgba(244, 244, 244, 0.5); /*white; */
 }
 .wrap > .container {
     width: 95%;
@@ -39,7 +35,7 @@ nav > .container { width: 100%;}
     height: auto;
 }
 .navbar {
-    margin-top: 0px;
+    margin-top: 10px;
 }
 /*
 .wrap > .container {
@@ -149,7 +145,7 @@ a.desc:after {
     outline: none;
 }
 /**SideBar**/
-.col-md-1.sidebar{    
+.col-md-1.sidebar{
     border: 1px dashed #59afe4;
     min-height: 910px;
     margin-bottom: 10px;
@@ -187,33 +183,28 @@ a.desc:after {
     border-radius: 10px;
     border: 1px dashed orangered;
 }
-.site-login {
-    margin: 0 10%;
+.site-login { margin: 0 10%;}
+.price-sale-box{
+  background: papayawhip;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 5px;
 }
-.w100pc{width: 100%;}
-.w75pc{width: 75%;}
-.form-control-feedback{
-    position: absolute;
-    top: 0;
-    right: 0px;
-    left: 560px;
-    z-index: 2;
-    display: block;
-    width: 34px;
-    height: 34px;
-    line-height: 34px;
-    text-align: center;
-    pointer-events: none;
+.mb-row{margin-bottom: 8px;}
+.color2{background: #ddeadd;}
+.color3{background: khaki;}
+#library > .row > .col-md-3 {
+  text-align: center;
+  border: 1px solid #08c;
+  margin-right: 10px;
+  width: 23%;
+  border-radius: 10px;
 }
-input.spoz {margin-left: 3%;}
-.navbar-form .form-control {
-    display: inline-block;
-    width: 30%;
-    vertical-align: middle;
+.panel-primary{
+  width: 50%;
+  margin: 10px;
 }
-.navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand{
-     margin: 0 15px 0px 0px;   
-}
-.navbar-inverse .navbar-brand {
-    color: #FF9800;
-}
+/*
+#sample,#insertion,#deltype{
+  display: none;
+}*/

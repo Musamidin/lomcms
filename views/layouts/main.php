@@ -18,62 +18,55 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title='Ломбард') ?></title>
+    <title><?= Html::encode($this->title='Ювелирный магазин') ?></title>
     <?php $this->head() ?>
 </head>
 <body>
 <?php $this->beginBody() ?>
 
 <header>
-    <div class="topLine"></div>
     <div class="container">
         asdas
     </div>
 </header>
 
 <div class="wrap">
-    <div class="container">
+    <div ng-cloak ng-app="App" class="container">
         <?php
     if(!\Yii::$app->getUser()->isGuest){
+
+      if(Yii::$app->user->identity->status == 1){
+        $options = [
+            ['label' => 'Главная', 'url' => ['/site/index']],
+            ['label' => 'Отчет', 'url' => ['/report']],
+            ['label' => 'Настройка',
+              'items' => [
+                   ['label' => 'Справочник', 'url' => ['/library']],
+                   '<li class="divider"></li>',
+                   ['label' => 'Реализаторы', 'url' => ['/agents']],
+              ],
+            ]
+        ];
+      }else{
+        $options = [
+              ['label' => 'Главная', 'url' => ['/site/index']]
+            ];
+      }
         NavBar::begin([
-            'brandLabel' => '<span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;&nbsp;CS.KG',
-            'brandUrl' => '/',
+            //'brandLabel' => 'MyService.kg',
+            //'brandUrl' => Yii::$app->homeUrl,
             'options' => [
-                'class' => 'navbar-fixed-top navbar navbar-inverse',
+                'class' => 'navbar navbar-inverse',
                 'id'=>'bs-example-navbar-collapse-9'
             ],
         ]);
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav collapse navbar-collapse navbar-left'],
-            // 'items' => [
-            //     ['label' => 'Главная', 'url' => ['/site/index']],
-            // ]
+            'items' => $options,
         ]);
-
-        echo '<form class="navbar-form navbar-left w75pc"><div class="form-group has-feedback w100pc">
-          <button type="button" class="btn btn-primary" onclick="addBtn()" ng-click="onAddProd()"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;Выдать кредит</button><input type="text" class="spoz form-control ng-pristine ng-valid ng-empty ng-touched" placeholder="Введите Ф.И.О. или номер билета" ng-model="searchInput" id="searchId" ng-keyup="onSearch($event)" aria-required="true" aria-invalid="true"><span class="glyphicon glyphicon-search form-control-feedback"></span>
-        </div></form>'; 
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right'],
             'items' => [
-                ['label' => 'Меню',  
-                    'url' => ['#'],
-                    //'template' => '<a href="{url}" >{label}<i class="fa fa-angle-left pull-right"></i></a>',
-                    'items' => [
-                        ['label' => '<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>&nbsp;Настройки', 'url' => ['/settings']],
-                        ['label' => '<span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp;Журнал', 'url' => ['/log']],
-                        ['label' => '<span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>&nbsp;Отчет', 'url' => ['/report']],
-                        ['label' => '<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>&nbsp;Отчет по sms', 'url' => ['/smsreport']],
-                    ],
-                ],
-                ['label' => 'Касса',  
-                    'url' => ['#'],
-                    //'template' => '<a href="{url}" >{label}<i class="fa fa-angle-left pull-right"></i></a>',
-                    'items' => [
-                        ['label' => '<span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>&nbsp;KGS:&nbsp;<span id="main-kassa">121551</span>', 'url' => ['#']],
-                        ['label' => '<span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>&nbsp;USD:&nbsp;<span id="main-kassa">121551</span>', 'url' => ['#']],
-                    ],
-                ],
                 Yii::$app->user->isGuest ? (
                     ['label' => 'Login', 'url' => ['/site/login']]
                 ) : (
@@ -97,7 +90,7 @@ AppAsset::register($this);
         ]) ?>
         <div class="col-md-12 main" style="min-height:500px;">
             <?= $content ?>
-        </div>        
+        </div>
     </div>
 </div>
 

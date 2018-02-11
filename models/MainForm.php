@@ -10,9 +10,10 @@ use yii\base\Model;
  */
 class MainForm extends Model
 {
+    public $from_agent_id;
     public $name;
     public $size;
-    public $count;
+    public $exchangerate;
     public $weight_grams;
     public $insertion;
     public $sample;
@@ -21,7 +22,9 @@ class MainForm extends Model
     public $price_buy;
     public $buy_currency;
     public $price_sale;
+    public $price_sold;
     public $sale_currency;
+    public $comment;
 
 
     /**
@@ -32,13 +35,18 @@ class MainForm extends Model
         return [
             // name, email, subject and body are required
                 [
-                    ['size','count','weight_grams','price_buy','price_sale'],
+                    ['size','price_buy','price_sale','price_sold'],
                     'integer','message' => 'Введите цифровое значение!'
                 ],
-
+                [
+                  ['weight_grams','exchangerate'],
+                  'number',
+                  'numberPattern' => '/^\s*[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',
+                  'message' => 'Введите цифровое значение!'
+                ],
                 ['name','required','message' => 'Введите название!'],
                 ['size','required','message' => 'Введите размер!'],
-                ['count','required','message' => 'Введите количество!'],
+                ['exchangerate','required','message' => 'Введите количество!'],
                 ['weight_grams','required','message' => 'Введите вес,гр.!'],
                 ['insertion','required','message' => 'Выберите вставку!'],
                 ['sample','required','message' => 'Выберите пробу!'],
@@ -47,12 +55,13 @@ class MainForm extends Model
                 ['price_buy','required','message' => 'Введите цену покупки!'],
                 ['buy_currency','required','message' => 'Выберите валюту покупки!'],
                 ['price_sale','required','message' => 'Введите цену продажа!'],
+                ['price_sold','required','message' => 'Введите цену продажа!'],
                 ['sale_currency','required','message' => 'Выберите валюту продажа!']
             // email has to be a valid email address
             //['email', 'email'],
             // verifyCode needs to be entered correctly
             //['verifyCode', 'captcha'],
-               
+
         ];
     }
 

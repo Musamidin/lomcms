@@ -42,24 +42,36 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
-        
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'baseUrl' => '/',
             'rules' => [
             'index' => 'site/index',
-            'about' => 'site/about',
-            'contact' => 'site/contact',
+            // 'about' => 'site/about',
+            // 'contact' => 'site/contact',
             'login' => 'site/login',
             'logout' => 'site/logout',
             'getdata' => 'site/getdata',
             'setdata' => 'site/setdata',
             'deleterow' => 'site/deleterow',
-            'search' => 'site/search'
+            'search' => 'site/search',
+            'allactions' => 'site/allactions',
+            'report' => 'site/report',
+            'agents' => 'site/agents',
+            'getagentdata' => 'site/getagentdata',
+            'getreport' => 'site/getreport',
+            'setagent' => 'site/setagent',
+            'deleteagent' => 'site/deleteagent',
+            'searchagent' => 'site/searchagent',
+            'library' => 'site/library',
+            'getlib'  => 'site/getlib',
+            'setlib' => 'site/setlib',
+            'test' => 'site/test',
             ],
         ],
-        
+
     ],
     'params' => $params,
 ];
@@ -70,14 +82,14 @@ if (YII_ENV_DEV) {
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['10.240.101.23','127.0.0.1', '::1'],
     ];
 
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        //'allowedIPs' => ['127.0.0.1', '::1'],
+        'allowedIPs' => ['10.240.101.23','127.0.0.1', '::1'],
     ];
 }
 
