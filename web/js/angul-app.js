@@ -1,6 +1,8 @@
 var app = angular.module("App",['angularUtils.directives.dirPagination']);
 
 app.controller("AppCtrl", function($scope,$http){
+
+	$.fn.bootstrapBtn = $.fn.button.noConflict();
 	//$scope.mainlist = [];
 	$scope.totalmainlist = 0;
 	$scope.mainlistPerPage = 6; // this should match however many results your API puts on one page
@@ -207,7 +209,31 @@ app.controller("AppCtrl", function($scope,$http){
 				  });
 	};
 
-	$scope.getData(1,$scope.mainlistPerPage);
+	//$scope.getData(1,$scope.mainlistPerPage);
+	$(document).on('click', '.addModal', function(){
+		//alert('test');
+			$( "#dialog-form-clients" ).dialog({
+					title: "Сведения о клиенте",
+					autoOpen: false,
+					width: 690,
+					modal: true,
+					open: function(){
+						//closeBtn();
+						//btnTheam("Сохранить");
+					},
+					close: function( event, ui ) {
+						$("#addWindowItem").find("input[type=text], textarea").val("");
+					},
+					buttons: [{
+						text: "Далее",
+			      //icon: "ui-icon-seek-next",
+						id : "btn1",
+			      click: function() {
+
+			      }
+					}]
+			}).dialog( "open" );
+	});
 
 	var sw = function(curr){
 		if(Number(curr) == 1){
@@ -416,7 +442,8 @@ app.controller("AppCtrl", function($scope,$http){
 
 	$scope.getlib();
 
-	$scope.actionAddLib = function(state){
+	$scope.actionAddLib = function(state)
+	{
 
 		$('#dataid').val('');
 		$('#lib-form')[0].reset();

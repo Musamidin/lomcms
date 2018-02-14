@@ -10,7 +10,7 @@ use Yii;
  * @property integer $id
  * @property string $login
  * @property string $password
- * @property string $name
+ * @property string $fio
  * @property string $role
  * @property string $datetime
  * @property integer $status
@@ -33,9 +33,9 @@ class User extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['login', 'password', 'datetime', 'name', 'role', 'status'], 'required'],
+            [['login', 'password', 'datetime', 'fio', 'role', 'status'], 'required'],
             [['login'], 'number'],
-            [['password', 'name', 'auth_key', 'access_token'], 'string'],
+            [['password', 'fio', 'auth_key', 'access_token'], 'string'],
         ];
     }
 
@@ -48,7 +48,7 @@ class User extends \yii\db\ActiveRecord
             'id' => 'id',
             'login' => 'Login',
             'password' => 'Password',
-            'name' => 'User Name',
+            'fio' => 'User Name',
             'role' => 'Role',
             'datetime' => 'Datetime',
             'auth_key' => 'Access Token',

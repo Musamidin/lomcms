@@ -18,7 +18,7 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title='Ювелирный магазин') ?></title>
+    <title><?= Html::encode($this->title='Ломбард') ?></title>
     <?php $this->head() ?>
 </head>
 <body>
@@ -53,16 +53,16 @@ AppAsset::register($this);
             ];
       }
         NavBar::begin([
-            //'brandLabel' => 'MyService.kg',
-            //'brandUrl' => Yii::$app->homeUrl,
+            'brandLabel' =>'<span class="glyphicon glyphicon-home" aria-hidden="true"></span> &nbsp;&nbsp;CS.KG',
+            'brandUrl' => Yii::$app->homeUrl,
             'options' => [
-                'class' => 'navbar navbar-inverse',
+                'class' => 'navbar navbar-fixed-top navbar-inverse',
                 'id'=>'bs-example-navbar-collapse-9'
             ],
         ]);
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav collapse navbar-collapse navbar-left'],
-            'items' => $options,
+            //'items' => $options,
         ]);
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right'],
@@ -82,6 +82,16 @@ AppAsset::register($this);
             ],
             'encodeLabels' => false,
         ]);
+        echo '<form class="navbar-form navbar-nav text-center">
+    <button type="button" id="addModal" class="btn btn-success mar-left addModal">
+    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Выдать кредит</button>  <!--data-toggle="modal" data-target="#addDataModal"-->
+            <div class="form-group has-success has-feedback">
+              <input type="text" placeholder="Введите Ф.И.О. или номер билета" id="searcher" class="min-w input-sm form-control">
+              <span class="glyphicon glyphicon-search form-control-feedback"></span>
+            </div>
+      <button type="button" id="exchangeModal" class="btn btn-info mar-left exchangeModal">
+    <span class="glyphicon glyphicon-random" aria-hidden="true"></span>&nbsp;&nbsp;Конвертация</button>
+      </form>';
         NavBar::end();
     }
         ?>

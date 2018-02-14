@@ -34,9 +34,6 @@ nav > .container { width: 100%;}
 .wrap {
     height: auto;
 }
-.navbar {
-    margin-top: 10px;
-}
 /*
 .wrap > .container {
     padding: 70px 15px 20px;
@@ -204,7 +201,13 @@ a.desc:after {
   width: 50%;
   margin: 10px;
 }
-/*
-#sample,#insertion,#deltype{
-  display: none;
-}*/
+.mar-left {
+    margin-right: 20px;
+    margin-left: 20px;
+}
+.min-w { min-width: 350px; }
+div#client-data {
+    border: 1px solid #777;
+    padding: 10px;
+    background: #35414f url(/css/jquery/images/ui-bg_dots-small_35_35414f_2x2.png) 50% 50% repeat;
+}

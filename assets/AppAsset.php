@@ -22,18 +22,21 @@ class AppAsset extends AssetBundle
         '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
         'css/site.css',
         'css/bootstrap-datepicker.min.css',
-        'css/select2.min.css'
+        'css/select2.min.css',
+        'css/jquery/jquery-ui.min.css',
+        'css/jquery/jquery-ui.theme.min.css',
+        'css/jquery/jquery-ui.structure.css'
     ];
     public $js = [
-    //'js/jquery-ui.1.11.0.js',
+    //'js/jquery.js',
     'js/angular.min1.6.4.js',
     'js/dirPagination.js',
     'js/angul-app.js',
-    'js/JsBarcode.all.min.js',
     'js/bootstrap-datepicker.min.js',
     'js/bootstrap-datepicker.ru.min.js',
     'js/select2.min.js',
-    'js/jquery.mask.min.js'
+    'js/jquery.mask.min.js',
+    'js/jquery/jquery-ui.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
