@@ -343,5 +343,59 @@ use yii\bootstrap\ActiveForm;
           </div>
           <br/>
       </div>
+      <div id="credit-data">
+          <div class="row">
+            <div class="col-md-6">
+              <input type="hidden" id="userid" name="userid" value="<?=$user_info['id'];?>"/>
+              <?=$form->field($clients, 'fio',['options'=>
+                  ['tag' => 'div','class'=> 'form-group field-mainform-fio has-feedback required'],
+                  'template'=>'{input}<span class="glyphicon glyphicon-user form-control-feedback"></span>{error}{hint}'
+                  ])->textInput(['autofocus' => false,'placeholder'=>'Ф.И.О.','ng-model'=>'formData.fio'])->label('Ф.И.О.');
+                  ?>
+            </div>
+            <div class="col-md-6">
+              <?=$form->field($clients, 'date_of_issue',['options'=>
+                  ['tag' => 'div','class'=> 'form-group field-mainform-date_of_issue has-feedback required'],
+                  'template'=>'{input}<span class="glyphicon glyphicon-calendar form-control-feedback"></span>{error}{hint}'
+                  ])->textInput(['autofocus' => false,'placeholder'=>'Дата выдачи (пасспорт) д/м/г','ng-model'=>'formData.date_of_issue'])->label('Дата выдачи (пасспорт) д/м/г');
+                  ?>
+            </div>
+          </div>
+          <br/>
+          <div class="row">
+            <div class="col-md-6">
+              <?=$form->field($clients, 'passport_id',['options'=>
+                  ['tag' => 'div','class'=> 'form-group field-mainform-passport_id has-feedback required'],
+                  'template'=>'{input}<span class="fa fa-barcode form-control-feedback"></span>{error}{hint}'
+                  ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер пасспорта','ng-model'=>'formData.passport_id'])->label('Введите номер пасспорта');
+                  ?>
+            </div>
+            <div class="col-md-6">
+              <?=$form->field($clients, 'phone',['options'=>
+                  ['tag' => 'div','class'=> 'form-group field-mainform-phone has-feedback required'],
+                  'template'=>'{input}<span class="fa fa-phone form-control-feedback"></span>{error}{hint}'
+                  ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер телефона','ng-model'=>'formData.phone'])->label('Введите номер телефона');
+                  ?>
+            </div>
+          </div>
+          <br/>
+          <div class="row">
+            <div class="col-md-6">
+              <?=$form->field($clients, 'passport_issued',['options'=>
+                  ['tag' => 'div','class'=> 'form-group field-mainform-passport_issued has-feedback required'],
+                  'template'=>'{input}<span class="fa fa-registered form-control-feedback"></span>{error}{hint}'
+                  ])->textInput(['autofocus' => false,'placeholder'=>'Кем выдан (пасспорт)','ng-model'=>'formData.passport_issued'])->label('Кем выдан (пасспорт)');
+                  ?>
+            </div>
+            <div class="col-md-6">
+              <?=$form->field($clients, 'address',['options'=>
+                  ['tag' => 'div','class'=> 'form-group field-mainform-address has-feedback required'],
+                  'template'=>'{input}<span class="fa fa-map-marker form-control-feedback"></span>{error}{hint}'
+                  ])->textInput(['autofocus' => false,'placeholder'=>'Введите адрес','ng-model'=>'formData.address'])->label('Введите адрес');
+                  ?>
+            </div>
+          </div>
+          <br/>
+      </div>
   <?php ActiveForm::end(); ?>
 </div>

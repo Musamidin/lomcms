@@ -206,7 +206,14 @@ a.desc:after {
     margin-left: 20px;
 }
 .min-w { min-width: 350px; }
-div#client-data {
+div#credit-data {
+    margin-top: 15px;
+    background: #35414f url(/css/jquery/images/ui-bg_diagonals-small_50_93c3cd_40x40.png) 50% 50% repeat;
+    border: 1px solid #777;
+    padding: 10px;
+}
+
+div#client-data{
     border: 1px solid #777;
     padding: 10px;
     background: #35414f url(/css/jquery/images/ui-bg_dots-small_35_35414f_2x2.png) 50% 50% repeat;
