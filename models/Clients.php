@@ -17,6 +17,7 @@ use Yii;
  * @property string $email
  * @property integer $user_id
  * @property string $datetime
+ * @property string $last_up_date
  */
 class Clients extends \yii\db\ActiveRecord
 {
@@ -36,7 +37,7 @@ class Clients extends \yii\db\ActiveRecord
         return [
             //[['fio'], 'required'],
             [['fio', 'passport_id', 'passport_issued', 'address', 'email'], 'string'],
-            [['date_of_issue', 'datetime'], 'safe'],
+            [['date_of_issue', 'datetime','last_up_date'], 'safe'],
             [['phone'], 'number'],
             [['user_id'], 'integer'],
         ];
@@ -58,6 +59,7 @@ class Clients extends \yii\db\ActiveRecord
             'email' => 'Email',
             'user_id' => 'User ID',
             'datetime' => 'Datetime',
+            'last_up_date'=> 'Update Date'
         ];
     }
 }

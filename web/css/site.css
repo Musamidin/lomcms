@@ -218,3 +218,20 @@ div#client-data{
     padding: 10px;
     background: #35414f url(/css/jquery/images/ui-bg_dots-small_35_35414f_2x2.png) 50% 50% repeat;
 }
+select#mainlist-currency { padding-right: 23.5px; }
+select#mainlist-percents { padding-right: 14.5px; }
+span.lbl-view-comm {
+    font-size: 13px;
+    padding-left: 0;
+    padding-right: 0;
+}
+.paddLR0{padding-left: 0px; padding-right: 0;}
+span.lbl-view {
+      height: 34px;
+      background: white;
+      display: block;
+      text-align: center;
+      padding: 8px;
+      font-weight: bold;
+      border: 1px solid silver;
+}

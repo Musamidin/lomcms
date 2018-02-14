@@ -14,6 +14,7 @@ use yii\helpers\Url;
 use yii\db\BaseActiveRecord;
 use yii\db\Exception;
 use app\models\Clients;
+use app\models\MainList;
 //use app\componets\Init;
 
 class SiteController extends Controller
@@ -104,10 +105,6 @@ class SiteController extends Controller
         return $this->redirect('login');
     }
 
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
     /* Index Controllers */
     public function actionIndex()
     {
@@ -119,7 +116,11 @@ class SiteController extends Controller
         // $currVal = (array)$arr['Currency'][0];
         // $curr['usd'] = number_format(str_replace(',','.',$currVal['Value'])+1,2);
         $clients = new Clients();
-        return $this->render('index',['clients' => $clients]);
+        $mainList = new MainList();
+        return $this->render('index',
+                            ['clients' => $clients,
+                             'mainList' => $mainList
+                            ]);
       }catch(Exception $e){
         return $this->render('index',['error' => $e]);
       }

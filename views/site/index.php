@@ -23,52 +23,7 @@ use yii\bootstrap\ActiveForm;
       </div>
     </div>
 </p>
-        <table class="table">
-          <head>
-            <tr>
-               <th>Название</th>
-               <th>Группа</th>
-               <th>Вставка</th>
-               <th>Проба</th>
-               <th>Вид поставки</th>
-               <th>Вес(гр)</th>
-               <th>Цена покупки</th>
-               <th>Цена продажи</th>
-               <th>Дата прихода</th>
-               <th>Комментарии</th>
-               <th>Action</th>
-            </tr>
-          </head>
-          <tbody>
-              <tr class="color{{ml.status}}" dir-paginate="ml in mainlist | itemsPerPage: mainlistPerPage" total-items="totalmainlist" current-page="pagination.current">
-                <td>{{ml.name}}{{ml.id}}</td>
-                <td>{{ml.groupbyName}}</td>
-                <td>{{ml.insertionName}}</td>
-                <td>{{ml.sampleName}}</td>
-                <td>{{ml.tdName}}</td>
-                <td>{{ml.weight_grams | number : 2}}</td>
-                <td>{{ml.price_buy| cutPrice }} {{ml.buy_currency | currFilt }}</td>
-                <td>{{ml.price_sale| cutPrice }} {{ml.sale_currency | currFilt}}</td>
-                <td>{{ ml.date_of_arrival | cutDate }}</td>
-                <td>{{ml.comment}}</td>
-                <td style="display:none;">{{ml.bar_code}}</td>
-                <td>
-                    <div class="btn-group">
-                        <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-                          Действие <span class="caret"></span>
-                       </button>
-                        <ul class="dropdown-menu">
-                          <li><a href="javascript:void(0)" ng-click="onDo(ml,2)"><span class="fa fa-money"></span>&nbsp;Продать</a></li>
-                          <li><a href="javascript:void(0)" ng-click="onDo(ml,3)"><span class="fa fa-share-alt"></span>&nbsp;Реализатор</a></li>
-                          <li class="divider"></li>
-                          <li><a href="javascript:void(0)" ng-click="onEdit(ml)"><span class="fa fa-edit"></span>&nbsp;Редактировать</a></li>
-                          <li><a href="javascript:void(0)" ng-click="onDelete(ml.id)"><span class="glyphicon glyphicon-trash"></span>&nbsp;Удалить</a></li>
-                        </ul>
-                   </div>
-                </td>
-              </tr>
-          </tbody>
-      </table>
+
       <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
       <!--max-size="3" direction-links="true" boundary-links="true"-->
       <!--button ng-click="test(1)">Test</button-->
@@ -292,7 +247,6 @@ use yii\bootstrap\ActiveForm;
       <div id="client-data">
           <div class="row">
             <div class="col-md-6">
-              <input type="hidden" id="userid" name="userid" value="<?=$user_info['id'];?>"/>
               <?=$form->field($clients, 'fio',['options'=>
                   ['tag' => 'div','class'=> 'form-group field-mainform-fio has-feedback required'],
                   'template'=>'{input}<span class="glyphicon glyphicon-user form-control-feedback"></span>{error}{hint}'
@@ -307,7 +261,6 @@ use yii\bootstrap\ActiveForm;
                   ?>
             </div>
           </div>
-          <br/>
           <div class="row">
             <div class="col-md-6">
               <?=$form->field($clients, 'passport_id',['options'=>
@@ -324,7 +277,6 @@ use yii\bootstrap\ActiveForm;
                   ?>
             </div>
           </div>
-          <br/>
           <div class="row">
             <div class="col-md-6">
               <?=$form->field($clients, 'passport_issued',['options'=>
@@ -341,61 +293,102 @@ use yii\bootstrap\ActiveForm;
                   ?>
             </div>
           </div>
-          <br/>
       </div>
       <div id="credit-data">
           <div class="row">
-            <div class="col-md-6">
-              <input type="hidden" id="userid" name="userid" value="<?=$user_info['id'];?>"/>
-              <?=$form->field($clients, 'fio',['options'=>
-                  ['tag' => 'div','class'=> 'form-group field-mainform-fio has-feedback required'],
-                  'template'=>'{input}<span class="glyphicon glyphicon-user form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'Ф.И.О.','ng-model'=>'formData.fio'])->label('Ф.И.О.');
-                  ?>
+            <div class="col-md-12">
+              <div id="tabs">
+                <ul>
+                  <li><a href="#tabs-1">Золото</a></li>
+                  <li><a href="#tabs-2">Авто/Техника</a></li>
+                </ul>
+                <div id="tabs-1">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <?=$form->field($mainList, 'commission',['options'=>
+                          ['tag' => 'div','class'=> 'form-group field-mainform-commission has-feedback required'],
+                          'template'=>'{input}<span class="fa fa-barcode form-control-feedback"></span>{error}{hint}'
+                          ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер пасспорта','ng-model'=>'formData.commission'])->label('Введите номер пасспорта');
+                          ?>
+                    </div>
+                    <div class="col-md-6">
+                      <?=$form->field($mainList, 'dateStart',['options'=>
+                          ['tag' => 'div','class'=> 'form-group field-mainform-dateStart has-feedback required'],
+                          'template'=>'{input}<span class="fa fa-phone form-control-feedback"></span>{error}{hint}'
+                          ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер телефона','ng-model'=>'formData.dateStart'])->label('Введите номер телефона');
+                          ?>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <?=$form->field($mainList, 'dateEnd',['options'=>
+                          ['tag' => 'div','class'=> 'form-group field-mainform-dateEnd has-feedback required'],
+                          'template'=>'{input}<span class="fa fa-registered form-control-feedback"></span>{error}{hint}'
+                          ])->textInput(['autofocus' => false,'placeholder'=>'Кем выдан (пасспорт)','ng-model'=>'formData.dateEnd'])->label('Кем выдан (пасспорт)');
+                          ?>
+                    </div>
+                    <div class="col-md-6">
+                      <?=$form->field($mainList, 'description',['options'=>
+                          ['tag' => 'div','class'=> 'form-group field-mainform-description has-feedback required'],
+                          'template'=>'{input}<span class="fa fa-map-marker form-control-feedback"></span>{error}{hint}'
+                          ])->textInput(['autofocus' => false,'placeholder'=>'Введите адрес','ng-model'=>'formData.description'])->label('Введите адрес');
+                          ?>
+                    </div>
+                  </div>
+                </div>
+                <div id="tabs-2">
+                  <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+                </div>
+              </div>
             </div>
-            <div class="col-md-6">
-              <?=$form->field($clients, 'date_of_issue',['options'=>
-                  ['tag' => 'div','class'=> 'form-group field-mainform-date_of_issue has-feedback required'],
-                  'template'=>'{input}<span class="glyphicon glyphicon-calendar form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'Дата выдачи (пасспорт) д/м/г','ng-model'=>'formData.date_of_issue'])->label('Дата выдачи (пасспорт) д/м/г');
-                  ?>
+            </div>
+            <br/>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="col-md-8 paddLR0">
+                  <?=$form->field($mainList, 'loan',['options'=>
+                      ['tag' => 'div','class'=> 'form-group field-mainform-loan has-feedback required'],
+                      'template'=>'{input}<span class="fa fa-money form-control-feedback"></span>{error}{hint}'
+                      ])->textInput(['autofocus' => false,'placeholder'=>'Сумма (Ссуда)','ng-model'=>'formData.loan'])->label('Сумма(Ссуда)');
+                      ?>
+                </div>
+                <div class="col-md-4 paddLR0">
+                  <?= $form->field($mainList, 'currency',['options'=>
+                      ['tag' => 'div','class'=> 'form-group field-mainform-currency has-feedback required'],
+                      'template'=>'{input}<span class="form-control-feedback"></span>{error}{hint}'
+                      ])->dropDownList(['1'=>'KGS','2'=>'USD'],
+                      ['options' =>[ '1' => ['Selected' => true]]],
+                      ['ng-model' => 'formData.currency']
+                      )->label(false); ?>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="col-md-5 paddLR0">
+                <?= $form->field($mainList, 'percents',['options'=>
+                    ['tag' => 'div','class'=> 'form-group field-mainform-percents has-feedback required'],
+                    'template'=>'{input}<span class="form-control-feedback"></span>{error}{hint}'
+                    ])->dropDownList(['1'=>'0.5%','2'=>'0.7%'],
+                    ['prompt' => '% ставка','ng-model' => 'formData.percents']
+                    )->label(false); ?>
+                  </div>
+                  <div class="col-md-7 paddLR0">
+                      <span class="lbl-view lbl-view-comm">Комиссия:<span id="comission">100 сом</span></span>
+                  </div>
+              </div>
+            </div>
+          <div class="row">
+            <div class="col-md-12">
+              <?= $form->field($mainList, 'description')->textarea(['autofocus' => false,'placeholder'=>'Комментарии','ng-model'=>'formData.description'])->label(false); ?>
             </div>
           </div>
-          <br/>
           <div class="row">
             <div class="col-md-6">
-              <?=$form->field($clients, 'passport_id',['options'=>
-                  ['tag' => 'div','class'=> 'form-group field-mainform-passport_id has-feedback required'],
-                  'template'=>'{input}<span class="fa fa-barcode form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер пасспорта','ng-model'=>'formData.passport_id'])->label('Введите номер пасспорта');
-                  ?>
+              <span class="lbl-view">Дата выдачи:<?=date('d/m/Y');?></span>
             </div>
             <div class="col-md-6">
-              <?=$form->field($clients, 'phone',['options'=>
-                  ['tag' => 'div','class'=> 'form-group field-mainform-phone has-feedback required'],
-                  'template'=>'{input}<span class="fa fa-phone form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер телефона','ng-model'=>'formData.phone'])->label('Введите номер телефона');
-                  ?>
+              <span class="lbl-view">Срок выкупа:<?= date('d/m/Y', strtotime('+ 90 day'));?></span>
             </div>
           </div>
-          <br/>
-          <div class="row">
-            <div class="col-md-6">
-              <?=$form->field($clients, 'passport_issued',['options'=>
-                  ['tag' => 'div','class'=> 'form-group field-mainform-passport_issued has-feedback required'],
-                  'template'=>'{input}<span class="fa fa-registered form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'Кем выдан (пасспорт)','ng-model'=>'formData.passport_issued'])->label('Кем выдан (пасспорт)');
-                  ?>
-            </div>
-            <div class="col-md-6">
-              <?=$form->field($clients, 'address',['options'=>
-                  ['tag' => 'div','class'=> 'form-group field-mainform-address has-feedback required'],
-                  'template'=>'{input}<span class="fa fa-map-marker form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'Введите адрес','ng-model'=>'formData.address'])->label('Введите адрес');
-                  ?>
-            </div>
-          </div>
-          <br/>
       </div>
   <?php ActiveForm::end(); ?>
 </div>

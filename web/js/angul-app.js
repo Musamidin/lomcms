@@ -3,7 +3,9 @@ var app = angular.module("App",['angularUtils.directives.dirPagination']);
 app.controller("AppCtrl", function($scope,$http){
 
 	$.fn.bootstrapBtn = $.fn.button.noConflict();
-	//$scope.mainlist = [];
+
+	 $( "#tabs" ).tabs();
+	 
 	$scope.totalmainlist = 0;
 	$scope.mainlistPerPage = 6; // this should match however many results your API puts on one page
 	$scope.pagination = { current: 1 };
