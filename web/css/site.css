@@ -222,10 +222,13 @@ select#mainlist-currency { padding-right: 23.5px; }
 select#mainlist-percents { padding-right: 14.5px; }
 span.lbl-view-comm {
     font-size: 13px;
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 0px;
+    padding-right: 0px;
 }
-.paddLR0{padding-left: 0px; padding-right: 0;}
+#gold-btn{ width: 34px; height: 34px; }
+.paddLR0{padding-left: 0px; padding-right: 0px;}
+.paddL0{ padding-left: 0px;}
+.paddR0{ padding-right: 0px;}
 span.lbl-view {
       height: 34px;
       background: white;
@@ -234,4 +237,10 @@ span.lbl-view {
       padding: 8px;
       font-weight: bold;
       border: 1px solid silver;
+}
+div#tabs-1 select{
+    padding-right: 0px;
+}
+div#tabs-1 input {
+    padding-right: 10px;
 }

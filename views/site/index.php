@@ -304,35 +304,49 @@ use yii\bootstrap\ActiveForm;
                 </ul>
                 <div id="tabs-1">
                   <div class="row">
-                    <div class="col-md-6">
-                      <?=$form->field($mainList, 'commission',['options'=>
-                          ['tag' => 'div','class'=> 'form-group field-mainform-commission has-feedback required'],
-                          'template'=>'{input}<span class="fa fa-barcode form-control-feedback"></span>{error}{hint}'
-                          ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер пасспорта','ng-model'=>'formData.commission'])->label('Введите номер пасспорта');
-                          ?>
+                    <div class="col-md-3 paddLR0">
+                      <div class="form-group field-mainform-golds has-feedback required field-mainlist-golds">
+                        <select id="mainlist-golds" class="form-control" name="golds[groups]">
+                          <option value="" selected="selected">Предмет</option>
+                          <option value="1">Кольцо</option>
+                          <option value="2">Серьги</option>
+                        </select>
+                      </div>
                     </div>
-                    <div class="col-md-6">
-                      <?=$form->field($mainList, 'dateStart',['options'=>
-                          ['tag' => 'div','class'=> 'form-group field-mainform-dateStart has-feedback required'],
-                          'template'=>'{input}<span class="fa fa-phone form-control-feedback"></span>{error}{hint}'
-                          ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер телефона','ng-model'=>'formData.dateStart'])->label('Введите номер телефона');
-                          ?>
+                    <div class="col-md-2 paddLR0">
+                      <div class="form-group field-mainform-golds has-feedback required field-mainlist-golds">
+                        <select id="mainlist-golds" class="form-control" name="golds[sample]" ng-model="data.sample">
+                          <option value="" selected="selected">Предмет</option>
+                          <option value="1">Кольцо</option>
+                          <option value="2">Серьги</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-2 paddLR0">
+                      <div class="form-group field-mainform-count has-feedback required field-mainlist-count required">
+                        <input type="text" id="mainlist-count" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="golds[count]" placeholder="Количество" ng-model="data.count" aria-required="true">
+                        <span class="fa fa-cubes form-control-feedback"></span>
+                      </div>
+                    </div>
+                    <div class="col-md-2 paddLR0">
+                      <div class="form-group field-mainform-gramm has-feedback required field-mainlist-gramm required">
+                        <input type="text" id="mainlist-gramm" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="golds[gramm]" placeholder="Грамм" ng-model="data.gramm" aria-required="true">
+                        <span class="fa fa-dashboard form-control-feedback"></span>
+                      </div>
+                    </div>
+                    <div class="col-md-2 paddLR0">
+                      <div class="form-group field-mainform-summ has-feedback required field-mainlist-summ required">
+                        <input type="text" id="mainlist-summ" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="golds[summ]" placeholder="Сумма" ng-model="data.summ" aria-required="true">
+                        <span class="fa fa-money form-control-feedback"></span>
+                      </div>
+                    </div>
+                    <div class="col-md-1 paddLR0">
+                        <button id="gold-btn"><span class="fa fa-plus-circle"></span></button>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-6">
-                      <?=$form->field($mainList, 'dateEnd',['options'=>
-                          ['tag' => 'div','class'=> 'form-group field-mainform-dateEnd has-feedback required'],
-                          'template'=>'{input}<span class="fa fa-registered form-control-feedback"></span>{error}{hint}'
-                          ])->textInput(['autofocus' => false,'placeholder'=>'Кем выдан (пасспорт)','ng-model'=>'formData.dateEnd'])->label('Кем выдан (пасспорт)');
-                          ?>
-                    </div>
-                    <div class="col-md-6">
-                      <?=$form->field($mainList, 'description',['options'=>
-                          ['tag' => 'div','class'=> 'form-group field-mainform-description has-feedback required'],
-                          'template'=>'{input}<span class="fa fa-map-marker form-control-feedback"></span>{error}{hint}'
-                          ])->textInput(['autofocus' => false,'placeholder'=>'Введите адрес','ng-model'=>'formData.description'])->label('Введите адрес');
-                          ?>
+                    <div class="col-md-12">
+                      dsfsdfsdfsdf
                     </div>
                   </div>
                 </div>
