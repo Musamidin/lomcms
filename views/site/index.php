@@ -45,7 +45,7 @@ use yii\bootstrap\ActiveForm;
               <?=$form->field($clients, 'date_of_issue',['options'=>
                   ['tag' => 'div','class'=> 'form-group field-mainform-date_of_issue has-feedback required'],
                   'template'=>'{input}<span class="glyphicon glyphicon-calendar form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'Дата выдачи (пасспорт) д/м/г','ng-model'=>'formData.date_of_issue'])->label('Дата выдачи (пасспорт) д/м/г');
+                  ])->textInput(['autofocus' => false,'placeholder'=>'Дата выдачи (пасспорт) д/м/г','ng-model'=>'formData.date_of_issue','readonly'=>'readonly'])->label('Дата выдачи (пасспорт) д/м/г');
                   ?>
             </div>
           </div>

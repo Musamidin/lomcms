@@ -37,9 +37,24 @@ $(document).on('click', '.addModal', function(){
 		}).dialog( "open" );
 });
 
+/** MASK **/
+ $("#clients-phone").mask("999999999999",{placeholder:"996 XXX XX XX XX"});
 
 /** TABER **/
 $( "#tabs" ).tabs();
+/** DATE PICKER **/
+
+		$('#clients-date_of_issue').datepicker({
+			format: "dd/mm/yyyy",
+			startView: 3,
+			language: "ru",
+			autoclose: true,
+			orientation: "bottom right"
+		}).on('hide', function() {
+					//getReport($('.getbydatetime').val());
+					//console.log(getReport($('.getbydatetime').val()));
+		});
+
 /**TAB IN GOLDS FUNCTIONS **/
 $(document).on('click', '.delRow', function(){
 		var thisid = Number(this.id.substring(1));
