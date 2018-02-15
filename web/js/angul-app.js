@@ -13,6 +13,31 @@ $scope.data = {};
 $scope.formData = {};
 $scope.poster = {};
 var arrTs = [];
+/**OPEN DIALOG BOX **/
+$(document).on('click', '.addModal', function(){
+		$( "#dialog-form-clients" ).dialog({
+				title: "Окно выдачи кредита",
+				autoOpen: false,
+				width: 690,
+				modal: true,
+				open: function(){
+				},
+				close: function( event, ui ) {
+					$("#addWindowItem").find("input[type=text], textarea").val("");
+				},
+				buttons: [{
+					text: "Далее",
+					//icon: "ui-icon-seek-next",
+					id : "btn1",
+					click: function() {
+						$scope.formData['gold'] = arrTs;
+						console.log($scope.formData);
+					}
+				}]
+		}).dialog( "open" );
+});
+
+
 /** TABER **/
 $( "#tabs" ).tabs();
 /**TAB IN GOLDS FUNCTIONS **/
@@ -269,29 +294,6 @@ $(document).on('click', '#add-gold', function(){
 	};
 
 	//$scope.getData(1,$scope.mainlistPerPage);
-	$(document).on('click', '.addModal', function(){
-		//alert('test');
-			$( "#dialog-form-clients" ).dialog({
-					title: "Окно выдачи кредита",
-					autoOpen: false,
-					width: 690,
-					modal: true,
-					open: function(){
-					},
-					close: function( event, ui ) {
-						$("#addWindowItem").find("input[type=text], textarea").val("");
-					},
-					buttons: [{
-						text: "Далее",
-			      //icon: "ui-icon-seek-next",
-						id : "btn1",
-			      click: function() {
-
-			      }
-					}]
-			}).dialog( "open" );
-	});
-
 	var sw = function(curr){
 		if(Number(curr) == 1){
 			return 'KGS';
@@ -303,7 +305,6 @@ $(document).on('click', '#add-gold', function(){
 			return 'KGS';
 		}
 	};
-
 }).filter("cutDate", function () {
     return function (input) {
         return input.slice(0, -4);
