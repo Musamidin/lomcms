@@ -303,50 +303,64 @@ use yii\bootstrap\ActiveForm;
                   <li><a href="#tabs-2">Авто/Техника</a></li>
                 </ul>
                 <div id="tabs-1">
-                  <div class="row">
+                  <div class="row gold-form-box">
                     <div class="col-md-3 paddLR0">
                       <div class="form-group field-mainform-golds has-feedback required field-mainlist-golds">
-                        <select id="mainlist-golds" class="form-control" name="golds[groups]">
+                        <select id="mainlist-golds" class="form-control" name="groups">
                           <option value="" selected="selected">Предмет</option>
-                          <option value="1">Кольцо</option>
-                          <option value="2">Серьги</option>
+                          <? foreach (Yii::$app->ListItem->getList(0) as $item): ?>
+                            <option value="<?=$item['keyname']; ?>"><?=$item['keyname']; ?></option>
+                          <? endforeach; ?>
                         </select>
                       </div>
                     </div>
                     <div class="col-md-2 paddLR0">
                       <div class="form-group field-mainform-golds has-feedback required field-mainlist-golds">
-                        <select id="mainlist-golds" class="form-control" name="golds[sample]" ng-model="data.sample">
-                          <option value="" selected="selected">Предмет</option>
-                          <option value="1">Кольцо</option>
-                          <option value="2">Серьги</option>
+                        <select id="mainlist-golds" class="form-control" name="sample" ng-model="data.sample">
+                          <option value="" selected="selected">Проба</option>
+                          <? foreach (Yii::$app->ListItem->getList(1) as $item): ?>
+                            <option value="<?=$item['keyname']; ?>"><?=$item['keyname']; ?></option>
+                          <? endforeach; ?>
                         </select>
                       </div>
                     </div>
                     <div class="col-md-2 paddLR0">
                       <div class="form-group field-mainform-count has-feedback required field-mainlist-count required">
-                        <input type="text" id="mainlist-count" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="golds[count]" placeholder="Количество" ng-model="data.count" aria-required="true">
+                        <input type="text" id="mainlist-count" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="count" placeholder="Кол-тво" ng-model="data.count" aria-required="true">
                         <span class="fa fa-cubes form-control-feedback"></span>
                       </div>
                     </div>
                     <div class="col-md-2 paddLR0">
                       <div class="form-group field-mainform-gramm has-feedback required field-mainlist-gramm required">
-                        <input type="text" id="mainlist-gramm" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="golds[gramm]" placeholder="Грамм" ng-model="data.gramm" aria-required="true">
+                        <input type="text" id="mainlist-gramm" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="gramm" placeholder="Грам" ng-model="data.gramm" aria-required="true">
                         <span class="fa fa-dashboard form-control-feedback"></span>
                       </div>
                     </div>
                     <div class="col-md-2 paddLR0">
                       <div class="form-group field-mainform-summ has-feedback required field-mainlist-summ required">
-                        <input type="text" id="mainlist-summ" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="golds[summ]" placeholder="Сумма" ng-model="data.summ" aria-required="true">
+                        <input type="text" id="mainlist-summ" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="summ" placeholder="Сумма" ng-model="data.summ" aria-required="true">
                         <span class="fa fa-money form-control-feedback"></span>
+                        <input type="hidden" name="num" value="1" id="numCount">
                       </div>
                     </div>
                     <div class="col-md-1 paddLR0">
-                        <button id="gold-btn"><span class="fa fa-plus-circle"></span></button>
+                        <button type="button" id="add-gold"><span class="fa fa-plus-circle"></span></button>
                     </div>
                   </div>
-                  <div class="row">
+                  <div class="row table-box">
                     <div class="col-md-12">
-                      dsfsdfsdfsdf
+                      <table class="table table-striped" id="thing_table">
+                          <thead>
+                            <tr><th>Предмет</th>
+                            <th>Проба</th>
+                            <th>Кол.</th>
+                            <th>Грамм</th>
+                            <th>Оц.Сумм</th>
+                            <th>Удалить</th>
+                          </tr></thead>
+                          <tbody id="tbody-gold">
+                          </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
@@ -381,7 +395,7 @@ use yii\bootstrap\ActiveForm;
                 <?= $form->field($mainList, 'percents',['options'=>
                     ['tag' => 'div','class'=> 'form-group field-mainform-percents has-feedback required'],
                     'template'=>'{input}<span class="form-control-feedback"></span>{error}{hint}'
-                    ])->dropDownList(['1'=>'0.5%','2'=>'0.7%'],
+                    ])->dropDownList(Yii::$app->ListItem->getListPercent(),
                     ['prompt' => '% ставка','ng-model' => 'formData.percents']
                     )->label(false); ?>
                   </div>

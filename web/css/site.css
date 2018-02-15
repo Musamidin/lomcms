@@ -225,7 +225,7 @@ span.lbl-view-comm {
     padding-left: 0px;
     padding-right: 0px;
 }
-#gold-btn{ width: 34px; height: 34px; }
+#add-gold{ width: 34px; height: 34px; }
 .paddLR0{padding-left: 0px; padding-right: 0px;}
 .paddL0{ padding-left: 0px;}
 .paddR0{ padding-right: 0px;}
@@ -238,9 +238,17 @@ span.lbl-view {
       font-weight: bold;
       border: 1px solid silver;
 }
+div#tabs-1{ background:#ddd; }
 div#tabs-1 select{
     padding-right: 0px;
 }
 div#tabs-1 input {
     padding-right: 10px;
+}
+#thing_table{font-size: 13px;border: 1px solid black;display: none;}
+#thing_table > thead{ background: #35414f; color: white; }
+#thing_table > thead > tr > th{ padding: 3px; }
+.row.table-box{
+  overflow: auto;
+  height: 90px;
 }

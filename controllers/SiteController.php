@@ -15,6 +15,7 @@ use yii\db\BaseActiveRecord;
 use yii\db\Exception;
 use app\models\Clients;
 use app\models\MainList;
+use app\models\Library;
 //use app\componets\Init;
 
 class SiteController extends Controller
@@ -117,6 +118,7 @@ class SiteController extends Controller
         // $curr['usd'] = number_format(str_replace(',','.',$currVal['Value'])+1,2);
         $clients = new Clients();
         $mainList = new MainList();
+
         return $this->render('index',
                             ['clients' => $clients,
                              'mainList' => $mainList

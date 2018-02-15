@@ -1,19 +1,76 @@
 var app = angular.module("App",['angularUtils.directives.dirPagination']);
 
 app.controller("AppCtrl", function($scope,$http){
+/**NO CONFLICT**/
+$.fn.bootstrapBtn = $.fn.button.noConflict();
 
-	$.fn.bootstrapBtn = $.fn.button.noConflict();
+$scope.totalmainlist = 0;
+$scope.mainlistPerPage = 6; // this should match however many results your API puts on one page
+$scope.pagination = { current: 1 };
 
-	 $( "#tabs" ).tabs();
-	 
-	$scope.totalmainlist = 0;
-	$scope.mainlistPerPage = 6; // this should match however many results your API puts on one page
-	$scope.pagination = { current: 1 };
+$scope.actionner = 'save';
+$scope.data = {};
+$scope.formData = {};
+$scope.poster = {};
+var arrTs = [];
+/** TABER **/
+$( "#tabs" ).tabs();
+/**TAB IN GOLDS FUNCTIONS **/
+$(document).on('click', '.delRow', function(){
+		var thisid = Number(this.id.substring(1));
+		delete arrTs[thisid-1];
+		$('#'+this.id).closest('tr').remove();
+		if(jQuery.isEmptyObject(arrTs)){ $('#thing_table').hide(); }
+		return false;
 
-	$scope.actionner = 'save';
-	$scope.data = {};
-	$scope.formData = {};
-	$scope.poster = {};
+});
+
+$(document).on('click', '#add-gold', function(){
+
+			var formdata='';
+			var flag = true;
+			formdata = $('.gold-form-box > div > div > :input').serializeArray();
+			$(formdata).each(function(index, obj){
+					if(obj.value === ""){
+						flag = false;
+						return false;
+					}
+			});
+			//console.log(formdata);
+			if(flag){
+				 $('#thing_table').show();
+					var data = {};
+					var appdata;
+					var n=1;
+					$(formdata).each(function(index, obj){
+								data[obj.name] = obj.value;
+					});
+					arrTs.push(data);
+					$('#numCount').val(Number(data.num)+1);
+					appdata =
+					'<tr id="r'+data.num+'">'+
+					'<td>'+data.groups+''+
+					'</td><td>'+data.sample+'пр.'+
+					'</td><td>'+data.count+'шт.'+
+					'</td><td>'+data.gramm+'гр.'+
+					'</td><td>'+data.summ+' '+ curr($('#mainlist-currency').val()) +
+					'</td><td>'+
+					'<a href="javascript:void(0);" class="delRow" id="r'+data.num+'"><span class="glyphicon glyphicon-trash"></span></a>'+
+					'</td></tr>';
+
+					$('.thdata').val('');
+					$('#tbody-gold').append(appdata);
+					///$('#currency').val()
+					//console.log(arrTs);
+		}else{
+				alert("Заполняйте все поля обязательно!");
+		}
+
+});
+
+	var curr = function(arg){
+		if(Number(arg) == 1){ return 'KGS'; }else if(Number(arg) == 2){ return 'USD'; }
+	}
 
 	$scope.pageChanged = function(newPage) {
 	       $scope.getData(newPage,$scope.mainlistPerPage);
@@ -215,13 +272,11 @@ app.controller("AppCtrl", function($scope,$http){
 	$(document).on('click', '.addModal', function(){
 		//alert('test');
 			$( "#dialog-form-clients" ).dialog({
-					title: "Сведения о клиенте",
+					title: "Окно выдачи кредита",
 					autoOpen: false,
 					width: 690,
 					modal: true,
 					open: function(){
-						//closeBtn();
-						//btnTheam("Сохранить");
 					},
 					close: function( event, ui ) {
 						$("#addWindowItem").find("input[type=text], textarea").val("");
