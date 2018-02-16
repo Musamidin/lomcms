@@ -32,13 +32,14 @@ use yii\bootstrap\ActiveForm;
 <div style="text-align:center;display:none;" id="dialog-form-clients">
   <?php $form = ActiveForm::begin(['id' => 'action-form']); ?>
       <input type="hidden" id="codeid" name="id" value=""/>
+      <input type="hidden" id="token" name="token" value="<?=md5(Yii::$app->session->getId().'opn');?>"/>
       <div id="client-data">
           <div class="row">
             <div class="col-md-6">
               <?=$form->field($clients, 'fio',['options'=>
                   ['tag' => 'div','class'=> 'form-group field-mainform-fio has-feedback required'],
                   'template'=>'{input}<span class="glyphicon glyphicon-user form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'Ф.И.О.','ng-model'=>'formData.fio'])->label('Ф.И.О.');
+                  ])->textInput(['placeholder'=>'Ф.И.О.','ng-model'=>'formData.fio'])->label('Ф.И.О.');
                   ?>
             </div>
             <div class="col-md-6">

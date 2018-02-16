@@ -42,8 +42,28 @@ $(document).on('click', '.addModal', function(){
 
 /** TABER **/
 $( "#tabs" ).tabs();
-/** DATE PICKER **/
-
+/*************************************************************/
+$( "#clients-fio" ).autocomplete({
+		 source: function(request, response) {
+					 $.ajax({
+							 url:"/getautocomplete",
+							 dataType: "json",
+							 data: {
+								 	 token : $('#token').val(),
+									 term : request.term
+							 },
+							 success: function(data) {
+									 response(data);
+							 }
+					 });
+			 },
+		 minLength: 2,
+		 select: function( event, ui ) {
+				 alert(ui.item.id);
+				 //getOnSelect(ui.item.codeid); //ui.item.id | ui.item | ui.item.value
+			 }
+});
+/************************DATE PICKER************************/
 		$('#clients-date_of_issue').datepicker({
 			format: "dd/mm/yyyy",
 			startView: 3,

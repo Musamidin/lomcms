@@ -34,13 +34,7 @@ class SiteController extends Controller
             $this->enableCsrfValidation = false;
         }elseif($action->id === 'search' || $action->id === 'searchagent'){
             $this->enableCsrfValidation = false;
-        }elseif($action->id === 'allactions'){
-          $this->enableCsrfValidation = false;
-        }elseif($action->id === 'getagentdata' || $action->id === 'getlib'){
-          $this->enableCsrfValidation = false;
-        }elseif($action->id === 'getreport'){
-          $this->enableCsrfValidation = false;
-        }elseif($action->id === 'setagent' || $action->id === 'deleteagent'){
+        }elseif($action->id === 'getautocomplete' || $action->id === 'getlib'){
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'test'){
           $this->enableCsrfValidation = false;
@@ -128,35 +122,27 @@ class SiteController extends Controller
       }
 
     }
-    // /* Agents Controllers */
-    // public function actionAgents()
-    // {
-    //     $agentsList = Agents::find()->select(['fio','id'])->asArray()->where('status = 1')->all();
-    //     $agentsModel = new AgentsModel();
-    //     return $this->render('agents',['agentModel'=>$agentsModel, 'agentList' => $agentsList]);
-    // }
-    // /* Agents AJAX Controllers */
-    // public function actionSetagent()
-    // {
-    //     $postData = file_get_contents("php://input");
-    //     $do = json_decode($postData);
-    //     header('Content-Type: application/json');
-    //     if($do->token === md5(Yii::$app->session->getId().'opn')){
-    //         try{
-    //           $al = empty($do->dataid) ? new Agents() : Agents::findOne($do->dataid);
-    //           $al->fio = $do->fio;
-    //           $al->email = $do->email;
-    //           $al->phone = $do->phone;
-    //           $al->pid = $do->pid;
-    //           $al->save();
-    //           return json_encode(array('status'=>1,'message'=>'good!'));
-    //         }catch(Exception $e){
-    //             return json_encode(array('status'=>2,'message'=>$e->errorInfo));
-    //         }
-    //     }else{
-    //         return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
-    //     }
-    // }
+
+    /* Autocomplete AJAX Controllers */
+    public function actionGetautocomplete()
+    {
+        $request = Yii::$app->request;
+        $token = $request->get('token');
+        $term = $request->get('term');
+
+        //header('Content-Type: application/json');
+        if($token === md5(Yii::$app->session->getId().'opn')){
+            try{
+                $clients = Clients::find()->select(['fio AS label','id'])->where("fio LIKE '%".$term."%'")->asArray()->all();
+
+                return json_encode($clients);
+            }catch(Exception $e){
+                return json_encode(array('status'=>2,'message'=>$e->errorInfo));
+            }
+        }else{
+            return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }
     //
     // public function actionDeleteagent()
     // {
