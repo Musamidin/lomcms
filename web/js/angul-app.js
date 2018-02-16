@@ -59,13 +59,14 @@ $( "#clients-fio" ).autocomplete({
 			 },
 		 minLength: 2,
 		 select: function( event, ui ) {
-				 alert(ui.item.id);
+				 //console.log(ui.item);
+				 $scope.formData = ui.item;
 				 //getOnSelect(ui.item.codeid); //ui.item.id | ui.item | ui.item.value
 			 }
 });
 /************************DATE PICKER************************/
 		$('#clients-date_of_issue').datepicker({
-			format: "dd/mm/yyyy",
+			format: "yyyy-mm-dd",
 			startView: 3,
 			language: "ru",
 			autoclose: true,

@@ -55,7 +55,7 @@ use yii\bootstrap\ActiveForm;
               <?=$form->field($clients, 'passport_id',['options'=>
                   ['tag' => 'div','class'=> 'form-group field-mainform-passport_id has-feedback required'],
                   'template'=>'{input}<span class="fa fa-barcode form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер пасспорта','ng-model'=>'formData.passport_id'])->label('Введите номер пасспорта');
+                  ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер пасспорта','ng-model'=>'formData.passport_id','ng-init'=>'formData.passport_id=""'])->label('Введите номер пасспорта');
                   ?>
             </div>
             <div class="col-md-6">

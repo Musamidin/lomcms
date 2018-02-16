@@ -133,7 +133,7 @@ class SiteController extends Controller
         //header('Content-Type: application/json');
         if($token === md5(Yii::$app->session->getId().'opn')){
             try{
-                $clients = Clients::find()->select(['fio AS label','id'])->where("fio LIKE '%".$term."%'")->asArray()->all();
+                $clients = Clients::find()->select(['id','fio','fio AS label','address','date_of_issue','passport_id','passport_issued','phone'])->where("fio LIKE '%".$term."%'")->asArray()->all();
 
                 return json_encode($clients);
             }catch(Exception $e){
