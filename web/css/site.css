@@ -229,6 +229,7 @@ span.lbl-view-comm {
 .paddLR0{padding-left: 0px; padding-right: 0px;}
 .paddL0{ padding-left: 0px;}
 .paddR0{ padding-right: 0px;}
+.paddL3{ padding-left: 3px;}
 span.lbl-view {
       height: 34px;
       background: white;
@@ -245,9 +246,9 @@ div#tabs-1 select{
 div#tabs-1 input {
     padding-right: 10px;
 }
-#thing_table{font-size: 13px;border: 1px solid black;display: none;}
-#thing_table > thead{ background: #35414f; color: white; }
-#thing_table > thead > tr > th{ padding: 3px; }
+#thing_table,#phone-table{font-size: 13px;border: 1px solid black;display: none;}
+#thing_table,#phone-table > thead{ background: #35414f; color: white; }
+#thing_table,#phone-table > thead > tr > th{ padding: 3px; }
 .row.table-box{
   overflow: auto;
   height: 90px;
@@ -255,4 +256,13 @@ div#tabs-1 input {
 #clients-date_of_issue{cursor: pointer;}
 ul.ui-autocomplete {
     z-index: 1100;
+}
+.addphone{margin-top: -1px;}
+.add-cont-btn,.show-cont-btn{cursor: pointer;}
+#popover750031{ top: 34px; left: -60.5px; display: none; }
+#popover750031 > .arrow{ left: 50%; }
+#history-btn{
+  color: #e1e463;
+  font-size: 11px;
+  text-decoration: underline;
 }

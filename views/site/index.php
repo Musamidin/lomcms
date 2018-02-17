@@ -54,16 +54,32 @@ use yii\bootstrap\ActiveForm;
             <div class="col-md-6">
               <?=$form->field($clients, 'passport_id',['options'=>
                   ['tag' => 'div','class'=> 'form-group field-mainform-passport_id has-feedback required'],
-                  'template'=>'{input}<span class="fa fa-barcode form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер пасспорта','ng-model'=>'formData.passport_id','ng-init'=>'formData.passport_id=""'])->label('Введите номер пасспорта');
+                  'template'=>'{input}<span class="fa fa-barcode form-control-feedback addphone"></span>{error}{hint}'
+                  ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер пасспорта','ng-model'=>'formData.passport_id'])->label('Введите номер пасспорта');
                   ?>
             </div>
             <div class="col-md-6">
               <?=$form->field($clients, 'phone',['options'=>
-                  ['tag' => 'div','class'=> 'form-group field-mainform-phone has-feedback required'],
-                  'template'=>'{input}<span class="fa fa-phone form-control-feedback"></span>{error}{hint}'
+                  ['tag' => 'div','class'=> 'form-group input-group field-mainform-phone has-feedback required'],
+                  'template'=>'<span class="input-group-addon show-cont-btn" data-toggle="popover" aria-describedby="popover750031"><i class="fa fa-angle-double-down"></i></span>{input}<span class="input-group-addon add-cont-btn"><i class="fa fa-plus-circle"></i></span>{error}{hint}'
                   ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер телефона','ng-model'=>'formData.phone'])->label('Введите номер телефона');
                   ?>
+                  <div class="popover fade bottom in" role="tooltip" id="popover750031">
+                    <div class="arrow"></div>
+                    <h3 class="popover-title">Контактные номера</h3>
+                    <div class="popover-content">
+                        <table class="table table-striped" id="phone-table">
+                            <thead>
+                              <tr>
+                                <th>Номера</th>
+                                <th>Удалить</th>
+                              </tr>
+                            </thead>
+                            <tbody id="tbody-phone">
+                            </tbody>
+                          </table>
+                        </div>
+                    </div>
             </div>
           </div>
           <div class="row">
@@ -80,6 +96,9 @@ use yii\bootstrap\ActiveForm;
                   'template'=>'{input}<span class="fa fa-map-marker form-control-feedback"></span>{error}{hint}'
                   ])->textInput(['autofocus' => false,'placeholder'=>'Введите адрес','ng-model'=>'formData.address'])->label('Введите адрес');
                   ?>
+            </div>
+            <div class="col-md-12">
+                <a href="javascript:void(0);" id="history-btn">История кредита</a>
             </div>
           </div>
       </div>
@@ -210,5 +229,23 @@ use yii\bootstrap\ActiveForm;
   <?php ActiveForm::end(); ?>
 </div>
 <!-- END Dialog box for add data -->
+<!-- START Dialog box for Contact phones data -->
+<div style="display:none;" id="contact-phone-dialog" title="Контактные номера">
+  <div class="row">
+      <div class="col-md-8 paddR0">
+        <div class="form-group field-mainform-phone has-feedback required field-phone-items has-success">
+          <input type="text" id="phone-items" class="form-control ng-pristine ng-valid ng-empty ng-touched" name="phones" placeholder="XXX XX XX XX" ng-model="list.phone" autocomplete="off" aria-invalid="false">
+          <span class="fa fa-phone form-control-feedback"></span>
+        </div>
+      </div>
+      <div class="col-md-4 paddL3">
+        <button class="btn btn-primary addphone" title="Добавить номер"><span class="glyphicon glyphicon-plus-sign"></span></button>
+      </div>
+      <div class="col-md-12">
+
+      </div>
+  </div>
+</div>
+<!-- END Dialog box for Contact phones data -->
 </div>
 <br/>

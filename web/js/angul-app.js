@@ -8,10 +8,9 @@ $scope.totalmainlist = 0;
 $scope.mainlistPerPage = 6; // this should match however many results your API puts on one page
 $scope.pagination = { current: 1 };
 
-$scope.actionner = 'save';
+$scope.list = {};
 $scope.data = {};
 $scope.formData = {};
-$scope.poster = {};
 var arrTs = [];
 /**OPEN DIALOG BOX **/
 $(document).on('click', '.addModal', function(){
@@ -128,10 +127,30 @@ $(document).on('click', '#add-gold', function(){
 		}
 
 });
-
+$(document).on('click', '#history-btn', function(){
+		$('#contact-phone-dialog').dialog({
+		    autoOpen: false,
+		    buttons: {
+		        "Сохранить": function() {
+		            $(this).dialog('close');
+		        }
+		    }
+		}).dialog( "open" );
+});
 	var curr = function(arg){
 		if(Number(arg) == 1){ return 'KGS'; }else if(Number(arg) == 2){ return 'USD'; }
 	}
+
+$(document).on('click', '.add-cont-btn', function(){
+		var tbl = '';
+		tbl = '<tr><td>'+$scope.formData.phone+'</td><td><a href="javascript:void(0)" id="'+$scope.formData.phone+'"><span class="glyphicon glyphicon-trash"></span><a/></td></tr>';
+		$('#phone-table').show();
+		$('#tbody-phone').append(tbl);
+		console.log($scope.formData.phone);
+});
+$(document).on('click', '.show-cont-btn', function(){
+		$('#popover750031').toggle();
+});
 
 	$scope.pageChanged = function(newPage) {
 	       $scope.getData(newPage,$scope.mainlistPerPage);
