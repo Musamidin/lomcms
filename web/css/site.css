@@ -265,4 +265,5 @@ ul.ui-autocomplete {
   color: #e1e463;
   font-size: 11px;
   text-decoration: underline;
+  display: none;
 }
