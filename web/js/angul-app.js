@@ -12,7 +12,9 @@ $scope.list = {};
 $scope.data = {};
 $scope.formData = {};
 var arrTs = [];
-/**OPEN DIALOG BOX **/
+var phoneBook = [];
+var arrData = [];
+/**START OPEN DIALOG BOX **/
 $(document).on('click', '.addModal', function(){
 		$( "#dialog-form-clients" ).dialog({
 				title: "Окно выдачи кредита",
@@ -30,18 +32,23 @@ $(document).on('click', '.addModal', function(){
 					id : "btn1",
 					click: function() {
 						$scope.formData['gold'] = arrTs;
+						$scope.formData['phone'] = phoneBook;
 						console.log($scope.formData);
 					}
 				}]
 		}).dialog( "open" );
 });
+/**END OPEN DIALOG BOX **/
 
 /** MASK **/
- $("#clients-phone").mask("999999999999",{placeholder:"996 XXX XX XX XX"});
+ $("#clients-phone").mask("999999999",{placeholder:"XXX XX XX XX"});
+/** END MASK **/
 
-/** TABER **/
+/** START TABER **/
 $( "#tabs" ).tabs();
-/*************************************************************/
+/** END TABER **/
+
+/*********** START autocomplete ********/
 $( "#clients-fio" ).autocomplete({
 		 source: function(request, response) {
 					 $.ajax({
@@ -59,30 +66,43 @@ $( "#clients-fio" ).autocomplete({
 		 minLength: 2,
 		 select: function( event, ui ) {
 				 //console.log(ui.item);
-				 $scope.formData = ui.item;
-				 //getOnSelect(ui.item.codeid); //ui.item.id | ui.item | ui.item.value
+				 var tbl = '';
+				 var nms = 1;
+				 phoneBook = eval(ui.item.phone);
+				 for(i=0; i<phoneBook.length; i++){
+					 tbl += '<tr id="rn'+nms+'"><td>'+phoneBook[i]+'</td><td><a href="javascript:void(0)" class="delphone" id="rn'+nms+'"><span class="glyphicon glyphicon-trash"></span><a/></td></tr>';
+					 nms++;
+				 }
+
+					$('#phone-table').show();
+					$('#tbody-phone').append(tbl);
+					console.log(phoneBook);
+				 //$scope.formData = ui.item;
+ 			  //ui.item.id | ui.item | ui.item.value
 			 }
 });
-/************************DATE PICKER************************/
-		$('#clients-date_of_issue').datepicker({
-			format: "yyyy-mm-dd",
-			startView: 3,
-			language: "ru",
-			autoclose: true,
-			orientation: "bottom right"
-		}).on('hide', function() {
-					//getReport($('.getbydatetime').val());
-					//console.log(getReport($('.getbydatetime').val()));
-		});
+/*********** END autocomplete ********/
 
-/**TAB IN GOLDS FUNCTIONS **/
+/**********START DATE PICKER***************/
+$('#clients-date_of_issue').datepicker({
+	format: "yyyy-mm-dd",
+	startView: 3,
+	language: "ru",
+	autoclose: true,
+	orientation: "bottom right"
+}).on('hide', function() {
+		//getReport($('.getbydatetime').val());
+		//console.log(getReport($('.getbydatetime').val()));
+});
+/********END DATE PICKER****************/
+
+/**IN TAB GOLDS FUNCTIONS **/
 $(document).on('click', '.delRow', function(){
 		var thisid = Number(this.id.substring(1));
 		delete arrTs[thisid-1];
 		$('#'+this.id).closest('tr').remove();
 		if(jQuery.isEmptyObject(arrTs)){ $('#thing_table').hide(); }
 		return false;
-
 });
 
 $(document).on('click', '#add-gold', function(){
@@ -127,6 +147,51 @@ $(document).on('click', '#add-gold', function(){
 		}
 
 });
+
+var curr = function(arg){
+	if(Number(arg) == 1){ return 'KGS'; }else if(Number(arg) == 2){ return 'USD'; }
+}
+/**END IN TAB GOLDS FUNCTIONS **/
+
+/** START CONTACT FUNCTIONS **/
+$(document).on('click', '.add-cont-btn', function(){
+	 $('.iconer').removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
+	 $('#popover750031').show();
+	 if(phoneBook.includes($scope.formData.phone)){
+		 alert('Номер: '+$scope.formData.phone +' в списке уже есть!');
+	 }else{
+		 phoneBook.push($scope.formData.phone);
+		 $('#clients-phone').val('');
+		 $('#rowNum').val(Number($('#rowNum').val())+1);
+			var tbl = '';
+			tbl = '<tr id="rn'+$('#rowNum').val()+'"><td>'+$scope.formData.phone+'</td><td><a href="javascript:void(0)" title="Удалить" class="delphone" id="rn'+$('#rowNum').val()+'"><span class="glyphicon glyphicon-trash"></span><a/></td></tr>';
+			$('#phone-table').show();
+			$('#tbody-phone').append(tbl);
+			console.log(phoneBook);
+	 }
+});
+// fa-angle-double-up
+$(document).on('click', '.delphone', function(){
+		var thisid = Number(this.id.substring(2));
+		delete phoneBook[thisid-1];
+		$('#'+this.id).closest('tr').remove();
+		if(jQuery.isEmptyObject(phoneBook)){ $('#phone-table').hide(); }
+		console.log(phoneBook);
+		return false;
+});
+
+$(document).on('click', '.show-cont-btn', function(){
+		$('#popover750031').toggle();
+		if($('#popover750031').css('display') == 'none')
+		{
+			$('.iconer').removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
+		}else{
+			$('.iconer').removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
+		}
+});
+/** END CONTACT FUNCTIONS **/
+
+/** START HISTORY FUNCTIONS **/
 $(document).on('click', '#history-btn', function(){
 		$('#contact-phone-dialog').dialog({
 		    autoOpen: false,
@@ -137,20 +202,7 @@ $(document).on('click', '#history-btn', function(){
 		    }
 		}).dialog( "open" );
 });
-	var curr = function(arg){
-		if(Number(arg) == 1){ return 'KGS'; }else if(Number(arg) == 2){ return 'USD'; }
-	}
-
-$(document).on('click', '.add-cont-btn', function(){
-		var tbl = '';
-		tbl = '<tr><td>'+$scope.formData.phone+'</td><td><a href="javascript:void(0)" id="'+$scope.formData.phone+'"><span class="glyphicon glyphicon-trash"></span><a/></td></tr>';
-		$('#phone-table').show();
-		$('#tbody-phone').append(tbl);
-		console.log($scope.formData.phone);
-});
-$(document).on('click', '.show-cont-btn', function(){
-		$('#popover750031').toggle();
-});
+/** END HISTORY FUNCTIONS **/
 
 	$scope.pageChanged = function(newPage) {
 	       $scope.getData(newPage,$scope.mainlistPerPage);
@@ -170,13 +222,6 @@ $(document).on('click', '.show-cont-btn', function(){
 		$('#data-id').val(data.id);
 		$('#dataModal').modal({ keyboard: false });
 	};
-
-	// $scope.save = function(){
-	// 	switch($scope.actionner){
-	// 		case 'save' : $scope.saveData(); break;
-	// 		case 'update' : $scope.updateData(); break;
-	// 	}
-	// };
 
 	$scope.save = function(){
 		$scope.data.token = $('#token').val();

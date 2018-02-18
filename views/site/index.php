@@ -61,7 +61,7 @@ use yii\bootstrap\ActiveForm;
             <div class="col-md-6">
               <?=$form->field($clients, 'phone',['options'=>
                   ['tag' => 'div','class'=> 'form-group input-group field-mainform-phone has-feedback required'],
-                  'template'=>'<span class="input-group-addon show-cont-btn" data-toggle="popover" aria-describedby="popover750031"><i class="fa fa-angle-double-down"></i></span>{input}<span class="input-group-addon add-cont-btn"><i class="fa fa-plus-circle"></i></span>{error}{hint}'
+                  'template'=>'<span class="input-group-addon show-cont-btn" data-toggle="popover" aria-describedby="popover750031"><i class="iconer fa fa-angle-double-down"></i></span>{input}<span class="input-group-addon add-cont-btn"><i class="fa fa-plus-circle"></i></span>{error}{hint}'
                   ])->textInput(['autofocus' => false,'placeholder'=>'Введите номер телефона','ng-model'=>'formData.phone'])->label('Введите номер телефона');
                   ?>
                   <div class="popover fade bottom in" role="tooltip" id="popover750031">
@@ -71,8 +71,8 @@ use yii\bootstrap\ActiveForm;
                         <table class="table table-striped" id="phone-table">
                             <thead>
                               <tr>
-                                <th>Номера</th>
-                                <th>Удалить</th>
+                                <th><span class="glyphicon glyphicon-earphone"></span></th>
+                                <th title="Удалить"><span class="glyphicon glyphicon-trash"></span></th>
                               </tr>
                             </thead>
                             <tbody id="tbody-phone">
@@ -80,6 +80,7 @@ use yii\bootstrap\ActiveForm;
                           </table>
                         </div>
                     </div>
+                    <input type="hidden" name="num" value="0" id="rowNum">
             </div>
           </div>
           <div class="row">

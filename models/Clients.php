@@ -38,7 +38,7 @@ class Clients extends \yii\db\ActiveRecord
             //[['fio'], 'required'],
             [['fio', 'passport_id', 'passport_issued', 'address', 'email'], 'string'],
             [['date_of_issue', 'datetime','last_up_date'], 'safe'],
-            [['phone'], 'number'],
+            //[['phone'], 'number'],
             [['user_id'], 'integer'],
         ];
     }

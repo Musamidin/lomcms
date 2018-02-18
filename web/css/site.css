@@ -246,9 +246,12 @@ div#tabs-1 select{
 div#tabs-1 input {
     padding-right: 10px;
 }
-#thing_table,#phone-table{font-size: 13px;border: 1px solid black;display: none;}
-#thing_table,#phone-table > thead{ background: #35414f; color: white; }
-#thing_table,#phone-table > thead > tr > th{ padding: 3px; }
+#thing_table {font-size: 13px;border: 1px solid black;display: none;}
+#thing_table > thead > tr > th{ padding: 3px; background: #35414f; color: white; }
+
+#phone-table{font-size: 13px;border: 1px solid black;display: none;}
+#phone-table > thead > tr > th{ padding: 3px; background: #35414f; color: white;text-align: center;}
+
 .row.table-box{
   overflow: auto;
   height: 90px;
@@ -267,3 +270,4 @@ ul.ui-autocomplete {
   text-decoration: underline;
   display: none;
 }
+i.iconer { color: red; }
