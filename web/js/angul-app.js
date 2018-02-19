@@ -11,13 +11,15 @@ $scope.pagination = { current: 1 };
 $scope.list = {};
 $scope.data = {};
 $scope.formData = {};
+$scope.calcData = {};
 var arrTs = [];
 var phoneBook = [];
 var arrData = [];
 /**START OPEN DIALOG BOX **/
 $(document).on('click', '.addModal', function(){
-		clearFunc();
-		console.log(phoneBook);
+		clearClientFormFunc();
+		clearCalFormFunc();
+		$('#history-btn').hide();
 		$( "#dialog-form-clients" ).dialog({
 				title: "Окно выдачи кредита",
 				autoOpen: false,
@@ -33,9 +35,26 @@ $(document).on('click', '.addModal', function(){
 					//icon: "ui-icon-seek-next",
 					id : "btn1",
 					click: function() {
-						$scope.formData['gold'] = arrTs;
-						$scope.formData['phone'] = phoneBook;
-						console.log($scope.formData);
+						//var data = {};
+						$($('#client-data :input').serializeArray()).each(function(index, obj){
+            	$scope.calcData[obj.name.slice(8,-1)] = obj.value;
+      			});
+						//data = $scope.calcData;
+						$scope.calcData['gold'] = arrTs;
+						$scope.calcData['phone'] = phoneBook;
+						$scope.calcData['token'] = $('#token').val();
+						$scope.calcData['id'] = $('#client-id').val();
+						$http({
+							method: 'POST',
+							url: '/issuanceofcredit',
+							data: $scope.calcData
+						}).then(function successCallback(response) {
+								//$scope.agentsList = eval(response.data);
+								console.log(response);
+							}, function errorCallback(response) {
+									//console.log(response);
+						});
+						console.log($scope.calcData);
 					}
 				}]
 		}).dialog( "open" );
@@ -68,6 +87,8 @@ $( "#clients-fio" ).autocomplete({
 		 minLength: 2,
 		 select: function( event, ui ) {
 				 //console.log(ui.item);
+				 phoneBook = [];
+				 $('#tbody-phone').html('');
 				 $('#client-id').val(ui.item.id);
 				 var tbl = '';
 				 phoneBook = eval(ui.item.phone);
@@ -75,8 +96,15 @@ $( "#clients-fio" ).autocomplete({
 					 tbl += '<tr id="rn'+phoneBook[i]+'"><td>'+phoneBook[i]+'</td><td><a href="javascript:void(0)" class="delphone" id="rn'+phoneBook[i]+'"><span class="glyphicon glyphicon-trash"></span><a/></td></tr>';
 				 }
 					$('#phone-table').show();
-					$('#tbody-phone').append(tbl);
-					//console.log(phoneBook);
+					$('#tbody-phone').html(tbl);
+					$.each(ui.item,function(key, val){
+							if(key !== 'phone'){
+								$('#clients-'+key).val(val);
+							}
+		      });
+					$('.iconer').removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
+					$('#popover750031').show();
+					$('#history-btn').show();
 				 //$scope.formData = ui.item;
  			  //ui.item.id | ui.item | ui.item.value
 			 }
@@ -90,10 +118,7 @@ $('#clients-date_of_issue').datepicker({
 	language: "ru",
 	autoclose: true,
 	orientation: "bottom right"
-}).on('hide', function() {
-		//getReport($('.getbydatetime').val());
-		//console.log(getReport($('.getbydatetime').val()));
-});
+}).on('hide', function() { });
 /********END DATE PICKER****************/
 
 /**IN TAB GOLDS FUNCTIONS **/
@@ -213,20 +238,54 @@ $(document).on('click', '#history-btn', function(){
 });
 /** END HISTORY FUNCTIONS **/
 
+/** START CALC FUNCTIONS **/
+$(document).on('change', '#mainlist-percents', function(){
+		var val = 0;
+		if($('#mainlist-percents').val() == ''){
+			val = 0;
+		}else{
+			val = $('#mainlist-percents').val();
+		}
+		var result = (Number($('#mainlist-loan').val())/100 * parseFloat(val) * 30);
+		$('#comission').text(Math.round(result)+' Сом');
+});
+
+$(document).on('keyup', '#mainlist-loan', function(){
+		var val = 0;
+		if($('#mainlist-percents').val() == ''){
+			val = 0;
+		}else{
+			val = $('#mainlist-percents').val();
+		}
+		var result = (Number($('#mainlist-loan').val())/100 * parseFloat(val) * 30);
+		$('#comission').text(Math.round(result)+' Сом');
+});
+/** END CALC FUNCTIONS **/
+
+/** START CLEAR FUNCTIONS **/
+$(document).on('click', '#reset-btn', function(){
+	clearClientFormFunc();
+});
+/** END CLEAR FUNCTIONS **/
+
 /** START FUNCTIONS **/
 var clearClientFormFunc = function(){
-	$('#client-id').val('');
-	$('#tbody-phone').html('');
-	$('#phone-table').hide();
-	phoneBook = [];
+		$('#client-data :input').val('');
+		$('#client-id').val('');
+		$('#tbody-phone').html('');
+		$('#phone-table,#history-btn,#popover750031').hide();
+		$('.iconer').removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
+		phoneBook = [];
 };
+
 var clearCalFormFunc = function(){
-	$('#client-id').val('');
-	$('#tbody-phone').html('');
-	$('#phone-table').hide();
-	arrTs = [];
+		arrTs = [];
+		//$('.gold-form-box :input').val('');
+		$('#tbody-gold').html('');
+		$('#thing_table').hide();
 };
 /** END FUNCTIONS **/
+
 	$scope.pageChanged = function(newPage) {
 	       $scope.getData(newPage,$scope.mainlistPerPage);
 	};

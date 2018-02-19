@@ -9,6 +9,7 @@ $config = [
     'components' => [
         //'Init' => ['class'=>'app\components\Init'],
         'ListItem' => ['class'=>'app\components\ListItem'],
+        'HelperFunc' => ['class'=>'app\components\HelperFunc'],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'a4s5d6as4d56',
@@ -54,22 +55,8 @@ $config = [
             // 'contact' => 'site/contact',
             'login' => 'site/login',
             'logout' => 'site/logout',
-            'getdata' => 'site/getdata',
-            'setdata' => 'site/setdata',
-            'deleterow' => 'site/deleterow',
-            'search' => 'site/search',
-            'allactions' => 'site/allactions',
-            'report' => 'site/report',
+            'issuanceofcredit' => 'site/issuanceofcredit',
             'getautocomplete' => 'site/getautocomplete',
-            'getagentdata' => 'site/getagentdata',
-            'getreport' => 'site/getreport',
-            'setagent' => 'site/setagent',
-            'deleteagent' => 'site/deleteagent',
-            'searchagent' => 'site/searchagent',
-            'library' => 'site/library',
-            'getlib'  => 'site/getlib',
-            'setlib' => 'site/setlib',
-            'test' => 'site/test',
             ],
         ],
 

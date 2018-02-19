@@ -16,7 +16,7 @@ use yii\db\Exception;
 use app\models\Clients;
 use app\models\MainList;
 use app\models\Library;
-//use app\componets\Init;
+//use app\componets\HelperFunc;
 
 class SiteController extends Controller
 {
@@ -26,16 +26,8 @@ class SiteController extends Controller
         if (\Yii::$app->getUser()->isGuest && $action->id !== 'login' && $action->id !=='/'){
             Yii::$app->response->redirect(Url::to(['login']), 301);
             Yii::$app->end();
-        }elseif($action->id === 'setdata' || $action->id === 'setlib'){
+        }elseif($action->id === 'issuanceofcredit' || $action->id === 'getautocomplete'){
             $this->enableCsrfValidation = false;
-        }elseif($action->id === 'getdata'){
-            $this->enableCsrfValidation = false;
-        }elseif($action->id === 'deleterow'){
-            $this->enableCsrfValidation = false;
-        }elseif($action->id === 'search' || $action->id === 'searchagent'){
-            $this->enableCsrfValidation = false;
-        }elseif($action->id === 'getautocomplete' || $action->id === 'getlib'){
-          $this->enableCsrfValidation = false;
         }elseif($action->id === 'test'){
           $this->enableCsrfValidation = false;
         }
@@ -144,6 +136,40 @@ class SiteController extends Controller
         }
     }
     //
+    public function actionIssuanceofcredit()
+    {
+      $postData = file_get_contents("php://input");
+      $do = json_decode($postData);
+      if(!empty($do->token) && $do->token == md5(Yii::$app->session->getId().'opn')){
+        $data = Yii::$app->HelperFunc->dataProcessing($do);
+        //print_r(Yii::$app->user->identity->id);
+          try{
+            $command = Yii::$app->db->
+            createCommand("SET NOCOUNT ON;EXEC dbo.actionData @id = ".$data['id']
+            .", @loan = ".$data['loan']
+            .", @percents = ".$data['percents']
+            .", @description = ".$data['description']
+            .", @other_prod = '".$data['other_prod']
+            ."', @gold = ".$data['gold']
+            .", @user_id = ".Yii::$app->user->identity->id
+            .", @fio = ".$data['fio']
+            .", @date_of_issue = ".$data['date_of_issue']
+            .", @passport_id = ".$data['passport_id']
+            .", @phone = ".$data['phone']
+            .", @address = ".$data['address']."");
+            $data = $command->queryAll();
+              //print_r($data);
+              echo json_encode(['status'=>$data[0]['status'],'msg'=>$data[0]['ErrorMessage']]);
+          }catch(Exception $e){
+              //print_r($e->errorInfo[2]);
+              echo json_encode(['status'=>1,'data'=>null,'msg'=>$e->errorInfo]);
+          }
+      }else{
+           echo json_encode(['status'=>2,'data'=>null,'msg'=>'Ошибка! токен не соответствует']);
+      }
+
+    }
+
     // public function actionDeleteagent()
     // {
     //     $postData = file_get_contents("php://input");
@@ -312,35 +338,7 @@ class SiteController extends Controller
     //     //echo $do->stype;
     // }
     //
-    // public function actionAllactions()
-    // {
-    //   $postData = file_get_contents("php://input");
-    //   $do = json_decode($postData);
-    //   //$agent = 0;
-    //   if(!empty($do->token) && $do->token == md5(Yii::$app->session->getId().'opn')){
-    //     if($do->dataid){
-    //       //try{
-    //         $agent = isset($do->fio) ? $do->fio : 0;
-    //         $command = Yii::$app->db->
-    //         createCommand("SET NOCOUNT ON;EXEC dbo.actionData @pid = ".$do->dataid
-    //         .", @status = ".$do->state
-    //         .", @priceSold = ".$do->price_sold
-    //         .", @soldCurrency = ".$do->sale_currency
-    //         .", @agentId = ".$agent."");
-    //         $data = $command->queryAll();
-    //           //print_r($data);
-    //           echo json_encode(['status'=>$data[0]['status'],'msg'=>$data[0]['ErrorMessage']]);
-    //       // }catch(Exception $e){
-    //       //     //print_r($e->errorInfo[2]);
-    //       //     echo json_encode(['status'=>1,'data'=>null,'msg'=>$e->errorInfo[2]]);
-    //       // }
-    //     }else{
-    //       echo json_encode(['status'=>1,'data'=>null,'msg'=>'Ошибка! токен не соответствует']);
-    //     }
-    //   }else{
-    //       echo json_encode(['status'=>2,'data'=>null,'msg'=>'Ошибка! токен не соответствует']);
-    //   }
-    // }
+
     //
     // public function actionSetdata()
     // {

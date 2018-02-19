@@ -19,7 +19,8 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     public $css = [
         'css/AdminLTE.min.css',
-        '//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css',
+        'css/font-awesome.min.css',
+        //'//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css'
         'css/site.css',
         'css/bootstrap-datepicker.min.css',
         'css/select2.min.css',

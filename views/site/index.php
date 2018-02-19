@@ -10,17 +10,6 @@ use yii\bootstrap\ActiveForm;
   <div id="index" class="body-content-page">
     <br/>
     <div class="row">
-      <div class="col-md-6">
-          <div class="form-group has-feedback">
-            <input type="text" class="form-control" placeholder="Поиск по названию изделия..." ng-model="searchInput" id="searchId" ng-keyup="onSearch($event)" aria-required="true" aria-invalid="true"><span class="glyphicon glyphicon-search form-control-feedback"></span><!--ng-change="myFunc($event)" -->
-          </div>
-        </div>
-        <div class="col-md-3">
-          <button class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>&nbsp;Добавить товар</button>
-
-        </div>
-        <div class="col-md-3">
-        </div>
     </div>
     </p>
     <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
@@ -176,7 +165,7 @@ use yii\bootstrap\ActiveForm;
                   </div>
                 </div>
                 <div id="tabs-2">
-                  <p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
+                  <?= $form->field($mainList, 'other_prod')->textarea(['autofocus' => false,'placeholder'=>'Авто/Техника/...','ng-model'=>'calcData.other_prod'])->label(false); ?>
                 </div>
               </div>
             </div>
@@ -188,7 +177,7 @@ use yii\bootstrap\ActiveForm;
                   <?=$form->field($mainList, 'loan',['options'=>
                       ['tag' => 'div','class'=> 'form-group field-mainform-loan has-feedback required'],
                       'template'=>'{input}<span class="fa fa-money form-control-feedback"></span>{error}{hint}'
-                      ])->textInput(['autofocus' => false,'placeholder'=>'Сумма (Ссуда)','ng-model'=>'formData.loan'])->label('Сумма(Ссуда)');
+                      ])->textInput(['autofocus' => false,'placeholder'=>'Сумма (Ссуда)','ng-model'=>'calcData.loan'])->label('Сумма(Ссуда)');
                       ?>
                 </div>
                 <div class="col-md-4 paddLR0">
@@ -197,7 +186,7 @@ use yii\bootstrap\ActiveForm;
                       'template'=>'{input}<span class="form-control-feedback"></span>{error}{hint}'
                       ])->dropDownList(['1'=>'KGS','2'=>'USD'],
                       ['options' =>[ '1' => ['Selected' => true]]],
-                      ['ng-model' => 'formData.currency']
+                      ['ng-model' => 'calcData.currency']
                       )->label(false); ?>
                 </div>
               </div>
@@ -207,7 +196,7 @@ use yii\bootstrap\ActiveForm;
                     ['tag' => 'div','class'=> 'form-group field-mainform-percents has-feedback required'],
                     'template'=>'{input}<span class="form-control-feedback"></span>{error}{hint}'
                     ])->dropDownList(Yii::$app->ListItem->getListPercent(),
-                    ['prompt' => '% ставка','ng-model' => 'formData.percents']
+                    ['prompt' => '% ставка','ng-model' => 'calcData.percents']
                     )->label(false); ?>
                   </div>
                   <div class="col-md-7 paddLR0">
@@ -217,7 +206,7 @@ use yii\bootstrap\ActiveForm;
             </div>
           <div class="row">
             <div class="col-md-12">
-              <?= $form->field($mainList, 'description')->textarea(['autofocus' => false,'placeholder'=>'Комментарии','ng-model'=>'formData.description'])->label(false); ?>
+              <?= $form->field($mainList, 'description')->textarea(['autofocus' => false,'placeholder'=>'Комментарии','ng-model'=>'calcData.description'])->label(false); ?>
             </div>
           </div>
           <div class="row">
@@ -225,7 +214,7 @@ use yii\bootstrap\ActiveForm;
               <span class="lbl-view">Дата выдачи:<?=date('d/m/Y');?></span>
             </div>
             <div class="col-md-6">
-              <span class="lbl-view">Срок выкупа:<?= date('d/m/Y', strtotime('+ 90 day'));?></span>
+              <span class="lbl-view">Срок выкупа:<?= date('d/m/Y', strtotime('+ 30 day'));?></span>
             </div>
           </div>
       </div>
