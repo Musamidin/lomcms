@@ -214,11 +214,16 @@ $(document).on('click', '#history-btn', function(){
 /** END HISTORY FUNCTIONS **/
 
 /** START FUNCTIONS **/
-var clearFunc = function(){
+var clearClientFormFunc = function(){
 	$('#client-id').val('');
 	$('#tbody-phone').html('');
 	$('#phone-table').hide();
 	phoneBook = [];
+};
+var clearCalFormFunc = function(){
+	$('#client-id').val('');
+	$('#tbody-phone').html('');
+	$('#phone-table').hide();
 	arrTs = [];
 };
 /** END FUNCTIONS **/
