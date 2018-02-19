@@ -270,4 +270,9 @@ ul.ui-autocomplete {
   text-decoration: underline;
   display: none;
 }
+#reset-btn{
+  color: #f39c12;
+  font-size: 11px;
+  text-decoration: underline;
+}
 i.iconer { color: red; }

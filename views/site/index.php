@@ -31,7 +31,7 @@ use yii\bootstrap\ActiveForm;
 <!-- START Dialog box for add data -->
 <div style="text-align:center;display:none;" id="dialog-form-clients">
   <?php $form = ActiveForm::begin(['id' => 'action-form']); ?>
-      <input type="hidden" id="codeid" name="id" value=""/>
+      <input type="hidden" id="client-id" name="id" value=""/>
       <input type="hidden" id="token" name="token" value="<?=md5(Yii::$app->session->getId().'opn');?>"/>
       <div id="client-data">
           <div class="row">
@@ -80,7 +80,6 @@ use yii\bootstrap\ActiveForm;
                           </table>
                         </div>
                     </div>
-                    <input type="hidden" name="num" value="0" id="rowNum">
             </div>
           </div>
           <div class="row">
@@ -98,8 +97,11 @@ use yii\bootstrap\ActiveForm;
                   ])->textInput(['autofocus' => false,'placeholder'=>'Введите адрес','ng-model'=>'formData.address'])->label('Введите адрес');
                   ?>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-6">
                 <a href="javascript:void(0);" id="history-btn">История кредита</a>
+            </div>
+            <div class="col-md-6">
+                <a href="javascript:void(0);" id="reset-btn">Сбросить</a>
             </div>
           </div>
       </div>

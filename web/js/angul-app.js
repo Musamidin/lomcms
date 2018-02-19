@@ -16,6 +16,8 @@ var phoneBook = [];
 var arrData = [];
 /**START OPEN DIALOG BOX **/
 $(document).on('click', '.addModal', function(){
+		clearFunc();
+		console.log(phoneBook);
 		$( "#dialog-form-clients" ).dialog({
 				title: "Окно выдачи кредита",
 				autoOpen: false,
@@ -66,17 +68,15 @@ $( "#clients-fio" ).autocomplete({
 		 minLength: 2,
 		 select: function( event, ui ) {
 				 //console.log(ui.item);
+				 $('#client-id').val(ui.item.id);
 				 var tbl = '';
-				 var nms = 1;
 				 phoneBook = eval(ui.item.phone);
 				 for(i=0; i<phoneBook.length; i++){
-					 tbl += '<tr id="rn'+nms+'"><td>'+phoneBook[i]+'</td><td><a href="javascript:void(0)" class="delphone" id="rn'+nms+'"><span class="glyphicon glyphicon-trash"></span><a/></td></tr>';
-					 nms++;
+					 tbl += '<tr id="rn'+phoneBook[i]+'"><td>'+phoneBook[i]+'</td><td><a href="javascript:void(0)" class="delphone" id="rn'+phoneBook[i]+'"><span class="glyphicon glyphicon-trash"></span><a/></td></tr>';
 				 }
-
 					$('#phone-table').show();
 					$('#tbody-phone').append(tbl);
-					console.log(phoneBook);
+					//console.log(phoneBook);
 				 //$scope.formData = ui.item;
  			  //ui.item.id | ui.item | ui.item.value
 			 }
@@ -157,23 +157,32 @@ var curr = function(arg){
 $(document).on('click', '.add-cont-btn', function(){
 	 $('.iconer').removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
 	 $('#popover750031').show();
-	 if(phoneBook.includes($scope.formData.phone)){
-		 alert('Номер: '+$scope.formData.phone +' в списке уже есть!');
+	 if(phoneBook.length >= 4){
+		 alert('Максимальное количество вводимых номеров 4');
 	 }else{
-		 phoneBook.push($scope.formData.phone);
-		 $('#clients-phone').val('');
-		 $('#rowNum').val(Number($('#rowNum').val())+1);
-			var tbl = '';
-			tbl = '<tr id="rn'+$('#rowNum').val()+'"><td>'+$scope.formData.phone+'</td><td><a href="javascript:void(0)" title="Удалить" class="delphone" id="rn'+$('#rowNum').val()+'"><span class="glyphicon glyphicon-trash"></span><a/></td></tr>';
-			$('#phone-table').show();
-			$('#tbody-phone').append(tbl);
-			console.log(phoneBook);
+		 if(phoneBook.includes($scope.formData.phone)){
+			 alert('Номер: '+$scope.formData.phone +' в списке уже есть!');
+		 }else{
+			 phoneBook.push($scope.formData.phone);
+			 $('#clients-phone').val('');
+			 $('#rowNum').val(Number($('#rowNum').val())+1);
+				var tbl = '';
+				tbl = '<tr id="rn'+$scope.formData.phone+'"><td>'+$scope.formData.phone+'</td><td><a href="javascript:void(0)" title="Удалить" class="delphone" id="rn'+$scope.formData.phone+'"><span class="glyphicon glyphicon-trash"></span><a/></td></tr>';
+				$('#phone-table').show();
+				$('#tbody-phone').append(tbl);
+				console.log(phoneBook);
+		 }
 	 }
 });
-// fa-angle-double-up
+
 $(document).on('click', '.delphone', function(){
-		var thisid = Number(this.id.substring(2));
-		delete phoneBook[thisid-1];
+		var thisid = this.id.substring(2);
+		var idx = phoneBook.indexOf(thisid);
+		// be careful, .indexOf() will return -1 if the item is not found
+		if (idx !== -1) {
+		    phoneBook.splice(idx, 1);
+		}
+		//delete phoneBook[thisid-1];
 		$('#'+this.id).closest('tr').remove();
 		if(jQuery.isEmptyObject(phoneBook)){ $('#phone-table').hide(); }
 		console.log(phoneBook);
@@ -204,6 +213,15 @@ $(document).on('click', '#history-btn', function(){
 });
 /** END HISTORY FUNCTIONS **/
 
+/** START FUNCTIONS **/
+var clearFunc = function(){
+	$('#client-id').val('');
+	$('#tbody-phone').html('');
+	$('#phone-table').hide();
+	phoneBook = [];
+	arrTs = [];
+};
+/** END FUNCTIONS **/
 	$scope.pageChanged = function(newPage) {
 	       $scope.getData(newPage,$scope.mainlistPerPage);
 	};
