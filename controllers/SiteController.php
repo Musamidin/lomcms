@@ -145,18 +145,21 @@ class SiteController extends Controller
         //print_r(Yii::$app->user->identity->id);
           try{
             $command = Yii::$app->db->
-            createCommand("SET NOCOUNT ON;EXEC dbo.actionData @id = ".$data['id']
-            .", @loan = ".$data['loan']
-            .", @percents = ".$data['percents']
-            .", @description = ".$data['description']
-            .", @other_prod = '".$data['other_prod']
-            ."', @gold = ".$data['gold']
-            .", @user_id = ".Yii::$app->user->identity->id
-            .", @fio = ".$data['fio']
-            .", @date_of_issue = ".$data['date_of_issue']
-            .", @passport_id = ".$data['passport_id']
-            .", @phone = ".$data['phone']
-            .", @address = ".$data['address']."");
+            createCommand("SET NOCOUNT ON; EXEC dbo.actionData @id =:id,@loan =:loan,@currency =:currency,@percents =:percents,@description =:description,@other_prod =:other_prod,@gold =:gold,@user_id =:user_id,@fio =:fio,@date_of_issue =:date_of_issue,@passport_id =:passport_id,@passport_issued =:passport_issued,@phone =:phone, @address =:address");
+            $command->bindValue(":id",$data['id'])
+            ->bindValue(":loan",$data['loan'])
+            ->bindValue(":currency",$data['currency'])
+            ->bindValue(":percents",$data['percents'])
+            ->bindValue(":description",$data['description'])
+            ->bindValue(":other_prod",$data['other_prod'])
+            ->bindValue(":gold",$data['gold'])
+            ->bindValue(":user_id",Yii::$app->user->identity->id)
+            ->bindValue(":fio",$data['fio'])
+            ->bindValue(":date_of_issue",$data['date_of_issue'])
+            ->bindValue(":passport_id",$data['passport_id'])
+            ->bindValue(":passport_issued",$data['passport_issued'])
+            ->bindValue(":phone",$data['phone'])
+            ->bindValue(":address",$data['address']);
             $data = $command->queryAll();
               //print_r($data);
               echo json_encode(['status'=>$data[0]['status'],'msg'=>$data[0]['ErrorMessage']]);

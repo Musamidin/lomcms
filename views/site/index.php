@@ -185,8 +185,7 @@ use yii\bootstrap\ActiveForm;
                       ['tag' => 'div','class'=> 'form-group field-mainform-currency has-feedback required'],
                       'template'=>'{input}<span class="form-control-feedback"></span>{error}{hint}'
                       ])->dropDownList(['1'=>'KGS','2'=>'USD'],
-                      ['options' =>[ '1' => ['Selected' => true]]],
-                      ['ng-model' => 'calcData.currency']
+                      ['prompt' => 'Ваюта','ng-model' => 'calcData.currency']
                       )->label(false); ?>
                 </div>
               </div>
