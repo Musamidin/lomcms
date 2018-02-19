@@ -131,44 +131,48 @@ $(document).on('click', '.delRow', function(){
 });
 
 $(document).on('click', '#add-gold', function(){
-
-			var formdata='';
-			var flag = true;
-			formdata = $('.gold-form-box > div > div > :input').serializeArray();
-			$(formdata).each(function(index, obj){
-					if(obj.value === ""){
-						flag = false;
-						return false;
-					}
-			});
-			//console.log(formdata);
-			if(flag){
-				 $('#thing_table').show();
-					var data = {};
-					var appdata;
-					var n=1;
-					$(formdata).each(function(index, obj){
-								data[obj.name] = obj.value;
-					});
-					arrTs.push(data);
-					$('#numCount').val(Number(data.num)+1);
-					appdata =
-					'<tr id="r'+data.num+'">'+
-					'<td>'+data.groups+''+
-					'</td><td>'+data.sample+'пр.'+
-					'</td><td>'+data.count+'шт.'+
-					'</td><td>'+data.gramm+'гр.'+
-					'</td><td>'+data.summ+' '+ curr($('#mainlist-currency').val()) +
-					'</td><td>'+
-					'<a href="javascript:void(0);" class="delRow" id="r'+data.num+'"><span class="glyphicon glyphicon-trash"></span></a>'+
-					'</td></tr>';
-
-					$('.thdata').val('');
-					$('#tbody-gold').append(appdata);
-					///$('#currency').val()
-					//console.log(arrTs);
+		if($('#mainlist-currency').val() == ''){
+			alert('Выберите Валюту!');
+			$('#mainlist-currency').focus().css("border-color", "#dd4b39");
 		}else{
-				alert("Заполняйте все поля обязательно!");
+					var formdata='';
+					var flag = true;
+					formdata = $('.gold-form-box > div > div > :input').serializeArray();
+					$(formdata).each(function(index, obj){
+							if(obj.value === ""){
+								flag = false;
+								return false;
+							}
+					});
+					//console.log(formdata);
+					if(flag){
+						 $('#thing_table').show();
+							var data = {};
+							var appdata;
+							var n=1;
+							$(formdata).each(function(index, obj){
+										data[obj.name] = obj.value;
+							});
+							arrTs.push(data);
+							$('#numCount').val(Number(data.num)+1);
+							appdata =
+							'<tr id="r'+data.num+'">'+
+							'<td>'+data.groups+''+
+							'</td><td>'+data.sample+'пр.'+
+							'</td><td>'+data.count+'шт.'+
+							'</td><td>'+data.gramm+'гр.'+
+							'</td><td>'+data.summ+' '+ curr($('#mainlist-currency').val()) +
+							'</td><td>'+
+							'<a href="javascript:void(0);" class="delRow" id="r'+data.num+'"><span class="glyphicon glyphicon-trash"></span></a>'+
+							'</td></tr>';
+
+							$('.thdata').val('');
+							$('#tbody-gold').append(appdata);
+							///$('#currency').val()
+							//console.log(arrTs);
+				}else{
+						alert("Заполняйте все поля обязательно!");
+				}
 		}
 
 });
@@ -239,6 +243,9 @@ $(document).on('click', '#history-btn', function(){
 /** END HISTORY FUNCTIONS **/
 
 /** START CALC FUNCTIONS **/
+$(document).on('change', '#mainlist-currency', function(){
+		$(this).focus().css("border-color", "#00a65a");
+});
 $(document).on('change', '#mainlist-percents', function(){
 		var val = 0;
 		if($('#mainlist-percents').val() == ''){
