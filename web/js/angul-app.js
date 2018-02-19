@@ -246,6 +246,7 @@ $(document).on('click', '#history-btn', function(){
 $(document).on('change', '#mainlist-currency', function(){
 		$(this).focus().css("border-color", "#00a65a");
 });
+
 $(document).on('change', '#mainlist-percents', function(){
 		var val = 0;
 		if($('#mainlist-percents').val() == ''){
