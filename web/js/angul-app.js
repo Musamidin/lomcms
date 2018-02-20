@@ -5,7 +5,7 @@ app.controller("AppCtrl", function($scope,$http){
 $.fn.bootstrapBtn = $.fn.button.noConflict();
 
 $scope.totalmainlist = 0;
-$scope.mainlistPerPage = 6; // this should match however many results your API puts on one page
+$scope.mainlistPerPage = 3; // this should match however many results your API puts on one page
 $scope.pagination = { current: 1 };
 
 $scope.list = {};
@@ -15,6 +15,21 @@ $scope.calcData = {};
 var arrTs = [];
 var phoneBook = [];
 var arrData = [];
+
+$('body').popover({
+    selector: '[data-toggle="popover"]'
+});
+
+$('body').on('click', function (e) {
+    $('[data-toggle="popover"]').each(function () {
+        //the 'is' for buttons that trigger popups
+        //the 'has' for icons within a button that triggers a popup
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+            $(this).popover('destroy');
+        }
+    });
+});
+
 /**START OPEN DIALOG BOX **/
 $(document).on('click', '.addModal', function(){
 		clearClientFormFunc();
@@ -294,10 +309,27 @@ var clearCalFormFunc = function(){
 };
 /** END FUNCTIONS **/
 
-	$scope.pageChanged = function(newPage) {
+$scope.pageChanged = function(newPage) {
 	       $scope.getData(newPage,$scope.mainlistPerPage);
 	};
 
+$scope.getData = function(pageNum,showPageCount){
+	$http.get('/getdata?page=' + pageNum +'&shpcount='+ showPageCount) // +'&pagenum='+pnum
+				.then(function(result) {
+					var respdata = eval(result.data);
+					if(respdata.status == 0){
+								$scope.mainlistview = eval(respdata.data.mainlistview);
+								$scope.totalmainlist = eval(respdata.data.count);
+					} else if(respdata.status > 0){
+							alert(respdata.msg);
+					}
+				}, function errorCallback(response) {
+				  	//console.log(response);
+				});
+	};
+
+	$scope.getData(1,$scope.mainlistPerPage);
+/*
 	$scope.onAddProd = function(){
 		delete $scope.data.id;
 		$('#mainForm')[0].reset();
@@ -365,25 +397,6 @@ var clearCalFormFunc = function(){
 			  }, function errorCallback(response) {
 			  		//console.log(response);
 			});
-	};
-
-	$scope.onBarcode = function(event){
-		$scope.poster.token = document.getElementById('token').value;
-		$scope.poster.key = $scope.searchBarcode;
-		$scope.poster.stype = 2;
-		if(event.keyCode === 13){
-			$http({
-			  method: 'POST',
-			  url: '/search',
-			  data: $scope.poster
-			}).then(function successCallback(response) {
-					$scope.mainlist = eval(response.data);
-					//console.log(response);
-					$scope.searchBarcode = '';
-			  }, function errorCallback(response) {
-			  		//console.log(response);
-			});
-		}
 	};
 
 	$scope.onDo = function(data,sts){
@@ -462,59 +475,45 @@ var clearCalFormFunc = function(){
 		});
 		//console.log($scope.formData);
 	};
+*/
 
-	$scope.getData = function(pageNum,showPageCount){
-		$http.get('/getdata?page=' + pageNum +'&shpcount='+ showPageCount) // +'&pagenum='+pnum
-					.then(function(result) {
-						var respdata = eval(result.data);
-						if(respdata.status == 0){
-									$scope.mainlist = eval(respdata.data.mainlist);
-									$scope.totalmainlist = eval(respdata.data.count);
-									$scope.samplesarr = eval(respdata.data.sample);
-									$scope.insertionarr = eval(respdata.data.insertion);
-									$scope.productGroupar = eval(respdata.data.productGroup);
-									$scope.typeOfDeliveryar = eval(respdata.data.typeOfDelivery);
-
-						} else if(respdata.status > 0){
-								alert(respdata.msg);
-						}
-					}, function errorCallback(response) {
-				  		//console.log(response);
-				  });
-	};
-
-	//$scope.getData(1,$scope.mainlistPerPage);
-	var sw = function(curr){
-		if(Number(curr) == 1){
-			return 'KGS';
-		}
-		if(Number(curr) == 2){
-			return 'USD';
-		}
-		if(curr == undefined){
-			return 'KGS';
-		}
-	};
-}).filter("cutDate", function () {
+}).filter("formatDatetime", function () {
     return function (input) {
-        return input.slice(0, -4);
+				var dt = input.slice(0, -4).split('-');
+				var td = dt[2].split(' ');
+        return td[0]+'.'+dt[1]+'.'+dt[0]+' '+td[1];
     }
-}).filter("cutPrice", function () {
+}).filter("phone", function () {
     return function (input) {
-        return input.slice(0, -5);
+				var str = '';
+				var obj = JSON.parse(input);
+				for(i=0; i< obj.length; i++){
+						str += obj[i]+' ';
+				}
+        return str;
     }
 }).filter("currFilt", function(){
-	return function(input){
-		if(Number(input) == 1){
-			return 'KGS';
-		}
-		if(Number(input) == 2){
-			return 'USD';
-		}
-	}
+			return function(input){
+				if(Number(input) == 1){
+					return 'KGS';
+				}
+				if(Number(input) == 2){
+					return 'USD';
+				}
+			}
 }).filter("fixedto", function(){
 	return function(input){
 		return parseFloat(input).toFixed(2);
+	}
+}).filter("parser", function(){
+	return function(input){
+		var str = '';
+		var obj = JSON.parse(input);
+		$.each(obj, function(key,obj){
+			str += obj.groups+'-'+ obj.sample +' пр.-'+obj.count +' шт.-'+obj.gramm+' гр.-'+obj.summ+'-'+obj.num+'-';
+			console.log(str);
+		});
+		return str;
 	}
 }).controller("AppCtrlAgent", function($scope,$http){
 	$scope.formData = {};

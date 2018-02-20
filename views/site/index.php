@@ -11,8 +11,64 @@ use yii\bootstrap\ActiveForm;
     <br/>
     <div class="row">
     </div>
-    </p>
-    <dir-pagination-controls on-page-change="pageChanged(newPageNumber)"></dir-pagination-controls>
+    <table class="table table-striped ml-table">
+      <tbody id="thead">
+        <tr>
+          <th>Дата</th>
+           <th>№ Билета</th>
+           <th>Ф.И.О.</th>
+           <th>Номер пасспорта</th>
+           <th>Телефон</th>
+           <th>Дата выдачи</th>
+           <th>Дата возврата</th>
+           <th>Ссуда</th>
+           <th>Комиссия</th>
+           <th>%-Ставка</th>
+           <th>Предмет залога</th>
+           <th>Описание П.З.</th>
+           <th>Действия</th>
+        </tr>
+      </tbody>
+      <tbody>
+          <tr class="color{{ml.status}}" dir-paginate="ml in mainlistview | itemsPerPage: mainlistPerPage" total-items="totalmainlist" current-page="pagination.current">
+            <td>{{ml.sysDate | formatDatetime}}</td>
+            <td>{{ml.ticket}}</td>
+            <td>{{ml.fio}}</td>
+            <td>{{ml.passport_id}}</td>
+            <td>
+              <span class="arr-down-ph" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{ml.phone | phone}}">
+                <span class="glyphicon glyphicon-chevron-down"></span></span>
+            </td>
+            <td>{{ml.dateStart}}</td>
+            <td>{{ml.dateEnd}}</td>
+            <td>{{ml.loan}} {{ml.currency | currFilt }}</td>
+            <td>{{ml.commission}}</td>
+            <td>{{ml.percents}} %</td>
+            <td>
+              <span class="arr-down-gold" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{ml.golds | parser }}">
+                <span class="glyphicon glyphicon-eye-close"></span></span>
+            </td>
+            <!--td>{{ml.golds | parser }} {{ml.other_prod}}</td-->
+            <td>{{ml.description}}</td>
+            <td>
+                <div class="btn-group">
+                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+                      Действие <span class="caret"></span>
+                   </button>
+                    <ul class="dropdown-menu">
+                      <li><a href="javascript:void(0)" ng-click="onDo(ml,2)"><span class="fa fa-money"></span>&nbsp;Продать</a></li>
+                      <li><a href="javascript:void(0)" ng-click="onDo(ml,3)"><span class="fa fa-share-alt"></span>&nbsp;Реализатор</a></li>
+                      <li class="divider"></li>
+                      <li><a href="javascript:void(0)" ng-click="onEdit(ml)"><span class="fa fa-edit"></span>&nbsp;Редактировать</a></li>
+                      <li><a href="javascript:void(0)" ng-click="onDelete(ml.id)"><span class="glyphicon glyphicon-trash"></span>&nbsp;Удалить</a></li>
+                    </ul>
+               </div>
+            </td>
+          </tr>
+      </tbody>
+  </table>
+    <dir-pagination-controls on-page-change="pageChanged(newPageNumber)">
+    </dir-pagination-controls>
     <!--max-size="3" direction-links="true" boundary-links="true"-->
     <!--button ng-click="test(1)">Test</button-->
   </div>

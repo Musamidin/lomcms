@@ -276,3 +276,21 @@ ul.ui-autocomplete {
   text-decoration: underline;
 }
 i.iconer { color: red; }
+
+.popover.bottom {
+margin-top: 10px;
+white-space: pre-wrap;
+white-space: pre-line;
+}
+.popover{
+    max-width: 104.66px;
+    width: 104.66px;
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    white-space: pre-line;
+    height:auto;
+}
+.arr-down-ph,.arr-down-gold{cursor: pointer;}
+.ml-table > tbody#thead > tr > th{ padding: 10px; background: #35414f;color: white;text-align: center;}
+.ml-table > tbody > tr > td{text-align: center;}

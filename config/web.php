@@ -57,6 +57,7 @@ $config = [
             'logout' => 'site/logout',
             'issuanceofcredit' => 'site/issuanceofcredit',
             'getautocomplete' => 'site/getautocomplete',
+            'getdata' => 'site/getdata',
             ],
         ],
 

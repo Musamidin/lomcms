@@ -15,6 +15,7 @@ use yii\db\BaseActiveRecord;
 use yii\db\Exception;
 use app\models\Clients;
 use app\models\MainList;
+use app\models\MainListView;
 use app\models\Library;
 //use app\componets\HelperFunc;
 
@@ -28,7 +29,7 @@ class SiteController extends Controller
             Yii::$app->end();
         }elseif($action->id === 'issuanceofcredit' || $action->id === 'getautocomplete'){
             $this->enableCsrfValidation = false;
-        }elseif($action->id === 'test'){
+        }elseif($action->id === 'getdata'){
           $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -173,6 +174,32 @@ class SiteController extends Controller
 
     }
 
+    /* MainList AJAX Controllers */
+    public function actionGetdata()
+    {
+        $request = Yii::$app->request;
+        $page = $request->get('page');
+        $shpcount = $request->get('shpcount');
+        header('Content-Type: application/json');
+        try{
+              $count = MainListView::find()->count();
+              $pagination = new Pagination(['defaultPageSize'=>$shpcount,'totalCount'=> $count]);
+              $mlv = MainListView::find()
+              ->offset($pagination->offset)
+              ->limit($pagination->limit)
+              ->asArray()
+              ->orderBy(['sysDate'=>SORT_DESC])
+              ->all();
+              echo json_encode(['status'=>0,
+                                'data'=>['mainlistview' => $mlv,'count' => $count],
+                                'msg'=>'OK']
+                              );
+        }catch(Exception $e){
+          echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+        }
+
+    }
+
     // public function actionDeleteagent()
     // {
     //     $postData = file_get_contents("php://input");
@@ -276,41 +303,8 @@ class SiteController extends Controller
     //       echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
     //   }
     // }
-    // /* MainList AJAX Controllers */
-    // public function actionGetdata()
-    // {
-    //     $request = Yii::$app->request;
-    //     $page = $request->get('page');
-    //     $shpcount = $request->get('shpcount');
-    //     header('Content-Type: application/json');
-    //     try{
-    //           $sample = Sample::find()->asArray()->all();
-    //           $insertion = Insertion::find()->asArray()->all();
-    //           $productGroup = ProductGroup::find()->asArray()->all();
-    //           $typeOfDelivery = TypeOfDelivery::find()->asArray()->all();
-    //           $count = MainListView::find()->count();
-    //           $pagination = new Pagination(['defaultPageSize'=>$shpcount,'totalCount'=> $count]);
-    //           $ml = MainListView::find()
-    //           ->offset($pagination->offset)
-    //           ->limit($pagination->limit)
-    //           ->asArray()
-    //           ->orderBy(['date_system'=>SORT_DESC])
-    //           ->all();
-    //           echo json_encode(['status'=>0,
-    //                             'data'=>['mainlist' => $ml,
-    //                                      'count' => $count,
-    //                                      'sample' => $sample,
-    //                                      'insertion' => $insertion,
-    //                                      'productGroup' => $productGroup,
-    //                                      'typeOfDelivery' => $typeOfDelivery],
-    //                             'msg'=>'OK']
-    //                           );
-    //     }catch(Exception $e){
-    //       echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
-    //     }
-    //
-    // }
-    //
+
+
     // public function actionSearch()
     // {
     //     $postData = file_get_contents("php://input");
