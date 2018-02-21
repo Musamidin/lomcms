@@ -12,12 +12,12 @@ body {
 }
 header>.container {
     padding: 10px 0;
-    width: 95%;
+    width: 97%;
     height: 130px;
     background: rgba(244, 244, 244, 0.5); /*white; */
 }
 .wrap > .container {
-    width: 95%;
+    width: 97%;
     min-height: 800px;
     background: white;
 }
@@ -43,7 +43,7 @@ footer.footer {
     margin-bottom: 15px;
 }
 footer > .container {
-    width: 95%;
+    width: 97%;
     padding: 35px 10px;
     background: rgba(0, 0, 0, 0.61);
     color: white;
@@ -249,9 +249,11 @@ div#tabs-1 input {
 #thing_table {font-size: 13px;border: 1px solid black;display: none;}
 #thing_table > thead > tr > th{ padding: 3px; background: #35414f; color: white; }
 
-#phone-table{font-size: 13px;border: 1px solid black;display: none;}
+#phone-table{margin-bottom: 0;font-size: 13px;border: 1px solid black;display: none;}
 #phone-table > thead > tr > th{ padding: 3px; background: #35414f; color: white;text-align: center;}
-
+#thing-table{font-size: 13px;}
+.thing-table > #thing-tbody > tr > th{padding: 2px; background: #35414f; color: white;text-align: center;}
+.thing-table > tbody > tr > th,td{ text-align: center; padding: 2px;}
 .row.table-box{
   overflow: auto;
   height: 90px;
@@ -276,21 +278,8 @@ ul.ui-autocomplete {
   text-decoration: underline;
 }
 i.iconer { color: red; }
-
-.popover.bottom {
-margin-top: 10px;
-white-space: pre-wrap;
-white-space: pre-line;
-}
-.popover{
-    max-width: 104.66px;
-    width: 104.66px;
-    word-break: break-all;
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    white-space: pre-line;
-    height:auto;
-}
+.viewer-hr{margin: 1px; border-top: 1px solid #f9c6c6;}
 .arr-down-ph,.arr-down-gold{cursor: pointer;}
 .ml-table > tbody#thead > tr > th{ padding: 10px; background: #35414f;color: white;text-align: center;}
 .ml-table > tbody > tr > td{text-align: center;}
+.popover-content { padding: 5px 5px; }

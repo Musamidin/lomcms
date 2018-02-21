@@ -24,7 +24,7 @@ use yii\bootstrap\ActiveForm;
            <th>Ссуда</th>
            <th>Комиссия</th>
            <th>%-Ставка</th>
-           <th>Предмет залога</th>
+           <th>Залог</th>
            <th>Описание П.З.</th>
            <th>Действия</th>
         </tr>
@@ -36,7 +36,7 @@ use yii\bootstrap\ActiveForm;
             <td>{{ml.fio}}</td>
             <td>{{ml.passport_id}}</td>
             <td>
-              <span class="arr-down-ph" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{ml.phone | phone}}">
+              <span class="arr-down-ph" data-html="true" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{ml.phone | phone}}">
                 <span class="glyphicon glyphicon-chevron-down"></span></span>
             </td>
             <td>{{ml.dateStart}}</td>
@@ -45,10 +45,9 @@ use yii\bootstrap\ActiveForm;
             <td>{{ml.commission}}</td>
             <td>{{ml.percents}} %</td>
             <td>
-              <span class="arr-down-gold" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{ml.golds | parser }}">
+              <span class="arr-down-gold" data-html="true" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{ml.golds | parser: ml.other_prod : ml.id }}">
                 <span class="glyphicon glyphicon-eye-close"></span></span>
             </td>
-            <!--td>{{ml.golds | parser }} {{ml.other_prod}}</td-->
             <td>{{ml.description}}</td>
             <td>
                 <div class="btn-group">

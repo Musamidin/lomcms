@@ -485,11 +485,12 @@ $scope.getData = function(pageNum,showPageCount){
     }
 }).filter("phone", function () {
     return function (input) {
-				var str = '';
+				var str = '<table>';
 				var obj = JSON.parse(input);
 				for(i=0; i< obj.length; i++){
-						str += obj[i]+' ';
+						str += '<tr><td>'+obj[i]+'</td></tr>';
 				}
+				str += '</table>';
         return str;
     }
 }).filter("currFilt", function(){
@@ -506,14 +507,21 @@ $scope.getData = function(pageNum,showPageCount){
 		return parseFloat(input).toFixed(2);
 	}
 }).filter("parser", function(){
-	return function(input){
-		var str = '';
-		var obj = JSON.parse(input);
-		$.each(obj, function(key,obj){
-			str += obj.groups+'-'+ obj.sample +' пр.-'+obj.count +' шт.-'+obj.gramm+' гр.-'+obj.summ+'-'+obj.num+'-';
-			console.log(str);
-		});
-		return str;
+	return function(input,param1,id){
+				var strt = '';
+				var objs = JSON.parse(input);
+		if(jQuery.isEmptyObject(objs) == false){
+			 strt = '<table class="thing-table" id="thing'+id+'"><tbody id="thing-tbody"><tr><th>Группа</th><th>Проба</th><th>Кол.</th><th>Грамм</th><th>Сумма</th></tr></tbody>';
+				$.each(objs, function(key,objs){
+					strt += '<tr><td>'+objs.groups+'</td><td>'+ objs.sample +' пр.</td><td>'+objs.count +' шт.</td><td>'+objs.gramm+' гр.</td><td>'+objs.summ+'</td></tr>';
+				});
+				strt += '</table><hr class="viewer-hr"/>';
+		}else{
+			$('#thing'+id).hide();
+		}
+		strt += param1;
+		//console.log(id);
+		return strt;
 	}
 }).controller("AppCtrlAgent", function($scope,$http){
 	$scope.formData = {};
