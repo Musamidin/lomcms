@@ -178,9 +178,11 @@ class SiteController extends Controller
     public function actionGetdata()
     {
         $request = Yii::$app->request;
+        $token = $request->get('token');
         $page = $request->get('page');
         $shpcount = $request->get('shpcount');
         header('Content-Type: application/json');
+        if($token == md5(Yii::$app->session->getId().'opn')){
         try{
               $count = MainListView::find()->count();
               $pagination = new Pagination(['defaultPageSize'=>$shpcount,'totalCount'=> $count]);
@@ -197,7 +199,9 @@ class SiteController extends Controller
         }catch(Exception $e){
           echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
+      }else{
 
+      }
     }
 
     // public function actionDeleteagent()

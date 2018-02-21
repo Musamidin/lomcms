@@ -314,7 +314,7 @@ $scope.pageChanged = function(newPage) {
 	};
 
 $scope.getData = function(pageNum,showPageCount){
-	$http.get('/getdata?page=' + pageNum +'&shpcount='+ showPageCount) // +'&pagenum='+pnum
+	$http.get('/getdata?page=' + pageNum +'&shpcount='+ showPageCount+'&token='+ $('#token').val()) // +'&pagenum='+pnum
 				.then(function(result) {
 					var respdata = eval(result.data);
 					if(respdata.status == 0){
