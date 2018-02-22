@@ -275,8 +275,8 @@ use yii\bootstrap\ActiveForm;
   <?php ActiveForm::end(); ?>
 </div>
 <!-- END Dialog box for add data -->
-<!-- START Dialog box for Contact phones data -->
-<div style="display:none;" id="contact-phone-dialog" title="Контактные номера">
+<!-- START Dialog box for Client history data -->
+<div style="display:none;" id="dialog-form-history" title="Контактные номера">
   <div class="row">
       <div class="col-md-8 paddR0">
         <div class="form-group field-mainform-phone has-feedback required field-phone-items has-success">
@@ -292,6 +292,25 @@ use yii\bootstrap\ActiveForm;
       </div>
   </div>
 </div>
-<!-- END Dialog box for Contact phones data -->
+<!-- END Dialog box for Client history data -->
+
+<!-- START Dialog box for Print data -->
+<div style="display:none;" id="dialog-form-print">
+  <div class="row">
+      <div class="col-md-8 paddR0">
+        <div class="form-group field-mainform-phone has-feedback required field-phone-items has-success">
+          <input type="text" id="phone-items" class="form-control ng-pristine ng-valid ng-empty ng-touched" name="phones" placeholder="XXX XX XX XX" ng-model="list.phone" autocomplete="off" aria-invalid="false">
+          <span class="fa fa-phone form-control-feedback"></span>
+        </div>
+      </div>
+      <div class="col-md-4 paddL3">
+        <button class="btn btn-primary addphone" title="Добавить номер"><span class="glyphicon glyphicon-plus-sign"></span></button>
+      </div>
+      <div class="col-md-12">
+
+      </div>
+  </div>
+</div>
+<!-- END Dialog box for Print data -->
 </div>
 <br/>

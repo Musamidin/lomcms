@@ -163,7 +163,7 @@ class SiteController extends Controller
             ->bindValue(":address",$data['address']);
             $data = $command->queryAll();
               //print_r($data);
-              echo json_encode(['status'=>$data[0]['status'],'msg'=>$data[0]['ErrorMessage']]);
+              echo json_encode(['status'=>$data[0]['status'],'msg'=>$data[0]['ErrorMessage'],'ticket' =>$data[0]['ticket'] ]);
           }catch(Exception $e){
               //print_r($e->errorInfo[2]);
               echo json_encode(['status'=>1,'data'=>null,'msg'=>$e->errorInfo]);

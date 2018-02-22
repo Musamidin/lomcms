@@ -62,10 +62,30 @@ $(document).on('click', '.addModal', function(){
 						$http({
 							method: 'POST',
 							url: '/issuanceofcredit',
-							data: $scope.calcData
+							data: {}//$scope.calcData
 						}).then(function successCallback(response) {
 								//$scope.agentsList = eval(response.data);
 								console.log(response);
+								$("#dialog-form-clients").dialog( "close" );
+								/***Print Dialog BOX***/
+								$( "#dialog-form-print" ).dialog({
+										title: "Залоговый билет",
+										autoOpen: false,
+										width: 690,
+										modal: true,
+										close: function( event, ui ) {
+
+										},
+										buttons: [{
+											text: "Распечатать",
+											icon: "ui-icon-print",
+											id : "btn1",
+											click: function() {
+											}
+										}]
+								}).dialog( "open" );
+						/***END Print Dialog Box ****/
+
 							}, function errorCallback(response) {
 									//console.log(response);
 						});
