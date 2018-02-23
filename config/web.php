@@ -55,9 +55,12 @@ $config = [
             // 'contact' => 'site/contact',
             'login' => 'site/login',
             'logout' => 'site/logout',
+            'settings' => 'site/settings',
             'issuanceofcredit' => 'site/issuanceofcredit',
             'getautocomplete' => 'site/getautocomplete',
             'getdata' => 'site/getdata',
+            'updatetemplate' => 'site/updatetemplate',
+            'gettemplate' => 'site/gettemplate'
             ],
         ],
 

@@ -62,29 +62,12 @@ $(document).on('click', '.addModal', function(){
 						$http({
 							method: 'POST',
 							url: '/issuanceofcredit',
-							data: {}//$scope.calcData
+							data: $scope.calcData
 						}).then(function successCallback(response) {
-								//$scope.agentsList = eval(response.data);
-								console.log(response);
+								$scope.calcData['ticket'] = eval(response.data);
+								console.log($scope.calcData);
 								$("#dialog-form-clients").dialog( "close" );
-								/***Print Dialog BOX***/
-								$( "#dialog-form-print" ).dialog({
-										title: "Залоговый билет",
-										autoOpen: false,
-										width: 690,
-										modal: true,
-										close: function( event, ui ) {
 
-										},
-										buttons: [{
-											text: "Распечатать",
-											icon: "ui-icon-print",
-											id : "btn1",
-											click: function() {
-											}
-										}]
-								}).dialog( "open" );
-						/***END Print Dialog Box ****/
 
 							}, function errorCallback(response) {
 									//console.log(response);
@@ -95,6 +78,33 @@ $(document).on('click', '.addModal', function(){
 		}).dialog( "open" );
 });
 /**END OPEN DIALOG BOX **/
+
+
+
+/***Print Dialog BOX***/
+$(document).on('click', '#exchangeModal', function(){
+		$( "#dialog-form-print" ).dialog({
+				title: "Залоговый билет",
+				autoOpen: false,
+				width: 800,
+				modal: true,
+				close: function( event, ui ) {
+
+				},
+				buttons: [{
+					text: "Распечатать",
+					icon: "glyphicon glyphicon-print",
+					id : "print-btn",
+					click: function() {
+					}
+				}],
+				open: function(){
+					$('#print-btn > span').removeClass('ui-button-icon ui-icon');
+				}
+		}).dialog( "open" );
+});
+/***END Print Dialog Box ****/
+
 
 /** MASK **/
  $("#clients-phone").mask("999999999",{placeholder:"XXX XX XX XX"});
@@ -349,153 +359,6 @@ $scope.getData = function(pageNum,showPageCount){
 	};
 
 	$scope.getData(1,$scope.mainlistPerPage);
-/*
-	$scope.onAddProd = function(){
-		delete $scope.data.id;
-		$('#mainForm')[0].reset();
-		$('#data-id').val('');
-		$('select').find('option:first').attr('selected', 'selected');
-		$('#dataModal').modal({ keyboard: false });
-	};
-
-	$scope.onEdit = function(data){
-		$scope.data = data;
-		$('#barcode').hide();
-		$('#data-id').val(data.id);
-		$('#dataModal').modal({ keyboard: false });
-	};
-
-	$scope.save = function(){
-		$scope.data.token = $('#token').val();
-		$scope.data.bar_code = $('#data-barcode').val();
-		$scope.data.status = 0;
-		$http({
-		  method: 'POST',
-		  url: '/setdata',
-		  data: $scope.data
-		}).then(function successCallback(response) {
-				//$scope.clearData();
-				$scope.getData(1,$scope.mainlistPerPage);
-				$('#dataModal').modal('hide');
-		  }, function errorCallback(response) {
-		  		//console.log(response);
-		  });
-	};
-
-	// $scope.updateData = function(){
-	// 	$scope.data.token = $('#token').val();
-	// 	$http({
-	// 	  method: 'POST',
-	// 	  url: '/setdata',
-	// 	  data: $scope.data
-	// 	}).then(function successCallback(response) {
-	// 			$scope.clearData();
-	// 			$scope.getData(1,$scope.mainlistPerPage);
-	// 			$('#dataModal').modal('hide');
-	// 	  }, function errorCallback(response) {
-	// 	  		console.log(response);
-	// 	  });
-	// };
-
-	$scope.clearData = function(){
-		$scope.data = {
-
-		};
-	};
-
-	$scope.onSearch = function(event){
-		$scope.poster.token = document.getElementById('token').value;
-		$scope.poster.key = $scope.searchInput;
-		$scope.poster.stype = 1;
-			$http({
-			  method: 'POST',
-			  url: '/search',
-			  data: $scope.poster
-			}).then(function successCallback(response) {
-					$scope.mainlist = eval(response.data);
-					//console.log(response);
-			  }, function errorCallback(response) {
-			  		//console.log(response);
-			});
-	};
-
-	$scope.onDo = function(data,sts){
-			$('#action-form')[0].reset();
-			$('#mainform-sale_currency,#agentsmodel-fio').find('option:first').attr('selected', 'selected');
-			if(sts == 2){
-				$('#actionModal').modal({ keyboard: false });
-				$('.savebtn,.sm-title').html('Продать');
-				$('#price-sale').html(Number(data.price_sale) +' '+ sw(data.sale_currency));
-				$('#dataid').val(data.id);
-				$('#state').val(sts);
-				$('.fio-box').hide();
-			}else if(sts == 3){
-				$('#actionModal').modal({ keyboard: false });
-				$('.savebtn,.sm-title').html('Под реализацию');
-				$('#dataid').val(data.id);
-				$('#state').val(sts);
-				$('.fio-box').show();
-			}else{
-				alert('Ошибка! Обратитесь к разработчику.');
-			}
-
-			//onActionDo(data);
-				// $http({
-				// 	method: 'POST',
-				// 	url: '/allactions',
-				// 	data: {id : pid, status : sts }
-				// }).then(function successCallback(response) {
-				// 		var jsdata = eval(response.data);
-				// 		//console.log(jsdata);
-				// 		if(jsdata.status == 0){
-				// 			console.log(jsdata.status);
-				// 		}
-				// 		if(jsdata.status > 0){
-				// 			alert(jsdata.msg);
-				// 		}
-				// 	}, function errorCallback(response) {
-				// 			console.log(response);
-				// });
-
-	};
-
-	$scope.onDelete = function(id){
-		$http({
-		  method: 'POST',
-		  url: '/deleterow',
-		  data: {id:id}
-		}).then(function successCallback(response) {
-				$scope.getData(1,$scope.mainlistPerPage);
-				//console.log(response);
-		  }, function errorCallback(response) {
-		  		//console.log(response);
-		  });
-	};
-
-	$scope.onActionDo = function(){
-		$scope.formData.dataid = $('#dataid').val();
-		$scope.formData.state = $('#state').val();
-		$scope.formData.token = $('#token').val();
-		$http({
-			method: 'POST',
-			url: '/allactions',
-			data: $scope.formData
-		}).then(function successCallback(response) {
-				var jsdata = eval(response.data);
-				//console.log(response);
-				if(jsdata.status == 0){
-					$('#actionModal').modal('hide');
-					$scope.getData(1,$scope.mainlistPerPage);
-				}
-				if(jsdata.status > 0){
-					alert(jsdata.msg);
-				}
-			}, function errorCallback(response) {
-					//console.log(response);
-		});
-		//console.log($scope.formData);
-	};
-*/
 
 }).filter("formatDatetime", function () {
     return function (input) {
@@ -543,150 +406,62 @@ $scope.getData = function(pageNum,showPageCount){
 		//console.log(id);
 		return strt;
 	}
-}).controller("AppCtrlAgent", function($scope,$http){
-	$scope.formData = {};
-	$scope.poster = {};
-	$scope.totalmainlist = 0;
-	$scope.mainlistPerPage = 6; // this should match however many results your API puts on one page
-	$scope.pagination = { current: 1 };
+}).controller("AppCtrlSettings", function($scope,$http){
+$scope.poster = {};
+$scope.totalmainlist = 0;
+$scope.mainlistPerPage = 6; // this should match however many results your API puts on one page
+$scope.pagination = { current: 1 };
+$scope.formData = {};
 
-	$scope.onAddAgent = function(){
-			$('#dataid').val('');
-			$('#agent-form')[0].reset();
-			$('#agentModal').modal({ keyboard: false });
-	};
+	/** START TABER **/
+	$( "#tabsSett" ).tabs();
+	/** END TABER **/
 
-	$scope.onActionAE = function(){
-		$scope.formData.dataid = $('#dataid').val();
-		$scope.formData.token = $('#token').val();
-			$http({
-				method: 'POST',
-				url: '/setagent',
-				data: $scope.formData
-			}).then(function successCallback(response) {
-				var result = eval(response.data);
-				if(result.status == 1){
-					$('#agentModal').modal('hide');
-					$scope.getagentdata(1,$scope.mainlistPerPage);
-				}else{
-					alert(result.message);
-					//console.log(response);
+tinymce.init({
+				selector:'#tinymceeditor',
+				height: 500,
+				plugins: "print preview table code image",
+				init_instance_callback: function(){
+					$scope.poster['token'] = $('#token').val();
+					$http({
+						method: 'POST',
+						url: '/gettemplate',
+						data: $scope.poster
+					}).then(function successCallback(response) {
+							var res = eval(response.data);
+							tinymce.activeEditor.setContent(res.data);
+							$('.currView').html(res.data);
+						}, function errorCallback(response) {
+								//console.log(response);
+					});
 				}
-			}, function errorCallback(response) {
-					//console.log(response);
-			});
-	};
+	 });
+$scope.test = function(){
+	tinymce.activeEditor.setContent('<span>some</span> html');
+};
 
-	$scope.onEdit = function(data){
-		$scope.formData = data;
-		$('#dataid').val(data.id);
-		$('#agentModal').modal({ keyboard: false });
-	};
-
-	$scope.onDelete = function(id,tkn){
+//tinymce.get("#tinymceeditor").execCommand('mceInsertContent', false, 'your content');
+//$('#tinymceeditor').text('sdf sdhfs dgfhsdg hjsdgf hsdjgfsj d');
+$scope.savetemplate = function(){
+		$scope.poster = {};
+		$scope.poster['temp'] = tinymce.activeEditor.getContent();
+		$scope.poster['token'] = $('#token').val();
 		$http({
 			method: 'POST',
-			url: '/deleteagent',
-			data: { id : id, token : tkn }
+			url: '/updatetemplate',
+			data: $scope.poster
 		}).then(function successCallback(response) {
-			var result = eval(response.data);
-			if(result.status == 1){
-				$scope.getagentdata(1,$scope.mainlistPerPage);
-			}else{
-				alert(result.message);
-				//console.log(response);
-			}
-		}, function errorCallback(response) {
-				//console.log(response);
-		});
-
-	};
-
-	$scope.onSearchAgent = function(event){
-		$scope.poster.key = $scope.searchInput;
-		$scope.poster.stype = 1;
-			$http({
-				method: 'POST',
-				url: '/searchagent',
-				data: $scope.poster
-			}).then(function successCallback(response) {
-					$scope.agentsList = eval(response.data);
+				 var res = eval(response.data);
+				//console.log(res);
+				$('.currView').html($scope.poster['temp']);
+			}, function errorCallback(response) {
 					//console.log(response);
-				}, function errorCallback(response) {
-						//console.log(response);
-			});
-	};
+		});
+		//console.log( $scope.poster );
+};
 
-	$scope.getagentdata = function(pageNum,showPageCount){
-		$http.get('/getagentdata?page=' + pageNum +'&shpcount='+ showPageCount) // +'&pagenum='+pnum
-					.then(function(result) {
-						var respdata = eval(result.data);
-									$scope.agentsList = eval(respdata.data.agentsList);
-					}, function errorCallback(response) {
-							//console.log(response);
-					});
-	};
-
-	$scope.getagentdata(1,$scope.mainlistPerPage);
 }).controller("AppCtrlReport", function($scope,$http){
 
-		$('.input-group.date').datepicker({
-				format: "mm/yyyy",
-		    startView: 2,
-		    minViewMode: 1,
-		    language: "ru",
-				autoclose: true,
-				orientation: "bottom left"
-		}).on('hide', function() {
-					getReport($('.getbydatetime').val());
-					//console.log(getReport($('.getbydatetime').val()));
-	  });
-
-		var getReport = function(shDate){
-
-				var month = shDate.split('/');
-				var dateFrom = ''+month[1]+'-'+month[0]+'-01';
-				var dateTo=null;
-				var titleDateShow='';
-				switch(Number(month[0])){
-					case 1: dateTo = ''+month[1]+'-'+month[0]+'-31'; titleDateShow = month[1]+' - Январь';
-					break;
-					case 2: dateTo = ''+month[1]+'-'+month[0]+'-28'; titleDateShow = month[1]+' - Февраль';
-					break;
-					case 3: dateTo = ''+month[1]+'-'+month[0]+'-31'; titleDateShow = month[1]+' - Март';
-					break;
-					case 4: dateTo = ''+month[1]+'-'+month[0]+'-30'; titleDateShow = month[1]+' - Апрель';
-					break;
-					case 5: dateTo = ''+month[1]+'-'+month[0]+'-31'; titleDateShow = month[1]+' - Май';
-					break;
-					case 6: dateTo = ''+month[1]+'-'+month[0]+'-30'; titleDateShow = month[1]+' - Июнь';
-					break;
-					case 7: dateTo = ''+month[1]+'-'+month[0]+'-31'; titleDateShow = month[1]+' - Июль';
-					break;
-					case 8: dateTo = ''+month[1]+'-'+month[0]+'-31'; titleDateShow = month[1]+' - Август';
-					break;
-					case 9: dateTo = ''+month[1]+'-'+month[0]+'-30'; titleDateShow = month[1]+' - Сентябрь';
-					break;
-					case 10: dateTo = ''+month[1]+'-'+month[0]+'-31'; titleDateShow = month[1]+' - Октябрь';
-					break;
-					case 11: dateTo = ''+month[1]+'-'+month[0]+'-30'; titleDateShow = month[1]+' - Ноябрь';
-					break;
-					case 12: dateTo = ''+month[1]+'-'+month[0]+'-31'; titleDateShow = month[1]+' - Декабрь';
-					break;
-				}
-
-				$http.get('/getreport?datefrom=' + dateFrom +'&dateto='+ dateTo)
-							.then(function(result) {
-								var resultData = eval(result.data);
-											$scope.report1 = eval(resultData.data.report1);
-											$scope.report2 = eval(resultData.data.report2);
-											$scope.report3 = eval(resultData.data.report3);
-											$('.report-table1,.report-table2,.report-table3').show();
-							}, function errorCallback(response) {
-									//console.log(response);
-							});
-				//return dateFrom+' ' + dateTo;
-		};
 }).filter('totalSumm', function() {
         return function(data, key) {
             if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
@@ -700,108 +475,5 @@ $scope.getData = function(pageNum,showPageCount){
         };
 })
 .controller("AppCtrlLibrary", function($scope,$http){
-	$scope.formData = {};
-
-	$scope.getlib = function(){
-		$http.get('/getlib')
-					.then(function(result) {
-						var respdata = eval(result.data);
-									$scope.samplesarr = eval(respdata.data.sample);
-									$scope.insertionarr = eval(respdata.data.insertion);
-									$scope.productGroupar = eval(respdata.data.productGroup);
-									$scope.typeOfDeliveryar = eval(respdata.data.typeOfDelivery);
-					}, function errorCallback(response) {
-							//console.log(response);
-					});
-	};
-
-	$scope.getlib();
-
-	$scope.actionAddLib = function(state)
-	{
-
-		$('#dataid').val('');
-		$('#lib-form')[0].reset();
-		$('#state').val(state);
-		$('#libModal').modal({ keyboard: false });
-		switch (state) {
-			case 1:{
-						$('#sett-field').attr('placeholder','Группа');
-						$('.sm-title-lib').text('Добавить группа');
-					} break;
-			case 2:{
-						$('#sett-field').attr('placeholder','Проба');
-						$('.sm-title-lib').text('Добавить пробу');
-			} break;
-			case 3:{
-						$('#sett-field').attr('placeholder','Вставка');
-						$('.sm-title-lib').text('Добавить вставку');
-			} break;
-			case 4:{
-						$('#sett-field').attr('placeholder','Вид поставки');
-						$('.sm-title-lib').text('Добавить вид поставку');
-			} break;
-			default:
-		}
-
-	};
-
-	$scope.actionEditLib = function(data,state){
-		$('#dataid').val(data.id);
-		$('#state').val(state);
-		$scope.formData = data;
-		$('#libModal').modal({ keyboard: false });
-		switch (state) {
-			case 1:{
-						$('.sm-title-lib').text('Редактировать группа');
-					} break;
-			case 2:{
-						$('.sm-title-lib').text('Редактировать пробу');
-			} break;
-			case 3:{
-						$('.sm-title-lib').text('Редактировать вставку');
-			} break;
-			case 4:{
-						$('.sm-title-lib').text('Редактировать вид поставку');
-			} break;
-			default:
-		}
-	};
-
-	$scope.onActionSett = function(data){
-		$scope.formData.dataid = $('#dataid').val();
-		$scope.formData.token = $('#token').val();
-		$scope.formData.state = $('#state').val();
-			$http({
-				method: 'POST',
-				url: '/setlib',
-				data: $scope.formData
-			}).then(function successCallback(response) {
-				var result = eval(response.data);
-				if(result.status == 1){
-					$('#libModal').modal('hide');
-					$scope.getlib();
-				}else{
-					alert(result.message);
-					//console.log(response);
-				}
-			}, function errorCallback(response) {
-					//console.log(response);
-			});
-	};
-
-/** TAB Script **/
-		$('#myTab a').click(function (e) {
-		  e.preventDefault();
-		  $(this).tab('show');
-		});
-
-//$('.money').mask("##########.##", {reverse: true});
-
-/** Select2 **/
-		$(".search-select").select2({
-			tags: true,
-			width:'100%'
-		});
 
 });

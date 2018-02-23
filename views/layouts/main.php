@@ -34,35 +34,27 @@ AppAsset::register($this);
     <div ng-cloak ng-app="App" class="container">
         <?php
     if(!\Yii::$app->getUser()->isGuest){
-
-      if(Yii::$app->user->identity->status == 1){
+      $options = [];
+      if(Yii::$app->user->identity->role == 1){
         $options = [
-            ['label' => 'Главная', 'url' => ['/site/index']],
+            //['label' => 'Главная', 'url' => ['/site/index']],
             ['label' => 'Отчет', 'url' => ['/report']],
             ['label' => 'Настройка',
               'items' => [
-                   ['label' => 'Справочник', 'url' => ['/library']],
+                   ['label' => 'Настройки', 'url' => ['/settings']],
                    '<li class="divider"></li>',
-                   ['label' => 'Реализаторы', 'url' => ['/agents']],
+                   ['label' => 'Справочник', 'url' => ['/library']],
               ],
             ]
         ];
-      }else{
-        $options = [
-              ['label' => 'Главная', 'url' => ['/site/index']]
-            ];
       }
         NavBar::begin([
             'brandLabel' =>'<span class="glyphicon glyphicon-home" aria-hidden="true"></span> &nbsp;&nbsp;CS.KG',
-            'brandUrl' => Yii::$app->homeUrl,
+            'brandUrl' => '/',
             'options' => [
                 'class' => 'navbar navbar-fixed-top navbar-inverse',
                 'id'=>'bs-example-navbar-collapse-9'
             ],
-        ]);
-        echo Nav::widget([
-            'options' => ['class' => 'navbar-nav collapse navbar-collapse navbar-left'],
-            //'items' => $options,
         ]);
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right'],
@@ -81,6 +73,10 @@ AppAsset::register($this);
                 )
             ],
             'encodeLabels' => false,
+        ]);
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav collapse navbar-collapse navbar-right'],
+            'items' => $options,
         ]);
         echo '<form class="navbar-form navbar-nav text-center">
     <button type="button" id="addModal" class="btn btn-success mar-left addModal">

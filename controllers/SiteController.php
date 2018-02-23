@@ -17,6 +17,7 @@ use app\models\Clients;
 use app\models\MainList;
 use app\models\MainListView;
 use app\models\Library;
+use app\models\Template;
 //use app\componets\HelperFunc;
 
 class SiteController extends Controller
@@ -30,6 +31,8 @@ class SiteController extends Controller
         }elseif($action->id === 'issuanceofcredit' || $action->id === 'getautocomplete'){
             $this->enableCsrfValidation = false;
         }elseif($action->id === 'getdata'){
+          $this->enableCsrfValidation = false;
+        }elseif($action->id === 'updatetemplate' || $action->id === 'gettemplate'){
           $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -105,10 +108,11 @@ class SiteController extends Controller
         // $curr['usd'] = number_format(str_replace(',','.',$currVal['Value'])+1,2);
         $clients = new Clients();
         $mainList = new MainList();
-
+        $temp = Template::findOne(1);
         return $this->render('index',
                             ['clients' => $clients,
-                             'mainList' => $mainList
+                             'mainList' => $mainList,
+                             'temp' => $temp
                             ]);
       }catch(Exception $e){
         return $this->render('index',['error' => $e]);
@@ -204,24 +208,68 @@ class SiteController extends Controller
       }
     }
 
-    // public function actionDeleteagent()
-    // {
-    //     $postData = file_get_contents("php://input");
-    //     $do = json_decode($postData);
-    //     header('Content-Type: application/json');
-    //     if($do->token === md5(Yii::$app->session->getId().'opn')){
-    //         try{
-    //           $al = Agents::findOne($do->id);
-    //           $al->status = 0;
-    //           $al->save();
-    //           return json_encode(array('status'=>1,'message'=>'good!'));
-    //         }catch(Exception $e){
-    //             return json_encode(array('status'=>2,'message'=>$e->errorInfo));
-    //         }
-    //     }else{
-    //         return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
-    //     }
-    // }
+    /* Settings Controllers */
+    public function actionSettings()
+    {
+      if(Yii::$app->user->identity->role == 1){
+        //$model = new ContactForm();
+        // if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
+        //     Yii::$app->session->setFlash('contactFormSubmitted');
+        //
+        //     return $this->refresh();
+        // }
+        return $this->render('settings');
+      }else{
+        return $this->redirect('/');
+      }
+    }
+
+    public function actionUpdatetemplate()
+    {
+        $postData = file_get_contents("php://input");
+        $do = json_decode($postData);
+        header('Content-Type: application/json');
+        if(Yii::$app->user->identity->role == 1){
+            if($do->token === md5(Yii::$app->session->getId().'opn')){
+                try{
+                  $tp = Template::findOne(1);
+                  $tp->user_id = Yii::$app->user->identity->id;
+                  $tp->temp = $do->temp;
+                  $tp->datetime = date('Y-m-d\TH:i:s');
+                  $tp->save();
+                  return json_encode(array('status'=>1,'message'=>'good!'));
+                }catch(Exception $e){
+                    return json_encode(array('status'=>2,'message'=>$e->errorInfo));
+                }
+                //print_r($tp);
+            }else{
+                return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+            }
+       }else{
+         return json_encode(array('status'=>4,'message'=>'Error("Права для этого пользователья ограничено!")'));
+       }
+    }
+
+    public function actionGettemplate()
+    {
+        $postData = file_get_contents("php://input");
+        $do = json_decode($postData);
+        header('Content-Type: application/json');
+        if(Yii::$app->user->identity->role == 1){
+            if($do->token === md5(Yii::$app->session->getId().'opn')){
+                try{
+                  $tp = Template::findOne(1);
+                  return json_encode(array('status'=>1,'data'=>$tp->temp));
+                }catch(Exception $e){
+                  return json_encode(array('status'=>2,'message'=>$e->errorInfo));
+                }
+            }else{
+                return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+            }
+       }else{
+         return json_encode(array('status'=>4,'message'=>'Error("Права для этого пользователья ограничено!")'));
+       }
+    }
     //
     // public function actionGetagentdata()
     // {
@@ -275,19 +323,7 @@ class SiteController extends Controller
     //     // }
     //     //echo $do->stype;
     // }
-    // /* Report Controllers */
-    // public function actionReport()
-    // {
-    //     $model = new ContactForm();
-    //     // if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-    //     //     Yii::$app->session->setFlash('contactFormSubmitted');
-    //     //
-    //     //     return $this->refresh();
-    //     // }
-    //     return $this->render('report', [
-    //         'model' => $model,
-    //     ]);
-    // }
+
     // /* Report AJAX Controllers */
     // public function actionGetreport()
     // {

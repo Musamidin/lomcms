@@ -37,7 +37,8 @@ class AppAsset extends AssetBundle
     'js/bootstrap-datepicker.ru.min.js',
     'js/select2.min.js',
     'js/jquery.mask.min.js',
-    'js/jquery/jquery-ui.min.js'
+    'js/jquery/jquery-ui.min.js',
+    'js/tinymce/tinymce.min.js'
     ];
     public $depends = [
         'yii\web\YiiAsset',
