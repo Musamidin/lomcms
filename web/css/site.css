@@ -254,6 +254,9 @@ div#tabs-1 input {
 #thing-table{font-size: 13px;}
 .thing-table > #thing-tbody > tr > th{padding: 2px; background: #35414f; color: white;text-align: center;}
 .thing-table > tbody > tr > th,td{ text-align: center; padding: 2px;}
+table#temp-table > table > tbody > tr > th,td{ text-align: left; padding: 2px;}
+table.gld-table{width: 100%;}
+table.gld-table > tbody > tr > th,td{text-align: center;}
 .row.table-box{
   overflow: auto;
   height: 90px;
@@ -283,3 +286,7 @@ i.iconer { color: red; }
 .ml-table > tbody#thead > tr > th{ padding: 10px; background: #35414f;color: white;text-align: center;}
 .ml-table > tbody > tr > td{text-align: center;}
 .popover-content { padding: 5px 5px; }
+.temp-hr{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-top: 2px dashed black;}

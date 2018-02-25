@@ -212,12 +212,6 @@ class SiteController extends Controller
     public function actionSettings()
     {
       if(Yii::$app->user->identity->role == 1){
-        //$model = new ContactForm();
-        // if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-        //     Yii::$app->session->setFlash('contactFormSubmitted');
-        //
-        //     return $this->refresh();
-        // }
         return $this->render('settings');
       }else{
         return $this->redirect('/');

@@ -5,13 +5,14 @@ app.controller("AppCtrl", function($scope,$http){
 $.fn.bootstrapBtn = $.fn.button.noConflict();
 
 $scope.totalmainlist = 0;
-$scope.mainlistPerPage = 3; // this should match however many results your API puts on one page
+$scope.mainlistPerPage = 12; // this should match however many results your API puts on one page
 $scope.pagination = { current: 1 };
 
 $scope.list = {};
 $scope.data = {};
 $scope.formData = {};
 $scope.calcData = {};
+
 var arrTs = [];
 var phoneBook = [];
 var arrData = [];
@@ -64,44 +65,32 @@ $(document).on('click', '.addModal', function(){
 							url: '/issuanceofcredit',
 							data: $scope.calcData
 						}).then(function successCallback(response) {
-								$scope.calcData['ticket'] = eval(response.data);
-								console.log($scope.calcData);
+								var result = eval(response);
+								$scope.calcData['ticket'] = result.data.ticket;
 								$("#dialog-form-clients").dialog( "close" );
+								$('#printPreviewModal').modal({ keyboard: false });
+								printPhones($scope.calcData['phone']);
+								printGold($scope.calcData['gold'],curr($scope.calcData['currency']));
+								$scope.init = function(){
 
-
+								};
+								console.log($scope.calcData);
 							}, function errorCallback(response) {
 									//console.log(response);
 						});
-						console.log($scope.calcData);
+						//console.log($scope.calcData);
 					}
 				}]
 		}).dialog( "open" );
 });
 /**END OPEN DIALOG BOX **/
 
-
-
 /***Print Dialog BOX***/
 $(document).on('click', '#exchangeModal', function(){
-		$( "#dialog-form-print" ).dialog({
-				title: "Залоговый билет",
-				autoOpen: false,
-				width: 800,
-				modal: true,
-				close: function( event, ui ) {
-
-				},
-				buttons: [{
-					text: "Распечатать",
-					icon: "glyphicon glyphicon-print",
-					id : "print-btn",
-					click: function() {
-					}
-				}],
-				open: function(){
-					$('#print-btn > span').removeClass('ui-button-icon ui-icon');
-				}
-		}).dialog( "open" );
+	//$scope.init();
+	//$( "#dialog-form-print" ).dialog( "open" );
+	// $scope.calcData['fio'] = "Musa";
+	console.log($scope.calcData);
 });
 /***END Print Dialog Box ****/
 
@@ -339,6 +328,30 @@ var clearCalFormFunc = function(){
 };
 /** END FUNCTIONS **/
 
+var printPhones = function(phones){
+	var str = '';
+	if(jQuery.isEmptyObject(phones) == false){
+			for(i=0; i< phones.length; i++){
+						str += phones[i]+'; ';
+			}
+			//str += str.slice(0, -2);
+	}
+	$('.print-phones').html(str);
+};
+
+var printGold = function(input,curr){
+			var strt = '';
+			//var objs = JSON.parse(input);
+		if(jQuery.isEmptyObject(input) == false){
+		 strt = '<table class="gld-table" border="1"><tbody class="gld-tbody"><tr><th>Группа</th><th>Проба</th><th>Кол.</th><th>Грамм</th><th>Сумма</th></tr></tbody>';
+			$.each(input, function(key,input){
+				strt += '<tr><td>'+input.groups+'</td><td>'+ input.sample +' пр.</td><td>'+input.count +' шт.</td><td>'+input.gramm+' гр.</td><td>'+input.summ+' '+curr+'</td></tr>';
+			});
+			strt += '</table>';
+		}
+		$('.print-gold').html(strt);
+};
+
 $scope.pageChanged = function(newPage) {
 	       $scope.getData(newPage,$scope.mainlistPerPage);
 	};
@@ -360,23 +373,31 @@ $scope.getData = function(pageNum,showPageCount){
 
 	$scope.getData(1,$scope.mainlistPerPage);
 
-}).filter("formatDatetime", function () {
+}).filter("formatDatetime", function ()
+{
     return function (input) {
 				var dt = input.slice(0, -4).split('-');
 				var td = dt[2].split(' ');
         return td[0]+'.'+dt[1]+'.'+dt[0]+' '+td[1];
     }
-}).filter("phone", function () {
+}).filter("phone", function ()
+{
     return function (input) {
-				var str = '<table>';
-				var obj = JSON.parse(input);
-				for(i=0; i< obj.length; i++){
-						str += '<tr><td>'+obj[i]+'</td></tr>';
-				}
-				str += '</table>';
-        return str;
+			 var str = '';
+			 if(jQuery.isEmptyObject(input) == false){
+						 if ( jQuery.type(input) == 'string') {
+							 str = '<table>';
+							 var obj = JSON.parse(input);
+							 for(i=0; i< obj.length; i++){
+									 str += '<tr><td>'+obj[i]+'</td></tr>';
+							 }
+							 str += '</table>';
+					 	}
+			 }
+      return str;
     }
-}).filter("currFilt", function(){
+}).filter("currFilt", function()
+{
 			return function(input){
 				if(Number(input) == 1){
 					return 'KGS';
@@ -385,7 +406,8 @@ $scope.getData = function(pageNum,showPageCount){
 					return 'USD';
 				}
 			}
-}).filter("fixedto", function(){
+}).filter("fixedto", function()
+{
 	return function(input){
 		return parseFloat(input).toFixed(2);
 	}
@@ -420,7 +442,7 @@ $scope.formData = {};
 tinymce.init({
 				selector:'#tinymceeditor',
 				height: 500,
-				plugins: "print preview table code image",
+				plugins: "print preview table code image hr",
 				init_instance_callback: function(){
 					$scope.poster['token'] = $('#token').val();
 					$http({
@@ -436,12 +458,11 @@ tinymce.init({
 					});
 				}
 	 });
+
 $scope.test = function(){
 	tinymce.activeEditor.setContent('<span>some</span> html');
 };
 
-//tinymce.get("#tinymceeditor").execCommand('mceInsertContent', false, 'your content');
-//$('#tinymceeditor').text('sdf sdhfs dgfhsdg hjsdgf hsdjgfsj d');
 $scope.savetemplate = function(){
 		$scope.poster = {};
 		$scope.poster['temp'] = tinymce.activeEditor.getContent();

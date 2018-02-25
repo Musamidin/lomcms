@@ -43,7 +43,7 @@ use yii\bootstrap\ActiveForm;
             <td>{{ml.dateEnd}}</td>
             <td>{{ml.loan}} {{ml.currency | currFilt }}</td>
             <td>{{ml.commission}}</td>
-            <td>{{ml.percents}} %</td>
+            <td>{{ml.percents | fixedto}} %</td>
             <td>
               <span class="arr-down-gold" data-html="true" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{ml.golds | parser: ml.other_prod : ml.id }}">
                 <span class="glyphicon glyphicon-eye-close"></span></span>
@@ -294,16 +294,36 @@ use yii\bootstrap\ActiveForm;
 </div>
 <!-- END Dialog box for Client history data -->
 
-<!-- START Dialog box for Print data -->
+<!-- START Dialog box for Print data
 <div style="display:none;" id="dialog-form-print">
   <div class="row">
       <div class="col-md-12">
-          <?=$temp->temp; ?>
+
       </div>
       <div class="col-md-12">
       </div>
   </div>
 </div>
-<!-- END Dialog box for Print data -->
+ END Dialog box for Print data -->
+
+<!--Small Modal Window-->
+<div id="printPreviewModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm" style="width:800px;">
+    <div class="modal-content">
+      <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title sm-title-lib">Залоговый билет</h4>
+      </div>
+      <div class="modal-body" ng-init="init()">
+        <?=$temp->temp; ?>
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-primary savebtn" ng-click="onActionSett()">Распечатать</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--End Small Modal Window-->
+
 </div>
 <br/>
