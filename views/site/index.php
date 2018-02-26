@@ -55,6 +55,7 @@ use yii\bootstrap\ActiveForm;
                       Действие <span class="caret"></span>
                    </button>
                     <ul class="dropdown-menu">
+                      <li><a href="javascript:void(0)" ng-click="printbtn('printarea')"><span class="fa fa-print"></span>&nbsp;Распечатать</a></li>
                       <li><a href="javascript:void(0)" ng-click="onDo(ml,2)"><span class="fa fa-money"></span>&nbsp;Продать</a></li>
                       <li><a href="javascript:void(0)" ng-click="onDo(ml,3)"><span class="fa fa-share-alt"></span>&nbsp;Реализатор</a></li>
                       <li class="divider"></li>
@@ -314,11 +315,11 @@ use yii\bootstrap\ActiveForm;
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title sm-title-lib">Залоговый билет</h4>
       </div>
-      <div class="modal-body" ng-init="init()">
+      <div class="modal-body" ng-init="init()" id="printarea">
         <?=$temp->temp; ?>
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn btn-primary savebtn" ng-click="onActionSett()">Распечатать</button>
+          <button type="button" class="btn btn-primary savebtn" ng-click="printbtn('printarea')">Распечатать</button>
       </div>
     </div>
   </div>

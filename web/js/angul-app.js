@@ -310,6 +310,16 @@ $(document).on('click', '#reset-btn', function(){
 });
 /** END CLEAR FUNCTIONS **/
 
+/**START Print Button function **/
+$scope.printbtn = function(printSectionId) {
+	var innerContents = document.getElementById(printSectionId).innerHTML;
+	var popupWinindow = window.open('', '_blank', 'width=800,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
+	popupWinindow.document.open();
+	popupWinindow.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/site.css" /></head><body onload="window.print()">' + innerContents + '</html>');
+	popupWinindow.document.close();
+};
+/**END Print Button function **/
+
 /** START FUNCTIONS **/
 var clearClientFormFunc = function(){
 		$('#client-data :input').val('');
@@ -443,6 +453,8 @@ tinymce.init({
 				selector:'#tinymceeditor',
 				height: 500,
 				plugins: "print preview table code image hr",
+				toolbar: "codesample | bold italic sizeselect fontselect fontsizeselect | hr alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | insertfile undo redo | forecolor backcolor emoticons | code",
+				fontsize_formats: "8pt 10pt 12pt 14pt 18pt 24pt 36pt",
 				init_instance_callback: function(){
 					$scope.poster['token'] = $('#token').val();
 					$http({
