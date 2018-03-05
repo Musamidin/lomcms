@@ -42,7 +42,7 @@ use yii\bootstrap\ActiveForm;
             <td>{{ml.dateStart}}</td>
             <td>{{ml.dateEnd}}</td>
             <td>{{ml.loan}} {{ml.currency | currFilt }}</td>
-            <td>{{ml.commission}}</td>
+            <td>{{ml.comission}}</td>
             <td>{{ml.percents | fixedto}} %</td>
             <td>
               <span class="arr-down-gold" data-html="true" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{ml.golds | parser: ml.other_prod : ml.id }}">
@@ -326,7 +326,7 @@ use yii\bootstrap\ActiveForm;
     <br/>
     <div class="row">
       <div class="col-md-6">
-        <span class="lbl-view">Начислена:<span id="commission"></span></span>
+        <span class="lbl-view">Начислена:<span id="real-comission"></span></span>
       </div>
       <div class="col-md-6">
         <span class="lbl-view">Итого к выплате:<span id="total-summ"></span></span>

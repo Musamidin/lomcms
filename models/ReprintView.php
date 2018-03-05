@@ -14,7 +14,7 @@ use Yii;
  * @property string $description
  * @property string $loan
  * @property integer $currency
- * @property string $commission
+ * @property string $comission
  * @property double $percents
  * @property string $dateStart
  * @property string $dateEnd
@@ -41,10 +41,10 @@ class ReprintView extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'ticket', 'loan', 'currency', 'commission', 'percents', 'dateStart', 'dateEnd'], 'required'],
+            [['id', 'ticket', 'loan', 'currency', 'comission', 'percents', 'dateStart', 'dateEnd'], 'required'],
             [['id', 'ticket', 'currency'], 'integer'],
             [['golds', 'other_prod', 'description', 'fio', 'passport_id', 'passport_issued', 'address', 'phone'], 'string'],
-            [['loan', 'commission', 'percents'], 'number'],
+            [['loan', 'comission', 'percents'], 'number'],
             [['dateStart', 'dateEnd', 'date_of_issue'], 'safe'],
         ];
     }
@@ -62,7 +62,7 @@ class ReprintView extends \yii\db\ActiveRecord
             'description' => 'Description',
             'loan' => 'Loan',
             'currency' => 'Currency',
-            'commission' => 'Commission',
+            'comission' => 'Comission',
             'percents' => 'Percents',
             'dateStart' => 'Date Start',
             'dateEnd' => 'Date End',

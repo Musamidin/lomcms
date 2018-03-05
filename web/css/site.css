@@ -188,7 +188,8 @@ a.desc:after {
   padding: 5px;
 }
 .mb-row{margin-bottom: 8px;}
-.color2{background: #ddeadd;}
+.color1{background: #d0eade; }
+.color2{background: darkgray;}
 .color3{background: khaki;}
 #library > .row > .col-md-3 {
   text-align: center;

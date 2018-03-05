@@ -161,12 +161,15 @@ $scope.onCalc = function(data){
 				//icon: "ui-icon-seek-next",
 				id : "btn1",
 				click: function() {
+          data['astatus'] = 2;
+          serverSide(data);
 				}
 			},{
 				text: "Продлить кредит",
 				//icon: "ui-icon-seek-next",
 				id : "btn2",
 				click: function() {
+          data['astatus'] = 1;
 					serverSide(data);
 				}
 			}]
@@ -187,7 +190,7 @@ $(document).on('keyup','#part-of-loan',function(){
 });
 
 var calcFunc = function(data){
-	var cday = parseInt((new Date() - new Date(data['dateStart'])) / (1000 * 60 * 60 * 24));
+	var cday = parseInt((new Date() - new Date(data['dateStart'])) / (1000 * 60 * 60 * 24))+1;
 	var com = 0, totsum = 0,	minDay = 10, minSumm = 100;
 
 	if(parseInt(data['currency']) == 2){ //Если валюта доллар
@@ -204,6 +207,7 @@ var calcFunc = function(data){
 					if(parseFloat(data['loan']) > 1000){ //Если сумма ссуды > 1000
 						com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
 	 				  totsum = (parseFloat(data['loan']) + com);
+            console.log(cday);
 					}else{ //Если сумма ссуды < 1000
 							if((cday % 30) !== 0){ tempDay = ((cday-(cday % 30))/30+1); }
 							com = (tempDay == 0 ? parseFloat(data['percents']) : (tempDay * parseFloat(data['percents'])));
@@ -215,7 +219,7 @@ var calcFunc = function(data){
 							com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
 						if(com < minSumm){ com = minSumm; }
 	 				  	totsum = (parseFloat(data['loan']) + com);
-							console.log(totsum);
+
 					}else{ //Если сумма ссуды < 1000
 						if((cday % 30) !== 0){ tempDay = ((cday-(cday % 30))/30+1); }
 						com = (tempDay == 0 ? parseFloat(data['percents']) : (tempDay * parseFloat(data['percents'])));
@@ -223,15 +227,16 @@ var calcFunc = function(data){
 					}
 			}
 	}
-	$('#commission').text(com.toFixed(2) +' '+curr(data['currency']));
+	$('#real-comission').text(com.toFixed(2) +' '+curr(data['currency']));
 	$('#total-summ').text(Math.round(totsum).toFixed(2)  +' '+curr(data['currency']));
 	$('#countDay').text(cday);
 	$('#min-term').text(minDay);
-	console.log(cday);
+	console.log(com);
 };
 
 var serverSide = function(data){
 		data['token'] = $('#token').val();
+    data['part_of_loan'] = $('#part-of-loan').val();
 		$http({
 			method: 'POST',
 			url: '/calcaction',

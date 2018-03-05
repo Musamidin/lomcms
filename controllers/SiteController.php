@@ -298,7 +298,22 @@ class SiteController extends Controller
       */
       if($do->token === md5(Yii::$app->session->getId().'opn')){
         $calcData = Yii::$app->HelperFunc->midasCalc($do);
-        print_r($calcData);
+        //print_r($calcData);
+        try{
+          $command = Yii::$app->db->
+          createCommand("SET NOCOUNT ON; EXEC dbo.actionCalc @id =:id, @comission =:comission, @totalSumm =:totalSumm, @countDay =:countDay, @part_of_loan =:part_of_loan, @status =:status");
+          $command->bindValue(":id",$do->id)
+          ->bindValue(":comission",$calcData['comission'])
+          ->bindValue(":totalSumm",$calcData['totalsumm'])
+          ->bindValue(":countDay",$calcData['countDay'])
+          ->bindValue(":part_of_loan",$do->part_of_loan)
+          ->bindValue(":status",$do->astatus);
+            $data = $command->queryAll();
+            return json_encode(['status'=>$data['status'],'msg'=>$data['msg']]);
+        }catch(Exception $e){
+            //print_r($e->errorInfo[2]);
+            echo json_encode(['status'=>1,'data'=>null,'msg'=>$e->errorInfo]);
+        }
       }else{
         return false;
       }

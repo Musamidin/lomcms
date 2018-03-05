@@ -16,7 +16,7 @@ use Yii;
  * @property string $description
  * @property string $loan
  * @property integer $currency
- * @property string $commission
+ * @property string $comission
  * @property double $percents
  * @property string $dateStart
  * @property string $dateEnd
@@ -41,9 +41,9 @@ class MainListView extends \yii\db\ActiveRecord
     {
         return [
             [['fio', 'passport_id', 'phone', 'golds', 'other_prod', 'description'], 'string'],
-            [['ticket', 'loan', 'currency', 'commission', 'percents', 'dateStart', 'dateEnd', 'countDay', 'sysDate'], 'required'],
+            [['ticket', 'loan', 'currency', 'comission', 'percents', 'dateStart', 'dateEnd', 'countDay', 'sysDate'], 'required'],
             [['ticket', 'currency', 'countDay', 'status'], 'integer'],
-            [['loan', 'commission', 'percents'], 'number'],
+            [['loan', 'comission', 'percents'], 'number'],
             [['dateStart', 'dateEnd', 'sysDate'], 'safe'],
         ];
     }
@@ -63,7 +63,7 @@ class MainListView extends \yii\db\ActiveRecord
             'description' => 'Description',
             'loan' => 'Loan',
             'currency' => 'Currency',
-            'commission' => 'Commission',
+            'comission' => 'Comission',
             'percents' => 'Percents',
             'dateStart' => 'Date Start',
             'dateEnd' => 'Date End',
