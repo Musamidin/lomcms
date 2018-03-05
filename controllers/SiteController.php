@@ -18,7 +18,8 @@ use app\models\MainList;
 use app\models\MainListView;
 use app\models\Library;
 use app\models\Template;
-//use app\componets\HelperFunc;
+use app\models\ReprintView;
+use app\componets\HelperFunc;
 
 class SiteController extends Controller
 {
@@ -30,9 +31,11 @@ class SiteController extends Controller
             Yii::$app->end();
         }elseif($action->id === 'issuanceofcredit' || $action->id === 'getautocomplete'){
             $this->enableCsrfValidation = false;
-        }elseif($action->id === 'getdata'){
+        }elseif($action->id === 'getdata' || $action->id === 'getprintpreviewdata'){
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'updatetemplate' || $action->id === 'gettemplate'){
+          $this->enableCsrfValidation = false;
+        }elseif($action->id === 'calcaction'){
           $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -165,9 +168,8 @@ class SiteController extends Controller
             ->bindValue(":passport_issued",$data['passport_issued'])
             ->bindValue(":phone",$data['phone'])
             ->bindValue(":address",$data['address']);
-            $data = $command->queryAll();
-              //print_r($data);
-              echo json_encode(['status'=>$data[0]['status'],'msg'=>$data[0]['ErrorMessage'],'ticket' =>$data[0]['ticket'] ]);
+              $data = $command->queryAll();
+              return json_encode(['status'=>0,'data'=>$data[0],'msg'=>'OK']);
           }catch(Exception $e){
               //print_r($e->errorInfo[2]);
               echo json_encode(['status'=>1,'data'=>null,'msg'=>$e->errorInfo]);
@@ -176,6 +178,24 @@ class SiteController extends Controller
            echo json_encode(['status'=>2,'data'=>null,'msg'=>'Ошибка! токен не соответствует']);
       }
 
+    }
+
+    public function actionGetprintpreviewdata()
+    {
+      $postData = file_get_contents("php://input");
+      $do = json_decode($postData);
+      header('Content-Type: application/json');
+      if($do->token == md5(Yii::$app->session->getId().'opn'))
+      {
+          try{
+            $rpv = ReprintView::find()->where("id = ".$do->id)->asArray()->all();
+            return json_encode(['status'=>0,'data'=>$rpv[0],'msg'=>'OK']);
+          }catch(Exception $e){
+            return json_encode(['status'=>1, 'data'=> null,'msg'=>$e->errorInfo]);
+          }
+      }else{
+          return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      }
     }
 
     /* MainList AJAX Controllers */
@@ -204,7 +224,7 @@ class SiteController extends Controller
           echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
         }
       }else{
-
+        return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       }
     }
 
@@ -264,237 +284,23 @@ class SiteController extends Controller
          return json_encode(array('status'=>4,'message'=>'Error("Права для этого пользователья ограничено!")'));
        }
     }
-    //
-    // public function actionGetagentdata()
-    // {
-    //   $request = Yii::$app->request;
-    //   $page = $request->get('page');
-    //   $shpcount = $request->get('shpcount');
-    //   header('Content-Type: application/json');
-    //   try{
-    //       $count = Agents::find()->count();
-    //       $pagination = new Pagination(['defaultPageSize'=>$shpcount,'totalCount'=> $count]);
-    //       $al = Agents::find()
-    //                   ->where('status = 1')
-    //                   ->offset($pagination->offset)
-    //                   ->limit($pagination->limit)
-    //                   ->asArray()
-    //                   ->orderBy(['datetime'=>SORT_DESC])
-    //                   ->all();
-    //       echo json_encode(['status'=>0,'data'=>
-    //                                             ['agentsList' => $al,
-    //                                              'count' => $count,
-    //                                              'msg'=>'OK']
-    //                                           ]);
-    //   }catch(Exception $e){
-    //       echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
-    //   }
-    // }
-    //
-    // public function actionSearchagent()
-    // {
-    //     $postData = file_get_contents("php://input");
-    //     $do = json_decode($postData);
-    //
-    //     header('Content-Type: application/json');
-    //     //if($do->token === md5(Yii::$app->session->getId().'opn')){
-    //         if(!empty($do->key)){
-    //             $al = Agents::find()
-    //                 ->filterWhere(['LIKE', 'fio', $do->key])
-    //                 ->asArray()
-    //                 ->orderBy(['datetime'=>SORT_DESC])
-    //                 ->all();
-    //         }else{
-    //             $al = Agents::find()
-    //             ->asArray()
-    //             ->where('status = 1')
-    //             ->orderBy(['datetime'=>SORT_DESC])
-    //             ->all();
-    //         }
-    //         echo json_encode($al);
-    //     // }else{
-    //     //     echo json_encode(array('status'=>2,'message'=>'Error(Invalid token!)'));
-    //     // }
-    //     //echo $do->stype;
-    // }
 
-    // /* Report AJAX Controllers */
-    // public function actionGetreport()
-    // {
-    //   $request = Yii::$app->request;
-    //   $dateFrom = $request->get('datefrom');
-    //   $dateTo = $request->get('dateto');
-    //   header('Content-Type: application/json');
-    //   try{
-    //     $sql1 = "SELECT *,(price_sold - (ISNULL(price_buy,0) * exchangerate)) AS dohod FROM actionReport(2,1) WHERE date_system BETWEEN CONVERT(datetime,'".$dateFrom." 00:00:00',102) AND CONVERT(datetime,'".$dateTo." 23:59:59',102)";
-    //     $sql2 = "SELECT *,(price_sold - ISNULL(price_buy,0)) AS dohod FROM actionReport(1,1) WHERE date_system BETWEEN CONVERT(datetime,'".$dateFrom." 00:00:00',102) AND CONVERT(datetime,'".$dateTo." 23:59:59',102)";
-    //     $sql3 = "SELECT *,(price_sold - ISNULL(price_buy,0)) AS dohod FROM actionReport(1,2) WHERE date_system BETWEEN CONVERT(datetime,'".$dateFrom." 00:00:00',102) AND CONVERT(datetime,'".$dateTo." 23:59:59',102)";
-    //     $report1 = Yii::$app->db->createCommand($sql1)->queryAll();
-    //     $report2 = Yii::$app->db->createCommand($sql2)->queryAll();
-    //     $report3 = Yii::$app->db->createCommand($sql3)->queryAll();
-    //       echo json_encode(['status'=>0,'data'=> ['report1' =>$report1,'report2' =>$report2,'report3' =>$report3],'msg'=>'OK']);
-    //   }catch(Exception $e){
-    //       echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
-    //   }
-    // }
-
-
-    // public function actionSearch()
-    // {
-    //     $postData = file_get_contents("php://input");
-    //     $do = json_decode($postData);
-    //
-    //     header('Content-Type: application/json');
-    //
-    //     if($do->token === md5(Yii::$app->session->getId().'opn')){
-    //         if(!empty($do->key)){
-    //             $ml = MainListView::find()
-    //                 ->filterWhere(['LIKE', 'name', $do->key])
-    //                 ->asArray()
-    //                 ->orderBy(['date_system'=>SORT_DESC])
-    //                 ->all();
-    //         }else{
-    //             $ml = MainListView::find()
-    //             ->limit(10)
-    //             ->asArray()
-    //             ->orderBy(['date_system'=>SORT_DESC])
-    //             ->all();
-    //         }
-    //         echo json_encode($ml);
-    //
-    //     }else{
-    //         echo json_encode(array('status'=>2,'message'=>'Error(Invalid token!)'));
-    //     }
-    //
-    //     //echo $do->stype;
-    // }
-    //
-
-    //
-    // public function actionSetdata()
-    // {
-    //     $postData = file_get_contents("php://input");
-    //     $do = json_decode($postData);
-    //     if($do->token === md5(Yii::$app->session->getId().'opn')){
-    //         if(!isset($do->id) && empty($do->id)){
-    //             $ml = new MainList();
-    //         }else{
-    //             $ml = MainList::findOne($do->id);
-    //         }
-    //         try{
-    //             $ml->user_id = Yii::$app->user->identity->getId();
-    //             $ml->name = $do->name;
-    //             $ml->from_agent_id = isset($do->fio) ? $do->fio : null;
-    //             $ml->groupby = $do->groupby;
-    //             $ml->insertion = $do->insertion;
-    //             $ml->sample = $do->sample;
-    //             $ml->type_of_delivery = $do->type_of_delivery;
-    //             $ml->size = $do->size;
-    //             $ml->exchangerate = floatval($do->exchangerate);
-    //             $ml->weight_grams = $do->weight_grams;
-    //             $ml->price_buy = $do->price_buy;
-    //             $ml->price_sale = $do->price_sale;
-    //             $ml->price_sold = isset($do->price_sold) ? $do->price_sold : 0;
-    //             $ml->discount = isset($do->discount) ? $do->discount : 0;
-    //             $ml->buy_currency = $do->buy_currency;
-    //             $ml->sale_currency = $do->sale_currency;
-    //             $ml->date_of_arrival = date('Y-m-d\TH:i:s');
-    //             $ml->date_of_sale = date('Y-m-d\TH:i:s');
-    //             $ml->comment = $do->comment;
-    //             $ml->bar_code = $do->bar_code;
-    //             $ml->status = $do->status;
-    //             $ml->date_system = date('Y-m-d\TH:i:s');
-    //             $ml->save();
-    //             return json_encode(array('status'=>1,'message'=>'good!'));
-    //         }catch(Exception $e){
-    //           return json_encode(array('status'=>3,'message'=>$e->errorInfo));
-    //         }
-    //     }else{
-    //         return json_encode(array('status'=>2,'message'=>'Error(Invalid token!)'));
-    //     }
-    // }
-    //
-    // public function actionDeleterow()
-    // {
-    //     $postData = file_get_contents("php://input");
-    //     $do = json_decode($postData);
-    //     $ml = MainList::findOne($do->id);
-    //     $ml->delete();
-    //     //print_r($ml);
-    // }
-    // /* library Controllers */
-    // public function actionLibrary()
-    // {
-    //   return $this->render('library',
-    //                       ['sample'=> new Sample(),
-    //                        'insertion' => new Insertion(),
-    //                        'productGroup' => new ProductGroup(),
-    //                        'typeOfDelivery' => new TypeOfDelivery()
-    //                      ]);
-    // }
-    //
-    // public function actionGetlib()
-    // {
-    //   header('Content-Type: application/json');
-    //   try{
-    //         $sample = Sample::find()->asArray()->all();
-    //         $insertion = Insertion::find()->asArray()->all();
-    //         $productGroup = ProductGroup::find()->asArray()->all();
-    //         $typeOfDelivery = TypeOfDelivery::find()->asArray()->all();
-    //
-    //         echo json_encode(['status'=>0,'data'=>[
-    //                                    'sample' => $sample,
-    //                                    'insertion' => $insertion,
-    //                                    'productGroup' => $productGroup,
-    //                                    'typeOfDelivery' => $typeOfDelivery],
-    //                           'msg'=>'OK']
-    //                         );
-    //   }catch(Exception $e){
-    //     echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
-    //   }
-    // }
-    //
-    // public function actionSetlib()
-    // {
-    //   $postData = file_get_contents("php://input");
-    //   $do = json_decode($postData);
-    //
-    //   if($do->token === md5(Yii::$app->session->getId().'opn')){
-    //       if(empty($do->dataid)){
-    //           switch((int)$do->state){
-    //             case 1:{ $ml = new ProductGroup(); } break;
-    //             case 2:{ $ml = new Sample(); } break;
-    //             case 3:{ $ml = new Insertion(); } break;
-    //             case 4:{ $ml = new TypeOfDelivery(); } break;
-    //           }
-    //       }else{
-    //         switch((int)$do->state){
-    //           case 1:{ $ml = ProductGroup::findOne($do->dataid); } break;
-    //           case 2:{ $ml = Sample::findOne($do->dataid); } break;
-    //           case 3:{ $ml = Insertion::findOne($do->dataid); } break;
-    //           case 4:{ $ml = TypeOfDelivery::findOne($do->dataid); } break;
-    //         }
-    //       }
-    //           $ml->name = $do->name;
-    //           $ml->save();
-    //           return json_encode(array('status'=>1,'message'=>'good!'));
-    //
-    //   }else{
-    //       return json_encode(array('status'=>2,'message'=>'Error(Invalid token!)'));
-    //   }
-    // }
-    //
-    // public function actionTest()
-    // {
-    //   $request = Yii::$app->request;
-    //   $page = $request->get('page');
-    //   $ml = MainListView::find();
-    //   // //->limit(10)
-    //   // ->asArray()
-    //   // ->orderBy(['date_system'=>SORT_DESC])
-    //   // ->all();
-    //   $dt = $ml->offset($page)->limit(3)->asArray()->all();
-    //           print_r($dt);
-    // }
-
+    public function actionCalcaction()
+    {
+      $postData = file_get_contents("php://input");
+      $do = json_decode($postData);
+      header('Content-Type: application/json');
+      /*
+      Yii::$app->HelperFunc->midasCalc($do);
+      Калькулятор для ломбарда Мидас
+      Принимает параметр объект
+      Возвращает массив ([comission] => 253.5 [totalsumm] => 15253.5 [countDay] => 13)
+      */
+      if($do->token === md5(Yii::$app->session->getId().'opn')){
+        $calcData = Yii::$app->HelperFunc->midasCalc($do);
+        print_r($calcData);
+      }else{
+        return false;
+      }
+    }
 }

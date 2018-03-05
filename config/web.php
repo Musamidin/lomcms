@@ -60,7 +60,9 @@ $config = [
             'getautocomplete' => 'site/getautocomplete',
             'getdata' => 'site/getdata',
             'updatetemplate' => 'site/updatetemplate',
-            'gettemplate' => 'site/gettemplate'
+            'gettemplate' => 'site/gettemplate',
+            'getprintpreviewdata' => 'site/getprintpreviewdata',
+            'calcaction' => 'site/calcaction'
             ],
         ],
 

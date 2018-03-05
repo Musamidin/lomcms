@@ -5,7 +5,7 @@ app.controller("AppCtrl", function($scope,$http){
 $.fn.bootstrapBtn = $.fn.button.noConflict();
 
 $scope.totalmainlist = 0;
-$scope.mainlistPerPage = 12; // this should match however many results your API puts on one page
+$scope.mainlistPerPage = 15; // this should match however many results your API puts on one page
 $scope.pagination = { current: 1 };
 
 $scope.list = {};
@@ -36,7 +36,7 @@ $(document).on('click', '.addModal', function(){
 		clearClientFormFunc();
 		clearCalFormFunc();
 		$('#history-btn').hide();
-		$( "#dialog-form-clients" ).dialog({
+		$("#dialog-form-clients").dialog({
 				title: "Окно выдачи кредита",
 				autoOpen: false,
 				width: 690,
@@ -51,39 +51,198 @@ $(document).on('click', '.addModal', function(){
 					//icon: "ui-icon-seek-next",
 					id : "btn1",
 					click: function() {
-						//var data = {};
 						$($('#client-data :input').serializeArray()).each(function(index, obj){
             	$scope.calcData[obj.name.slice(8,-1)] = obj.value;
       			});
-						//data = $scope.calcData;
+						$($('#credit-data :input').serializeArray()).each(function(index, obj){
+            	$scope.calcData[obj.name.slice(9,-1)] = obj.value;
+      			});
 						$scope.calcData['gold'] = arrTs;
 						$scope.calcData['phone'] = phoneBook;
 						$scope.calcData['token'] = $('#token').val();
 						$scope.calcData['id'] = $('#client-id').val();
-						$http({
-							method: 'POST',
-							url: '/issuanceofcredit',
-							data: $scope.calcData
-						}).then(function successCallback(response) {
-								var result = eval(response);
-								$scope.calcData['ticket'] = result.data.ticket;
-								$("#dialog-form-clients").dialog( "close" );
-								$('#printPreviewModal').modal({ keyboard: false });
-								printPhones($scope.calcData['phone']);
-								printGold($scope.calcData['gold'],curr($scope.calcData['currency']));
-								$scope.init = function(){
 
-								};
-								console.log($scope.calcData);
-							}, function errorCallback(response) {
-									//console.log(response);
-						});
-						//console.log($scope.calcData);
+						var resp = checker($scope.calcData);
+						if(resp[0] == false){
+							alert(resp[1]);
+						}else{
+							savedata($scope.calcData);
+						}
 					}
 				}]
-		}).dialog( "open" );
+		}).dialog("open");
 });
 /**END OPEN DIALOG BOX **/
+
+/** START checker function **/
+var checker = function(data){
+		var response = [];
+			if(data['fio'] == ''){
+				response.push(false);
+				response.push('Заполните поле Ф.И.О.');
+			}else if(data['date_of_issue'] == ''){
+				response.push(false);
+				response.push('Укажите дату выдачи документа');
+			}else if(data['passport_id'] == ''){
+				response.push(false);
+				response.push('Заполните поле номер паспорта');
+			}else if(jQuery.isEmptyObject(data['phone']) == true){
+				response.push(false);
+				response.push('Добвьте контактные номера');
+			}else if(data['passport_issued'] == ''){
+				response.push(false);
+				response.push('Заполните поле орган выдавший документа');
+			}else if(data['address'] == ''){
+				response.push(false);
+				response.push('Заполните поле Адрес');
+			}else if(jQuery.isEmptyObject(data['gold']) == true && data['other_prod'] == ''){
+				response.push(false);
+				response.push('Заполните тип залога ЗОЛОТО или АВТО/ТЕХНИКА');
+			}else if(data['loan'] == ''){
+				response.push(false);
+				response.push('Введите сумму займа!');
+			}else if(data['currency'] == ''){
+				response.push(false);
+				response.push('Выберите валюту!');
+			}else if(data['percents'] == ''){
+				response.push(false);
+				response.push('Выберите % ставку!');
+			}else{
+				response.push(true);
+				response.push('ok');
+			}
+		return response;
+};
+/** END checker function **/
+
+/** START SAVE DATA FUNCTIONS **/
+var savedata = function(param){
+		$http({
+			method: 'POST',
+			url: '/issuanceofcredit',
+			data: param
+		}).then(function successCallback(response) {
+
+				$("#dialog-form-clients").dialog( "close" );
+				$scope.data = response.data.data;
+				var state = response.data;
+				$('#printPreviewModal').modal({ keyboard: false });
+				printGold(param['gold'],curr(param['currency']));
+				$scope.init = function(){ };
+				$scope.getData(1,$scope.mainlistPerPage);
+			}, function errorCallback(response) {
+					//console.log(response);
+		});
+};
+/*** END SAVE DATA FUNCTIONS */
+
+/** START Calculate function **/
+$scope.onCalc = function(data){
+	$.each(data,function(key,val){
+		if(key == 'loan' || key == 'ticket' || key == 'dateStart' || key == 'dateEnd' || key == 'percents'){
+			$('#'+key).text(val);
+		}else if(key == 'currency'){
+			$('#loan').append(' '+curr(val));
+		}
+	});
+	calcFunc(data);
+	$("#dialog-form-calculate").dialog({
+			title: data.fio,
+			autoOpen: false,
+			width: 690,
+			modal: true,
+			open: function(){
+			},
+			close: function( event, ui ) {
+				//$("#addWindowItem").find("input[type=text], textarea").val("");
+			},
+			buttons: [{
+				text: "Закрыть кредит",
+				//icon: "ui-icon-seek-next",
+				id : "btn1",
+				click: function() {
+				}
+			},{
+				text: "Продлить кредит",
+				//icon: "ui-icon-seek-next",
+				id : "btn2",
+				click: function() {
+					serverSide(data);
+				}
+			}]
+	}).dialog("open");
+	console.log(data);
+};
+
+$(document).on('keyup','#part-of-loan',function(){
+		if(parseInt(this.value) < parseInt($('#loan').text())){
+			$('#btn1').attr('disabled',true).hide();
+		}else if(parseInt(this.value) == parseInt($('#loan').text())){
+			$('#btn1').attr('disabled',false).show();
+		}else if(parseInt(this.value) > parseInt($('#loan').text())){
+			alert('Часть от ссуды не может быть больше чем выданная ссуда!');
+			$('#btn1').attr('disabled',true).hide();
+			//$(this).val(parseInt($('#loan').text()));
+		}
+});
+
+var calcFunc = function(data){
+	var cday = parseInt((new Date() - new Date(data['dateStart'])) / (1000 * 60 * 60 * 24));
+	var com = 0, totsum = 0,	minDay = 10, minSumm = 100;
+
+	if(parseInt(data['currency']) == 2){ //Если валюта доллар
+			if(parseInt(data['status']) > 0){ //Если статус был проден
+					com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
+					totsum = (parseFloat(data['loan']) + com);
+			}else{
+				 if(cday < minDay){ cday = minDay; }
+				 com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
+				 totsum = (parseFloat(data['loan']) + com);
+			}
+	}else if(parseInt(data['currency']) == 1){ // KGS Сом
+			if(parseInt(data['status']) > 0){ //Если статус был проден
+					if(parseFloat(data['loan']) > 1000){ //Если сумма ссуды > 1000
+						com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
+	 				  totsum = (parseFloat(data['loan']) + com);
+					}else{ //Если сумма ссуды < 1000
+							if((cday % 30) !== 0){ tempDay = ((cday-(cday % 30))/30+1); }
+							com = (tempDay == 0 ? parseFloat(data['percents']) : (tempDay * parseFloat(data['percents'])));
+		 				  totsum = (parseFloat(data['loan']) + com);
+					}
+			}else{ //Если статус 0 (Первый раз)
+					if(parseFloat(data['loan']) > 1000){ //Если сумма ссуды > 1000
+						if(cday < minDay){ cday = minDay; }
+							com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
+						if(com < minSumm){ com = minSumm; }
+	 				  	totsum = (parseFloat(data['loan']) + com);
+							console.log(totsum);
+					}else{ //Если сумма ссуды < 1000
+						if((cday % 30) !== 0){ tempDay = ((cday-(cday % 30))/30+1); }
+						com = (tempDay == 0 ? parseFloat(data['percents']) : (tempDay * parseFloat(data['percents'])));
+						totsum = (parseFloat(data['loan']) + com);
+					}
+			}
+	}
+	$('#commission').text(com.toFixed(2) +' '+curr(data['currency']));
+	$('#total-summ').text(Math.round(totsum).toFixed(2)  +' '+curr(data['currency']));
+	$('#countDay').text(cday);
+	$('#min-term').text(minDay);
+	console.log(cday);
+};
+
+var serverSide = function(data){
+		data['token'] = $('#token').val();
+		$http({
+			method: 'POST',
+			url: '/calcaction',
+			data: data
+		}).then(function successCallback(response) {
+				console.log(response);
+			}, function errorCallback(response) {
+					//console.log(response);
+		});
+};
+/** END Calculate function **/
 
 /***Print Dialog BOX***/
 $(document).on('click', '#exchangeModal', function(){
@@ -93,7 +252,6 @@ $(document).on('click', '#exchangeModal', function(){
 	console.log($scope.calcData);
 });
 /***END Print Dialog Box ****/
-
 
 /** MASK **/
  $("#clients-phone").mask("999999999",{placeholder:"XXX XX XX XX"});
@@ -311,13 +469,34 @@ $(document).on('click', '#reset-btn', function(){
 /** END CLEAR FUNCTIONS **/
 
 /**START Print Button function **/
-$scope.printbtn = function(printSectionId) {
-	var innerContents = document.getElementById(printSectionId).innerHTML;
+var printbtn = function() {
+	$('#printPreviewModal').modal('hide');
+	var innerContents = document.getElementById('printarea').innerHTML;
 	var popupWinindow = window.open('', '_blank', 'width=800,height=700,scrollbars=no,menubar=no,toolbar=no,location=no,status=no,titlebar=no');
 	popupWinindow.document.open();
-	popupWinindow.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/site.css" /></head><body onload="window.print()">' + innerContents + '</html>');
+	popupWinindow.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/printer.css" /></head><body onload="window.print()">' + innerContents + '</html>');
 	popupWinindow.document.close();
 };
+
+$scope.printTempPreview = function(pid){
+		$http({
+			method: 'POST',
+			url: '/getprintpreviewdata',
+			data: {id:pid, token: $('#token').val() }
+		}).then(function successCallback(response) {
+				$scope.data = response.data.data;
+				var state = response.data;
+				printGold($scope.data['golds'],curr($scope.data['currency']));
+				$scope.init = function(){ };
+				$('#printPreviewModal').modal({ keyboard: false });
+			}, function errorCallback(response) {
+					//console.log(response);
+		});
+};
+
+$(document).on('click','.printingbtn', function(){
+		printbtn();
+});
 /**END Print Button function **/
 
 /** START FUNCTIONS **/
@@ -338,6 +517,7 @@ var clearCalFormFunc = function(){
 };
 /** END FUNCTIONS **/
 
+/*
 var printPhones = function(phones){
 	var str = '';
 	if(jQuery.isEmptyObject(phones) == false){
@@ -348,14 +528,15 @@ var printPhones = function(phones){
 	}
 	$('.print-phones').html(str);
 };
+*/
 
 var printGold = function(input,curr){
 			var strt = '';
-			//var objs = JSON.parse(input);
-		if(jQuery.isEmptyObject(input) == false){
-		 strt = '<table class="gld-table" border="1"><tbody class="gld-tbody"><tr><th>Группа</th><th>Проба</th><th>Кол.</th><th>Грамм</th><th>Сумма</th></tr></tbody>';
-			$.each(input, function(key,input){
-				strt += '<tr><td>'+input.groups+'</td><td>'+ input.sample +' пр.</td><td>'+input.count +' шт.</td><td>'+input.gramm+' гр.</td><td>'+input.summ+' '+curr+'</td></tr>';
+			var objs = JSON.parse(input);
+		if(jQuery.isEmptyObject(objs) == false){
+		 strt = '<table class="gld-table" border="1" width="100%"><tbody class="gld-tbody"><tr><th>Группа</th><th>Проба</th><th>Кол.</th><th>Грамм</th><th>Сумма</th></tr></tbody>';
+			$.each(objs, function(key,objs){
+				strt += '<tr><td>'+objs.groups+'</td><td>'+ objs.sample +' пр.</td><td>'+objs.count +' шт.</td><td>'+objs.gramm+' гр.</td><td>'+objs.summ+' '+curr+'</td></tr>';
 			});
 			strt += '</table>';
 		}
@@ -392,18 +573,31 @@ $scope.getData = function(pageNum,showPageCount){
     }
 }).filter("phone", function ()
 {
-    return function (input) {
+    return function (input,param) {
 			 var str = '';
-			 if(jQuery.isEmptyObject(input) == false){
-						 if ( jQuery.type(input) == 'string') {
-							 str = '<table>';
-							 var obj = JSON.parse(input);
-							 for(i=0; i< obj.length; i++){
-									 str += '<tr><td>'+obj[i]+'</td></tr>';
-							 }
-							 str += '</table>';
-					 	}
+			 if(param == 1){
+				 if(jQuery.isEmptyObject(input) == false){
+							 if ( jQuery.type(input) == 'string') {
+								 str = '<table>';
+								 var obj = JSON.parse(input);
+								 for(i=0; i< obj.length; i++){
+										 str += '<tr><td>'+obj[i]+'</td></tr>';
+								 }
+								 str += '</table>';
+						 	}
+				 }
+			 }else if(param == 2){
+				 if(jQuery.isEmptyObject(input) == false){
+							 if ( jQuery.type(input) == 'string') {
+								 var obj = JSON.parse(input);
+								 for(i=0; i< obj.length; i++){
+										 str += obj[i]+'; ';
+								 }
+								 str = str.slice(0, -2);
+						 	}
+				 }
 			 }
+
       return str;
     }
 }).filter("currFilt", function()

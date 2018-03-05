@@ -218,6 +218,11 @@ div#client-data{
     padding: 10px;
     background: #35414f url(/css/jquery/images/ui-bg_dots-small_35_35414f_2x2.png) 50% 50% repeat;
 }
+div#calculate-data{
+    border: 1px solid #777;
+    padding: 10px;
+    background: #35414f url(/css/jquery/images/ui-bg_dots-small_35_35414f_2x2.png) 50% 50% repeat;
+}
 select#mainlist-currency { padding-right: 23.5px; }
 select#mainlist-percents { padding-right: 14.5px; }
 span.lbl-view-comm {
@@ -255,8 +260,7 @@ div#tabs-1 input {
 .thing-table > #thing-tbody > tr > th{padding: 2px; background: #35414f; color: white;text-align: center;}
 .thing-table > tbody > tr > th,td{ text-align: center; padding: 2px;}
 table#temp-table > table > tbody > tr > th,td{ text-align: left; padding: 2px;}
-table.gld-table{width: 100%;}
-table.gld-table > tbody > tr > th,td{text-align: center;}
+
 .row.table-box{
   overflow: auto;
   height: 90px;
@@ -290,3 +294,19 @@ i.iconer { color: red; }
     margin-top: 10px;
     margin-bottom: 10px;
     border-top: 2px dashed black;}
+table.gld-table{width: 100%;}
+table.gld-table > tbody > tr > th,td{text-align: center;}
+#calculate-data > .row > div > span.lbl-view{
+  height: 34px;
+  background: white;
+  display: block;
+  text-align: left;
+  padding: 8px;
+  font-weight: bold;
+  border: 1px solid silver;
+}
+#calculate-data > .row > div > span.lbl-view > span{
+    background: #e1e463;
+    padding: 3px;
+    border-radius: 5px;
+}

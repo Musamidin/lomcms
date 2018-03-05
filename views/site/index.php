@@ -25,7 +25,7 @@ use yii\bootstrap\ActiveForm;
            <th>Комиссия</th>
            <th>%-Ставка</th>
            <th>Залог</th>
-           <th>Описание П.З.</th>
+           <th style="width:10%;">Описание П.З.</th>
            <th>Действия</th>
         </tr>
       </tbody>
@@ -36,7 +36,7 @@ use yii\bootstrap\ActiveForm;
             <td>{{ml.fio}}</td>
             <td>{{ml.passport_id}}</td>
             <td>
-              <span class="arr-down-ph" data-html="true" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{ml.phone | phone}}">
+              <span class="arr-down-ph" data-html="true" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{ml.phone | phone:1}}">
                 <span class="glyphicon glyphicon-chevron-down"></span></span>
             </td>
             <td>{{ml.dateStart}}</td>
@@ -55,11 +55,10 @@ use yii\bootstrap\ActiveForm;
                       Действие <span class="caret"></span>
                    </button>
                     <ul class="dropdown-menu">
-                      <li><a href="javascript:void(0)" ng-click="printbtn('printarea')"><span class="fa fa-print"></span>&nbsp;Распечатать</a></li>
-                      <li><a href="javascript:void(0)" ng-click="onDo(ml,2)"><span class="fa fa-money"></span>&nbsp;Продать</a></li>
-                      <li><a href="javascript:void(0)" ng-click="onDo(ml,3)"><span class="fa fa-share-alt"></span>&nbsp;Реализатор</a></li>
+                      <li><a href="javascript:void(0)" ng-click="onCalc(ml)"><span class="fa fa-calculator"></span>&nbsp;Посчитать</a></li>
+                      <li><a href="javascript:void(0)" ng-click="printTempPreview(ml.id)"><span class="fa fa-print"></span>&nbsp;Распечатать</a></li>
                       <li class="divider"></li>
-                      <li><a href="javascript:void(0)" ng-click="onEdit(ml)"><span class="fa fa-edit"></span>&nbsp;Редактировать</a></li>
+                      <li><a href="javascript:void(0)" ng-click="onRealize(ml)"><span class="fa fa-cart-arrow-down"></span>&nbsp;Списать</a></li>
                       <li><a href="javascript:void(0)" ng-click="onDelete(ml.id)"><span class="glyphicon glyphicon-trash"></span>&nbsp;Удалить</a></li>
                     </ul>
                </div>
@@ -84,7 +83,7 @@ use yii\bootstrap\ActiveForm;
               <?=$form->field($clients, 'fio',['options'=>
                   ['tag' => 'div','class'=> 'form-group field-mainform-fio has-feedback required'],
                   'template'=>'{input}<span class="glyphicon glyphicon-user form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['placeholder'=>'Ф.И.О.','ng-model'=>'formData.fio'])->label('Ф.И.О.');
+                  ])->textInput(['placeholder'=>'Ф.И.О.','ng-model'=>'formData.fio','title'=>'Ф.И.О'])->label('Ф.И.О.');
                   ?>
             </div>
             <div class="col-md-6">
@@ -295,31 +294,73 @@ use yii\bootstrap\ActiveForm;
 </div>
 <!-- END Dialog box for Client history data -->
 
-<!-- START Dialog box for Print data
-<div style="display:none;" id="dialog-form-print">
-  <div class="row">
-      <div class="col-md-12">
-
+<!-- START Dialog box for Print data-->
+<div style="display:none;" id="dialog-form-calculate">
+  <div id="calculate-data">
+    <div class="row">
+      <div class="col-md-6">
+        <span class="lbl-view">№:<span id="ticket"></span></span>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-6">
+        <span class="lbl-view">Ссуда:<span id="loan"></span></span>
       </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-md-6">
+        <span class="lbl-view">Дата выдачи:<span id="dateStart"></span></span>
+      </div>
+      <div class="col-md-6">
+        <span class="lbl-view">Дата возврата:<span id="dateEnd"></span></span>
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-md-6">
+        <span class="lbl-view">% - Ставка:<span id="percents"></span></span>
+      </div>
+      <div class="col-md-6">
+        <span class="lbl-view">Количество дней:<span id="countDay"></span></span>
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-md-6">
+        <span class="lbl-view">Начислена:<span id="commission"></span></span>
+      </div>
+      <div class="col-md-6">
+        <span class="lbl-view">Итого к выплате:<span id="total-summ"></span></span>
+      </div>
+    </div>
+    <br/>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group has-feedback required has-default">
+          <input type="text" id="part-of-loan" class="form-control ng-pristine ng-valid ui-autocomplete-input ng-empty ng-touched" name="part_of_loan" title="Погасить часть от ссуды" placeholder="Погасить часть от ссуды" autocomplete="off" aria-invalid="false">
+          <span class="fa fa-money form-control-feedback"></span><p class="help-block help-block-error"></p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <span class="lbl-view">Минимальный срок:<span id="min-term">10</span> Дней</span>
+      </div>
+    </div>
   </div>
 </div>
- END Dialog box for Print data -->
+<!--  END Dialog box for Print data -->
 
 <!--Small Modal Window-->
 <div id="printPreviewModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm" style="width:800px;">
     <div class="modal-content">
-      <div class="modal-header">
+      <!--div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
           <h4 class="modal-title sm-title-lib">Залоговый билет</h4>
-      </div>
+      </div-->
       <div class="modal-body" ng-init="init()" id="printarea">
         <?=$temp->temp; ?>
       </div>
       <div class="modal-footer">
-          <button type="button" class="btn btn-primary savebtn" ng-click="printbtn('printarea')">Распечатать</button>
+          <button type="button" class="btn btn-primary printingbtn">Распечатать</button>
       </div>
     </div>
   </div>
