@@ -62,7 +62,8 @@ $config = [
             'updatetemplate' => 'site/updatetemplate',
             'gettemplate' => 'site/gettemplate',
             'getprintpreviewdata' => 'site/getprintpreviewdata',
-            'calcaction' => 'site/calcaction'
+            'calcaction' => 'site/calcaction',
+            'deleteaction' => 'site/deleteaction'
             ],
         ],
 

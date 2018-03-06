@@ -152,6 +152,7 @@ $scope.onCalc = function(data){
 			width: 690,
 			modal: true,
 			open: function(){
+				$('#btn1,#btn2').show();
 			},
 			close: function( event, ui ) {
 				//$("#addWindowItem").find("input[type=text], textarea").val("");
@@ -161,7 +162,7 @@ $scope.onCalc = function(data){
 				//icon: "ui-icon-seek-next",
 				id : "btn1",
 				click: function() {
-          data['astatus'] = 2;
+          data['fstatus'] = 2;
           serverSide(data);
 				}
 			},{
@@ -169,12 +170,31 @@ $scope.onCalc = function(data){
 				//icon: "ui-icon-seek-next",
 				id : "btn2",
 				click: function() {
-          data['astatus'] = 1;
+					$('#btn1,#btn2').hide();
+          data['fstatus'] = 1;
 					serverSide(data);
 				}
 			}]
 	}).dialog("open");
-	console.log(data);
+	//console.log(data);
+};
+
+$scope.onDelete = function(id){
+			$http({
+				method: 'POST',
+				url: '/deleteaction',
+				data: { id: id, token : $('#token').val() }
+			}).then(function successCallback(response) {
+        var respdata = eval(response.data);
+        if(respdata.status == 0){
+              $scope.mainlistview = eval(respdata.data.mainlistview);
+              $scope.totalmainlist = eval(respdata.data.count);
+        } else if(respdata.status > 0){
+            alert(respdata.msg);
+        }
+				}, function errorCallback(response) {
+						//console.log(response);
+			});
 };
 
 $(document).on('keyup','#part-of-loan',function(){
@@ -190,7 +210,7 @@ $(document).on('keyup','#part-of-loan',function(){
 });
 
 var calcFunc = function(data){
-	var cday = parseInt((new Date() - new Date(data['dateStart'])) / (1000 * 60 * 60 * 24))+1;
+	var cday = parseInt((new Date() - new Date(data['dateStart'])) / (1000 * 60 * 60 * 24));
 	var com = 0, totsum = 0,	minDay = 10, minSumm = 100;
 
 	if(parseInt(data['currency']) == 2){ //Если валюта доллар
@@ -242,7 +262,9 @@ var serverSide = function(data){
 			url: '/calcaction',
 			data: data
 		}).then(function successCallback(response) {
-				console.log(response);
+			  var respVal = eval(response);
+					$("#dialog-form-calculate").dialog('close');
+					$scope.getData(1,$scope.mainlistPerPage);
 			}, function errorCallback(response) {
 					//console.log(response);
 		});

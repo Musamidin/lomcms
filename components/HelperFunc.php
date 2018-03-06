@@ -4,6 +4,8 @@ namespace app\components;
 use Yii;
 use yii\base\Component;
 use app\models\ReprintView;
+use app\models\MainListView;
+use yii\data\Pagination;
 /**
  *
  */
@@ -71,7 +73,24 @@ class HelperFunc extends Component
     return $retVal;
   }
 
-
+  public function getData($param)
+  {
+    $data = [];
+    try{
+          $data['count'] = MainListView::find()->count();
+          $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+          $data['mlv'] = MainListView::find()
+          ->offset($pagination->offset)
+          ->limit($pagination->limit)
+          ->asArray()
+          ->orderBy(['last_up_date'=>SORT_DESC])
+          ->all();
+          return $data;
+    }catch(Exception $e){
+        return $e->errorInfo;
+      //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+    }
+  }
 
 }
 ?>

@@ -23,6 +23,7 @@ use app\componets\HelperFunc;
 
 class SiteController extends Controller
 {
+    public $psize = 15;
 
     public function beforeAction($action)
     {
@@ -35,7 +36,7 @@ class SiteController extends Controller
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'updatetemplate' || $action->id === 'gettemplate'){
           $this->enableCsrfValidation = false;
-        }elseif($action->id === 'calcaction'){
+        }elseif($action->id === 'calcaction' || $action->id ==='deleteaction'){
           $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -203,26 +204,16 @@ class SiteController extends Controller
     {
         $request = Yii::$app->request;
         $token = $request->get('token');
-        $page = $request->get('page');
-        $shpcount = $request->get('shpcount');
+        $data = [];
+        $data['page'] = $request->get('page');
+        $data['shpcount'] = $request->get('shpcount');
         header('Content-Type: application/json');
         if($token == md5(Yii::$app->session->getId().'opn')){
-        try{
-              $count = MainListView::find()->count();
-              $pagination = new Pagination(['defaultPageSize'=>$shpcount,'totalCount'=> $count]);
-              $mlv = MainListView::find()
-              ->offset($pagination->offset)
-              ->limit($pagination->limit)
-              ->asArray()
-              ->orderBy(['sysDate'=>SORT_DESC])
-              ->all();
-              echo json_encode(['status'=>0,
-                                'data'=>['mainlistview' => $mlv,'count' => $count],
-                                'msg'=>'OK']
-                              );
-        }catch(Exception $e){
-          echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
-        }
+          $retData = Yii::$app->HelperFunc->getData($data);
+          echo json_encode(['status'=>0,
+                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                            'msg'=>'OK']
+                          );
       }else{
         return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
       }
@@ -307,9 +298,9 @@ class SiteController extends Controller
           ->bindValue(":totalSumm",$calcData['totalsumm'])
           ->bindValue(":countDay",$calcData['countDay'])
           ->bindValue(":part_of_loan",$do->part_of_loan)
-          ->bindValue(":status",$do->astatus);
+          ->bindValue(":status",$do->fstatus);
             $data = $command->queryAll();
-            return json_encode(['status'=>$data['status'],'msg'=>$data['msg']]);
+            return json_encode(['status'=>$data[0]['status'],'msg'=>$data[0]['msg']]);
         }catch(Exception $e){
             //print_r($e->errorInfo[2]);
             echo json_encode(['status'=>1,'data'=>null,'msg'=>$e->errorInfo]);
@@ -317,5 +308,32 @@ class SiteController extends Controller
       }else{
         return false;
       }
+    }
+
+    public function actionDeleteaction()
+    {
+          //$data['page'] = 1;
+          $data['shpcount'] = $this->psize;
+          $postData = file_get_contents("php://input");
+          $do = json_decode($postData);
+          header('Content-Type: application/json');
+          if($do->token == md5(Yii::$app->session->getId().'opn')){
+              $command = Yii::$app->db->
+              createCommand("SET NOCOUNT ON; EXEC dbo.actionDelete @id =:id");
+              $command->bindValue(":id",$do->id);
+              $resp = $command->queryAll();
+              if($resp[0]['status'] == 0){
+                  $retData = Yii::$app->HelperFunc->getData($data);
+                  echo json_encode(['status'=>0,
+                                  'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                                  'msg'=>'OK']
+                                );
+              }else{
+                //print_r($resp);
+                echo json_encode(['status'=>1,'data'=>null,'msg'=>$resp->errorInfo]);
+              }
+        }else{
+          return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
     }
 }

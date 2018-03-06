@@ -15,7 +15,6 @@ use Yii;
  * @property string $other_prod
  * @property string $description
  * @property string $loan
- * @property string $part_of_loan
  * @property string $comission
  * @property double $percents
  * @property string $sysDate
@@ -27,6 +26,7 @@ use Yii;
  * @property integer $status_sms
  * @property integer $status_email
  * @property integer $status
+ * @property integer $astatus
  *
  * @property ActionList[] $actionLists
  */
@@ -47,9 +47,9 @@ class MainList extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'client_id', 'ticket', 'loan', 'comission', 'percents', 'sysDate', 'actionDate', 'dateStart', 'dateEnd'], 'required'],
-            [['user_id', 'client_id', 'ticket', 'sms', 'email', 'status_sms', 'status_email', 'status'], 'integer'],
+            [['user_id', 'client_id', 'ticket', 'sms', 'email', 'status_sms', 'status_email', 'status', 'astatus'], 'integer'],
             [['golds', 'other_prod', 'description'], 'string'],
-            [['loan', 'part_of_loan', 'comission', 'percents'], 'number'],
+            [['loan', 'comission', 'percents'], 'number'],
             [['sysDate', 'actionDate', 'dateStart', 'dateEnd'], 'safe'],
             [['ticket'], 'unique'],
         ];
@@ -69,7 +69,6 @@ class MainList extends \yii\db\ActiveRecord
             'other_prod' => 'Other Prod',
             'description' => 'Description',
             'loan' => 'Loan',
-            'part_of_loan' => 'part of loan',
             'comission' => 'Comission',
             'percents' => 'Percents',
             'sysDate' => 'Sys Date',
@@ -81,6 +80,7 @@ class MainList extends \yii\db\ActiveRecord
             'status_sms' => 'Status Sms',
             'status_email' => 'Status Email',
             'status' => 'Status',
+            'astatus' => 'aStatus',
         ];
     }
 

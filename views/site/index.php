@@ -19,7 +19,7 @@ use yii\bootstrap\ActiveForm;
            <th>Ф.И.О.</th>
            <th>Номер пасспорта</th>
            <th>Телефон</th>
-           <th>Дата выдачи</th>
+           <th>Дата начало</th>
            <th>Дата возврата</th>
            <th>Ссуда</th>
            <th>Комиссия</th>
@@ -50,7 +50,7 @@ use yii\bootstrap\ActiveForm;
             </td>
             <td>{{ml.description}}</td>
             <td>
-                <div class="btn-group">
+                <div ng-if="ml.status < '2'" class="btn-group">
                     <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
                       Действие <span class="caret"></span>
                    </button>
@@ -58,14 +58,15 @@ use yii\bootstrap\ActiveForm;
                       <li><a href="javascript:void(0)" ng-click="onCalc(ml)"><span class="fa fa-calculator"></span>&nbsp;Посчитать</a></li>
                       <li><a href="javascript:void(0)" ng-click="printTempPreview(ml.id)"><span class="fa fa-print"></span>&nbsp;Распечатать</a></li>
                       <li class="divider"></li>
-                      <li><a href="javascript:void(0)" ng-click="onRealize(ml)"><span class="fa fa-cart-arrow-down"></span>&nbsp;Списать</a></li>
-                      <li><a href="javascript:void(0)" ng-click="onDelete(ml.id)"><span class="glyphicon glyphicon-trash"></span>&nbsp;Удалить</a></li>
+                      <li ng-if="<?=Yii::$app->user->identity->id; ?> == '1' && ml.astatus == '3' || ml.astatus == '4'"><a href="javascript:void(0)" ng-click="onRealize(ml)"><span class="fa fa-cart-arrow-down"></span>&nbsp;Списать</a></li>
+                      <li ng-if="<?=Yii::$app->user->identity->id; ?> == '1' && ml.status =='0'"><a href="javascript:void(0)" ng-click="onDelete(ml.id)"><span class="glyphicon glyphicon-trash"></span>&nbsp;Удалить</a></li>
                     </ul>
                </div>
             </td>
           </tr>
       </tbody>
   </table>
+  <?=Yii::$app->user->identity->id; ?>
     <dir-pagination-controls on-page-change="pageChanged(newPageNumber)">
     </dir-pagination-controls>
     <!--max-size="3" direction-links="true" boundary-links="true"-->
@@ -308,7 +309,7 @@ use yii\bootstrap\ActiveForm;
     <br/>
     <div class="row">
       <div class="col-md-6">
-        <span class="lbl-view">Дата выдачи:<span id="dateStart"></span></span>
+        <span class="lbl-view">Дата начало:<span id="dateStart"></span></span>
       </div>
       <div class="col-md-6">
         <span class="lbl-view">Дата возврата:<span id="dateEnd"></span></span>
