@@ -264,7 +264,13 @@ var serverSide = function(data){
 		}).then(function successCallback(response) {
 			  var respVal = eval(response);
 					$("#dialog-form-calculate").dialog('close');
-					$scope.getData(1,$scope.mainlistPerPage);
+          var respdata = eval(response.data);
+          if(respdata.status == 0){
+                $scope.mainlistview = eval(respdata.data.mainlistview);
+                $scope.totalmainlist = eval(respdata.data.count);
+          } else if(respdata.status > 0){
+              alert(respdata.msg);
+          }
 			}, function errorCallback(response) {
 					//console.log(response);
 		});
@@ -715,6 +721,15 @@ $scope.savetemplate = function(){
 };
 
 }).controller("AppCtrlReport", function($scope,$http){
+    $('.input-group.date').datepicker({
+      language: "ru",
+      daysOfWeekDisabled: "1",
+      autoclose: true
+    }).on('changeDate', function(e) {
+        alert(e);
+    });
+
+
 
 }).filter('totalSumm', function() {
         return function(data, key) {

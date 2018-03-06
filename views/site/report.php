@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
           <div class="col-md-4">
             <div class="input-group date">
               <input type="text" class="form-control getbydatetime">
-              <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+              <span class="input-group-addon rep-dpicker"><i class="glyphicon glyphicon-calendar"></i></span>
             </div>
           </div>
           <div class="col-md-4">

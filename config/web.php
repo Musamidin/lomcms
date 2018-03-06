@@ -56,6 +56,7 @@ $config = [
             'login' => 'site/login',
             'logout' => 'site/logout',
             'settings' => 'site/settings',
+            'report' => 'site/report',
             'issuanceofcredit' => 'site/issuanceofcredit',
             'getautocomplete' => 'site/getautocomplete',
             'getdata' => 'site/getdata',

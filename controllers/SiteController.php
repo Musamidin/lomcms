@@ -124,6 +124,11 @@ class SiteController extends Controller
 
     }
 
+    public function actionReport()
+    {
+      return $this->render('report');
+    }
+
     /* Autocomplete AJAX Controllers */
     public function actionGetautocomplete()
     {
@@ -299,8 +304,17 @@ class SiteController extends Controller
           ->bindValue(":countDay",$calcData['countDay'])
           ->bindValue(":part_of_loan",$do->part_of_loan)
           ->bindValue(":status",$do->fstatus);
-            $data = $command->queryAll();
-            return json_encode(['status'=>$data[0]['status'],'msg'=>$data[0]['msg']]);
+            $resp = $command->queryAll();
+            if($resp[0]['status'] == 0){
+                $retData = Yii::$app->HelperFunc->getData($data);
+                echo json_encode(['status'=>0,
+                                'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                                'msg'=>'OK']
+                              );
+            }else{
+              //print_r($resp);
+              echo json_encode(['status'=>1,'data'=>null,'msg'=>$resp->errorInfo]);
+            }
         }catch(Exception $e){
             //print_r($e->errorInfo[2]);
             echo json_encode(['status'=>1,'data'=>null,'msg'=>$e->errorInfo]);
