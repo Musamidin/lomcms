@@ -57,6 +57,9 @@ $config = [
             'logout' => 'site/logout',
             'settings' => 'site/settings',
             'report' => 'site/report',
+            'smsreport' => 'site/smsreport',
+            'userreport' => 'site/userreport',
+            'recognition' => 'site/recognition',
             'issuanceofcredit' => 'site/issuanceofcredit',
             'getautocomplete' => 'site/getautocomplete',
             'getdata' => 'site/getdata',
@@ -64,7 +67,9 @@ $config = [
             'gettemplate' => 'site/gettemplate',
             'getprintpreviewdata' => 'site/getprintpreviewdata',
             'calcaction' => 'site/calcaction',
-            'deleteaction' => 'site/deleteaction'
+            'deleteaction' => 'site/deleteaction',
+            'recognitionajax' => 'site/recognitionajax',
+            'getrecognitionajax' => 'site/getrecognitionajax'
             ],
         ],
 

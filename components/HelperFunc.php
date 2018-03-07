@@ -6,6 +6,7 @@ use yii\base\Component;
 use app\models\ReprintView;
 use app\models\MainListView;
 use yii\data\Pagination;
+use app\models\Recognition;
 /**
  *
  */
@@ -84,6 +85,24 @@ class HelperFunc extends Component
           ->limit($pagination->limit)
           ->asArray()
           ->orderBy(['last_up_date'=>SORT_DESC])
+          ->all();
+          return $data;
+    }catch(Exception $e){
+        return $e->errorInfo;
+      //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+    }
+  }
+  public function getRecognition($param)
+  {
+    $data = [];
+    try{
+          $data['count'] = Recognition::find()->count();
+          $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+          $data['rnlist'] = Recognition::find()
+          ->offset($pagination->offset)
+          ->limit($pagination->limit)
+          ->asArray()
+          ->orderBy(['date_system'=>SORT_DESC])
           ->all();
           return $data;
     }catch(Exception $e){

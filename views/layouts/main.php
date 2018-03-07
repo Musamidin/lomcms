@@ -38,14 +38,33 @@ AppAsset::register($this);
       if(Yii::$app->user->identity->role == 1){
         $options = [
             //['label' => 'Главная', 'url' => ['/site/index']],
-            ['label' => 'Отчет', 'url' => ['/report']],
-            ['label' => 'Настройка',
+            //['label' => 'Отчет', 'url' => ['/report']],
+            ['label' => 'Меню',
+              'items' => [
+                   ['label' => 'Отчёт', 'url' => ['/userreport']],
+                   '<li class="divider"></li>',
+                   ['label' => 'Учет прочих р/п', 'url' => ['/recognition']],
+              ],
+            ],
+            ['label' => 'Админ',
               'items' => [
                    ['label' => 'Настройки', 'url' => ['/settings']],
-                   '<li class="divider"></li>',
                    ['label' => 'Справочник', 'url' => ['/library']],
+                   '<li class="divider"></li>',
+                   ['label' => 'Отчёт', 'url' => ['/report']],
+                   ['label' => 'СМС Отчёт', 'url' => ['/smsreport']],
               ],
             ]
+        ];
+      }else{
+        $options = [
+            ['label' => 'Меню',
+              'items' => [
+                   ['label' => 'Отчёт', 'url' => ['/userreport']],
+                   '<li class="divider"></li>',
+                   ['label' => 'Учет прочих р/п', 'url' => ['/recognition']],
+              ],
+            ],
         ];
       }
         NavBar::begin([

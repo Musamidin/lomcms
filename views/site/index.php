@@ -58,15 +58,14 @@ use yii\bootstrap\ActiveForm;
                       <li><a href="javascript:void(0)" ng-click="onCalc(ml)"><span class="fa fa-calculator"></span>&nbsp;Посчитать</a></li>
                       <li><a href="javascript:void(0)" ng-click="printTempPreview(ml.id)"><span class="fa fa-print"></span>&nbsp;Распечатать</a></li>
                       <li class="divider"></li>
-                      <li ng-if="<?=Yii::$app->user->identity->id; ?> == '1' && ml.astatus == '3' || ml.astatus == '4'"><a href="javascript:void(0)" ng-click="onRealize(ml)"><span class="fa fa-cart-arrow-down"></span>&nbsp;Списать</a></li>
-                      <li ng-if="<?=Yii::$app->user->identity->id; ?> == '1' && ml.status =='0'"><a href="javascript:void(0)" ng-click="onDelete(ml.id)"><span class="glyphicon glyphicon-trash"></span>&nbsp;Удалить</a></li>
+                      <li ng-if="<?=Yii::$app->user->identity->role; ?> == '1' && ml.astatus == '3' || ml.astatus == '4'"><a href="javascript:void(0)" ng-click="onRealize(ml)"><span class="fa fa-cart-arrow-down"></span>&nbsp;Списать</a></li>
+                      <li ng-if="<?=Yii::$app->user->identity->role; ?> == '1' && ml.status =='0'"><a href="javascript:void(0)" ng-click="onDelete(ml.id)"><span class="glyphicon glyphicon-trash"></span>&nbsp;Удалить</a></li>
                     </ul>
                </div>
             </td>
           </tr>
       </tbody>
   </table>
-  <?=Yii::$app->user->identity->id; ?>
     <dir-pagination-controls on-page-change="pageChanged(newPageNumber)">
     </dir-pagination-controls>
     <!--max-size="3" direction-links="true" boundary-links="true"-->

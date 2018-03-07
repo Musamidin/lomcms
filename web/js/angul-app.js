@@ -731,6 +731,17 @@ $scope.savetemplate = function(){
 
 
 
+}).controller("AppCtrlUserReport", function($scope,$http){
+    $('.input-group.date').datepicker({
+      language: "ru",
+      daysOfWeekDisabled: "1",
+      autoclose: true
+    }).on('changeDate', function(e) {
+        console.log(new Date(e.date).toLocaleDateString());
+    });
+
+
+
 }).filter('totalSumm', function() {
         return function(data, key) {
             if (typeof(data) === 'undefined' || typeof(key) === 'undefined') {
@@ -744,5 +755,120 @@ $scope.savetemplate = function(){
         };
 })
 .controller("AppCtrlLibrary", function($scope,$http){
+
+}).controller("AppCtrlRecognition", function($scope,$http){
+  $.fn.bootstrapBtn = $.fn.button.noConflict();
+  $scope.totalmainlist = 0;
+  $scope.mainlistPerPage = 15; // this should match however many results your API puts on one page
+  $scope.pagination = { current: 1 };
+
+  $scope.data = {};
+
+$scope.pageChanged = function(newPage) {
+  	   $scope.getrecognitionajax(newPage,$scope.mainlistPerPage);
+};
+
+$scope.getrecognitionajax = function(pageNum,showPageCount){
+
+  $http.get('/getrecognitionajax?page=' + pageNum +'&shpcount='+ showPageCount+'&token='+ $('#token').val()) // +'&pagenum='+pnum
+				.then(function(result) {
+					var respdata = eval(result.data);
+					if(respdata.status == 0){
+								$scope.rnlist = eval(respdata.data.rnlist);
+								$scope.totalmainlist = eval(respdata.data.count);
+					} else if(respdata.status > 0){
+							alert(respdata.msg);
+					}
+				}, function errorCallback(response) {
+				  	//console.log(response);
+				});
+};
+
+$scope.getrecognitionajax(1,$scope.mainlistPerPage);
+
+    $('.input-group.date.rep-dpicker').datepicker({
+      language: "ru",
+      daysOfWeekDisabled: "1",
+      autoclose: true
+    }).on('changeDate', function(e) {
+        alert(e);
+    });
+
+$scope.addlog = function(){
+
+      $("#dialog-form-recognition").dialog({
+  				title: "Регистрация (Расход/Приход)",
+  				autoOpen: false,
+  				width: 690,
+  				modal: true,
+  				open: function(){
+  				},
+  				close: function( event, ui ) {
+  					//$("#addWindowItem").find("input[type=text], textarea").val("");
+  				},
+  				buttons: [{
+  					text: "Далее",
+  					id : "btn1",
+  					click: function() {
+  						$($('#recognition-data :input').serializeArray()).each(function(index, obj){
+              	$scope.data[obj.name] = obj.value;
+        			});
+  						$scope.data['token'] = $('#token').val();
+              console.log($scope.data);
+              savedatatodb($scope.data);
+  						// var resp = checker($scope.calcData);
+  						// if(resp[0] == false){
+  						// 	alert(resp[1]);
+  						// }else{
+  						// 	savedatatodb($scope.calcData);
+  						// }
+  					}
+  				}]
+  		}).dialog("open");
+};
+
+var savedatatodb = function(data){
+    $http({
+      method: 'POST',
+      url: '/recognitionajax',
+      data: data
+    }).then(function successCallback(response) {
+
+        $("#dialog-form-recognition").dialog('close');
+          var respdata = eval(response.data);
+					if(respdata.status == 0){
+								$scope.rnlist = eval(respdata.data.rnlist);
+								$scope.totalmainlist = eval(respdata.data.count);
+					} else if(respdata.status > 0){
+							alert(respdata.msg);
+					}
+      }, function errorCallback(response) {
+          //console.log(response);
+    });
+};
+/*****************************************************/
+
+  $(document).on('change', '#transfer', function(){
+      if($(this).val() != ''){
+        $('#status_inout').val('Расход');
+        $('#status_inout').hide();
+        //$('#comments').val($('#comments').val()+'-'+$(this).val());
+      }else{
+        $('#status_inout').val('');
+        $('#status_inout').show();
+      }
+  });
+/*****************************************************/
+
+  $(document).on('click', '#trf', function(){
+      if($(this).prop('checked') == true){
+        $('#transfer').show();
+      }else{
+        $('#transfer').hide();
+        $('#transfer').val('');
+        $('#status_inout').val('');
+        $('#status_inout').show();
+      }
+  });
 
 });

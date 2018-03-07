@@ -20,6 +20,7 @@ use app\models\Library;
 use app\models\Template;
 use app\models\ReprintView;
 use app\componets\HelperFunc;
+use app\models\Recognition;
 
 class SiteController extends Controller
 {
@@ -37,6 +38,8 @@ class SiteController extends Controller
         }elseif($action->id === 'updatetemplate' || $action->id === 'gettemplate'){
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'calcaction' || $action->id ==='deleteaction'){
+          $this->enableCsrfValidation = false;
+        }elseif($action->id === 'recognitionajax' || $action->id === 'getrecognitionajax'){
           $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -100,7 +103,7 @@ class SiteController extends Controller
         return $this->redirect('login');
     }
 
-    /* Index Controllers */
+      /* Render Controllers */
     public function actionIndex()
     {
       //$curr = [];
@@ -129,6 +132,30 @@ class SiteController extends Controller
       return $this->render('report');
     }
 
+    public function actionUserreport()
+    {
+      return $this->render('userreport');
+    }
+
+    public function actionSmsreport()
+    {
+      return $this->render('smsreport');
+    }
+
+    public function actionRecognition()
+    {
+      return $this->render('recognition');
+    }
+
+    public function actionSettings()
+    {
+      if(Yii::$app->user->identity->role == 1){
+        return $this->render('settings');
+      }else{
+        return $this->redirect('/');
+      }
+    }
+
     /* Autocomplete AJAX Controllers */
     public function actionGetautocomplete()
     {
@@ -149,7 +176,7 @@ class SiteController extends Controller
             return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
         }
     }
-    //
+
     public function actionIssuanceofcredit()
     {
       $postData = file_get_contents("php://input");
@@ -221,16 +248,6 @@ class SiteController extends Controller
                           );
       }else{
         return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
-      }
-    }
-
-    /* Settings Controllers */
-    public function actionSettings()
-    {
-      if(Yii::$app->user->identity->role == 1){
-        return $this->render('settings');
-      }else{
-        return $this->redirect('/');
       }
     }
 
@@ -350,4 +367,54 @@ class SiteController extends Controller
           return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
         }
     }
+
+    public function actionGetrecognitionajax()
+    {
+        $request = Yii::$app->request;
+        $token = $request->get('token');
+        $data['page'] = $request->get('page');
+        $data['shpcount'] = $request->get('shpcount');
+
+        header('Content-Type: application/json');
+        if($token == md5(Yii::$app->session->getId().'opn')){
+          $retData = Yii::$app->HelperFunc->getRecognition($data);
+          echo json_encode(['status'=>0,
+                            'data'=>['rnlist' => $retData['rnlist'],'count' => $retData['count']],
+                            'msg'=>'OK']
+                          );
+      }else{
+        return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      }
+    }
+
+    public function actionRecognitionajax()
+    {
+        $postData = file_get_contents("php://input");
+        $do = json_decode($postData);
+        header('Content-Type: application/json');
+        if($do->token == md5(Yii::$app->session->getId().'opn')){
+            try{
+              $rn = new Recognition();
+              $rn->user_id = Yii::$app->user->identity->id;
+              $rn->date_system = date('Y-m-d\TH:i:s');
+              $rn->status = $do->status;
+              $rn->transfer = $do->transfer;
+              $rn->comments = $do->comments;
+              $rn->summ = $do->summ;
+              $rn->currency = $do->currency;
+              $rn->save();
+              $rdata = Yii::$app->HelperFunc->getRecognition($data['shpcount'] = $this->psize);
+              echo json_encode(['status'=>0,
+                              'data'=>['rnlist' => $rdata['rnlist'],'count' => $rdata['count']],
+                              'msg'=>'OK']
+                            );
+            }catch(Exception $e){
+                return json_encode(array('status'=>1,'message'=>$e->errorInfo));
+            }
+          }else{
+            return json_encode(array('status'=>2,'message'=>'Error(Invalid token!)'));
+          }
+    }
+
+
 }
