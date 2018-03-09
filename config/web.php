@@ -69,7 +69,8 @@ $config = [
             'calcaction' => 'site/calcaction',
             'deleteaction' => 'site/deleteaction',
             'recognitionajax' => 'site/recognitionajax',
-            'getrecognitionajax' => 'site/getrecognitionajax'
+            'getrecognitionajax' => 'site/getrecognitionajax',
+            'getuserreportajax' => 'site/getuserreportajax',
             ],
         ],
 

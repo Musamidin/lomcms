@@ -111,6 +111,10 @@ AppAsset::register($this);
     }
         ?>
         <?= Breadcrumbs::widget([
+          'homeLink' => [
+                      'label' => Yii::t('yii', 'Главная'),
+                      'url' => '/',
+                 ],
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
         <div class="col-md-12 main" style="min-height:500px;">

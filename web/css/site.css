@@ -344,3 +344,9 @@ div#recognition-data {
     -webkit-appearance: checkbox;
 }
 .prv-span{height: 34px;}
+.kassBadg {
+    border: 1px solid #69A246;
+    background-color: rgba(161, 189, 93, 0.31);
+    border-radius: 15px;
+    padding: 5px;
+}

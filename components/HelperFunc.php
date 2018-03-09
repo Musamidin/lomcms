@@ -92,6 +92,7 @@ class HelperFunc extends Component
       //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
     }
   }
+
   public function getRecognition($param)
   {
     $data = [];
@@ -111,5 +112,31 @@ class HelperFunc extends Component
     }
   }
 
+  public function getUserReport($param)
+  {
+    $resp = [];
+    for($i=1; $i < 8; $i++){
+       $command = Yii::$app->db->
+       createCommand("SET NOCOUNT ON; EXEC dbo.DailyReport @type =:type,@dateFrom =:dateFrom,@dateTo =:dateTo,@curr =:curr");
+       $command->bindValue(":type",$i);
+       $command->bindValue(":dateFrom",$param['datefrom']);
+       $command->bindValue(":dateTo",$param['dateto']);
+       $command->bindValue(":curr",$param['curr']);
+       $resp['rep'.$i] = $command->queryAll();
+    }
+    return $resp;
+  }
+
+  public function getTotalKassa($par)
+  {
+    $data = [];
+    $data['strKgs'] = Yii::$app->db->createCommand("SELECT [dbo].[startAndEndKassa]('".$par['datefrom']."',1) AS KGS")->queryScalar();
+    $data['strUsd'] = Yii::$app->db->createCommand("SELECT [dbo].[startAndEndKassa]('".$par['datefrom']."',2) AS USD")->queryScalar();
+
+    $data['currKgs'] = Yii::$app->db->createCommand("SELECT [dbo].[currentKassa]('".$par['datefrom']."','".$par['dateto']."',1) AS totalKassa")->queryScalar();
+    $data['currUsd'] = Yii::$app->db->createCommand("SELECT [dbo].[currentKassa]('".$par['datefrom']."','".$par['dateto']."',2) AS totalKassa")->queryScalar();
+
+    return $data;
+  }
 }
 ?>

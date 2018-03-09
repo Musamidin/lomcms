@@ -565,7 +565,13 @@ var printPhones = function(phones){
 
 var printGold = function(input,curr){
 			var strt = '';
-			var objs = JSON.parse(input);
+      var objs = {};
+      if ( jQuery.type(input) == 'string') {
+          objs = JSON.parse(input);
+      }else{
+          objs = input;
+      }
+
 		if(jQuery.isEmptyObject(objs) == false){
 		 strt = '<table class="gld-table" border="1" width="100%"><tbody class="gld-tbody"><tr><th>Группа</th><th>Проба</th><th>Кол.</th><th>Грамм</th><th>Сумма</th></tr></tbody>';
 			$.each(objs, function(key,objs){
@@ -600,9 +606,13 @@ $scope.getData = function(pageNum,showPageCount){
 }).filter("formatDatetime", function ()
 {
     return function (input) {
+      if(jQuery.isEmptyObject(input) == false){
 				var dt = input.slice(0, -4).split('-');
 				var td = dt[2].split(' ');
         return td[0]+'.'+dt[1]+'.'+dt[0]+' '+td[1];
+      }else{
+        return '';
+      }
     }
 }).filter("phone", function ()
 {
@@ -646,7 +656,11 @@ $scope.getData = function(pageNum,showPageCount){
 }).filter("fixedto", function()
 {
 	return function(input){
-		return parseFloat(input).toFixed(2);
+    if(jQuery.isEmptyObject(input) == false){
+		    return parseFloat(input).toFixed(2);
+    }else{
+      return 0;
+    }
 	}
 }).filter("parser", function(){
 	return function(input,param1,id){
@@ -732,15 +746,48 @@ $scope.savetemplate = function(){
 
 
 }).controller("AppCtrlUserReport", function($scope,$http){
+
+  $scope.kassa = {};
+
     $('.input-group.date').datepicker({
       language: "ru",
-      daysOfWeekDisabled: "1",
+      format: 'yyyy-mm-dd',
       autoclose: true
     }).on('changeDate', function(e) {
-        console.log(new Date(e.date).toLocaleDateString());
+        $http.get('/getuserreportajax?datefrom=' + $('.getbydatetime').val()+'T00:00:00' +'&dateto='+ $('.getbydatetime').val()+'T23:59:59'+'&typereport='+$('#typereport').val()+'&token='+ $('#token').val()) // +'&pagenum='+pnum
+              .then(function(result) {
+                //console.log(result);
+                var respdata = eval(result.data);
+                if(respdata.status == 0){
+                      $scope.kgs = eval(respdata.data.kgs);
+                      $scope.usd = eval(respdata.data.usd);
+                      $scope.kassa = eval(respdata.data.kassa);
+                } else if(respdata.status > 0){
+                    alert(respdata.msg);
+                }
+              }, function errorCallback(response) {
+                  //console.log(response);
+              });
     });
 
+    /**************************saveExcel***********************************/
+    $(document).on('click', '.saveExcel', function(e){
 
+      	if($('.getbydatetime').val() == ''){
+      		alert('Выберите дату!!!');
+      		return false;
+      	}else{
+     		$("#table2excel").table2excel({
+     		    // exclude CSS class
+     		    exclude: ".noExl",
+     		    name: "Excel Document Name",
+     			filename: "Отёт "+$('.getbydatetime').val(),
+     			exclude_img: true,
+     			exclude_links: true,
+     			exclude_inputs: true
+     		});
+      	}
+    });
 
 }).filter('totalSumm', function() {
         return function(data, key) {
@@ -788,7 +835,6 @@ $scope.getrecognitionajax(1,$scope.mainlistPerPage);
 
     $('.input-group.date.rep-dpicker').datepicker({
       language: "ru",
-      daysOfWeekDisabled: "1",
       autoclose: true
     }).on('changeDate', function(e) {
         alert(e);

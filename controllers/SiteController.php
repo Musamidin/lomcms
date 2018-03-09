@@ -41,6 +41,8 @@ class SiteController extends Controller
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'recognitionajax' || $action->id === 'getrecognitionajax'){
           $this->enableCsrfValidation = false;
+        }elseif($action->id === 'getuserreportajax'){
+          $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
     }
@@ -311,7 +313,8 @@ class SiteController extends Controller
       */
       if($do->token === md5(Yii::$app->session->getId().'opn')){
         $calcData = Yii::$app->HelperFunc->midasCalc($do);
-        //print_r($calcData);
+        $param['page'] = 1;
+        $param['shpcount'] = $this->psize;
         try{
           $command = Yii::$app->db->
           createCommand("SET NOCOUNT ON; EXEC dbo.actionCalc @id =:id, @comission =:comission, @totalSumm =:totalSumm, @countDay =:countDay, @part_of_loan =:part_of_loan, @status =:status");
@@ -323,7 +326,7 @@ class SiteController extends Controller
           ->bindValue(":status",$do->fstatus);
             $resp = $command->queryAll();
             if($resp[0]['status'] == 0){
-                $retData = Yii::$app->HelperFunc->getData($data);
+                $retData = Yii::$app->HelperFunc->getData($param);
                 echo json_encode(['status'=>0,
                                 'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
                                 'msg'=>'OK']
@@ -393,6 +396,8 @@ class SiteController extends Controller
         $do = json_decode($postData);
         header('Content-Type: application/json');
         if($do->token == md5(Yii::$app->session->getId().'opn')){
+          $param['page'] = 1;
+          $param['shpcount'] = $this->psize;
             try{
               $rn = new Recognition();
               $rn->user_id = Yii::$app->user->identity->id;
@@ -403,7 +408,7 @@ class SiteController extends Controller
               $rn->summ = $do->summ;
               $rn->currency = $do->currency;
               $rn->save();
-              $rdata = Yii::$app->HelperFunc->getRecognition($data['shpcount'] = $this->psize);
+              $rdata = Yii::$app->HelperFunc->getRecognition($param);
               echo json_encode(['status'=>0,
                               'data'=>['rnlist' => $rdata['rnlist'],'count' => $rdata['count']],
                               'msg'=>'OK']
@@ -416,5 +421,30 @@ class SiteController extends Controller
           }
     }
 
+    public function actionGetuserreportajax()
+    {
+        $request = Yii::$app->request;
+        //$retData = [];
+        $token = $request->get('token');
+        $data['datefrom'] = $request->get('datefrom');
+        $data['dateto'] = $request->get('dateto');
+        $data['typereport'] = $request->get('typereport');
+
+        header('Content-Type: application/json');
+        if($token == md5(Yii::$app->session->getId().'opn')){
+            $data['curr'] = 1;
+            $retKgs = Yii::$app->HelperFunc->getUserReport($data);
+            $data['curr'] = 2;
+            $retUsd = Yii::$app->HelperFunc->getUserReport($data);
+            $kassa = Yii::$app->HelperFunc->getTotalKassa($data);
+            //print_r($kassa);
+            echo json_encode(['status'=>0,
+                              'data'=>['kgs' => $retKgs,'usd' => $retUsd,'kassa'=>$kassa],
+                              'msg'=>'OK']
+                            );
+        }else{
+          return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }
 
 }
