@@ -49,7 +49,6 @@ AppAsset::register($this);
             ['label' => 'Админ',
               'items' => [
                    ['label' => 'Настройки', 'url' => ['/settings']],
-                   ['label' => 'Справочник', 'url' => ['/library']],
                    '<li class="divider"></li>',
                    ['label' => 'Отчёт', 'url' => ['/report']],
                    ['label' => 'СМС Отчёт', 'url' => ['/smsreport']],
@@ -97,6 +96,7 @@ AppAsset::register($this);
             'options' => ['class' => 'navbar-nav collapse navbar-collapse navbar-right'],
             'items' => $options,
         ]);
+        if(Yii::$app->request->url == '/'){
         echo '<form class="navbar-form navbar-nav text-center">
     <button type="button" id="addModal" class="btn btn-success mar-left addModal">
     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Выдать кредит</button>  <!--data-toggle="modal" data-target="#addDataModal"-->
@@ -107,6 +107,7 @@ AppAsset::register($this);
       <button type="button" id="exchangeModal" class="btn btn-info mar-left exchangeModal">
     <span class="glyphicon glyphicon-random" aria-hidden="true"></span>&nbsp;&nbsp;Конвертация</button>
       </form>';
+      }
         NavBar::end();
     }
         ?>
