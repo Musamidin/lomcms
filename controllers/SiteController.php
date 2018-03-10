@@ -41,7 +41,7 @@ class SiteController extends Controller
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'recognitionajax' || $action->id === 'getrecognitionajax'){
           $this->enableCsrfValidation = false;
-        }elseif($action->id === 'getuserreportajax'){
+        }elseif($action->id === 'getuserreportajax' || $action->id === 'searchajax'){
           $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -447,4 +447,29 @@ class SiteController extends Controller
         }
     }
 
+    public function actionSearchajax()
+    {
+        $postData = file_get_contents("php://input");
+        $do = json_decode($postData);
+        header('Content-Type: application/json');
+        //print_r($do);
+        if($do->token == md5(Yii::$app->session->getId().'opn')){
+          try{
+                $mlv = MainListView::find()
+                ->filterWhere(['LIKE', $do->field, $do->key])
+                ->asArray()
+                ->orderBy(['last_up_date'=>SORT_DESC])
+                ->all();
+                echo json_encode(['status'=>0,
+                                'data'=>['mainlistview' => $mlv,'count' => 1],
+                                'msg'=>'OK']
+                              );
+          }catch(Exception $e){
+              echo json_encode(['status'=>1,'data'=>null,'msg'=>$resp->errorInfo]);
+          }
+        }else{
+
+          return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }
 }

@@ -138,6 +138,7 @@ var savedata = function(param){
 
 /** START Calculate function **/
 $scope.onCalc = function(data){
+  $('#part-of-loan').val('');
 	$.each(data,function(key,val){
 		if(key == 'loan' || key == 'ticket' || key == 'dateStart' || key == 'dateEnd' || key == 'percents'){
 			$('#'+key).text(val);
@@ -162,8 +163,12 @@ $scope.onCalc = function(data){
 				//icon: "ui-icon-seek-next",
 				id : "btn1",
 				click: function() {
-          data['fstatus'] = 2;
-          serverSide(data);
+          if($('#part-of-loan').val() != ''){
+            alert('Для выкупа ссуды удалите введеную вами частичную сумму!');
+          }else{
+            data['fstatus'] = 2;
+            serverSide(data);
+          }
 				}
 			},{
 				text: "Продлить кредит",
@@ -200,7 +205,7 @@ $scope.onDelete = function(id){
 $(document).on('keyup','#part-of-loan',function(){
 		if(parseInt(this.value) < parseInt($('#loan').text())){
 			$('#btn1').attr('disabled',true).hide();
-		}else if(parseInt(this.value) == parseInt($('#loan').text())){
+		}else if(this.value == ''){
 			$('#btn1').attr('disabled',false).show();
 		}else if(parseInt(this.value) > parseInt($('#loan').text())){
 			alert('Часть от ссуды не может быть больше чем выданная ссуда!');
@@ -547,21 +552,46 @@ var clearCalFormFunc = function(){
 		//$('.gold-form-box :input').val('');
 		$('#tbody-gold').html('');
 		$('#thing_table').hide();
+    $('#credit-data :input,textarea').val('');
+    $("#mainlist-currency option[value='Ваюта']").prop('selected', true);
+    $("#mainlist-percents option[value='% ставка']").prop('selected', true);
+    $('#numCount').val(1);
 };
 /** END FUNCTIONS **/
 
-/*
-var printPhones = function(phones){
-	var str = '';
-	if(jQuery.isEmptyObject(phones) == false){
-			for(i=0; i< phones.length; i++){
-						str += phones[i]+'; ';
-			}
-			//str += str.slice(0, -2);
-	}
-	$('.print-phones').html(str);
+$(document).on('keyup','#searcher',function(){
+      if($.isNumeric(this.value) == true){
+        if(this.value.length > 4){
+          search('ticket',this.value);
+        }else if(this.value.length == 0){
+          $scope.getData(1,$scope.mainlistPerPage);
+        }
+      }else{
+        if(this.value.length > 4){
+          search('fio',this.value);
+        }else if(this.value.length == 0){
+          $scope.getData(1,$scope.mainlistPerPage);
+        }
+      }
+});
+
+var search = function(field,value){
+  $http({
+    method: 'POST',
+    url: '/searchajax',
+    data: { field: field, key: value, token : $('.tokenclass').val() }
+  }).then(function successCallback(result) {
+        var respdata = eval(result.data);
+        if(respdata.status == 0){
+              $scope.mainlistview = eval(respdata.data.mainlistview);
+              $scope.totalmainlist = eval(respdata.data.count);
+        } else if(respdata.status > 0){
+            alert(respdata.msg);
+        }
+    }, function errorCallback(response) {
+        //console.log(response);
+  });
 };
-*/
 
 var printGold = function(input,curr){
 			var strt = '';

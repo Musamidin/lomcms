@@ -71,6 +71,7 @@ $config = [
             'recognitionajax' => 'site/recognitionajax',
             'getrecognitionajax' => 'site/getrecognitionajax',
             'getuserreportajax' => 'site/getuserreportajax',
+            'searchajax' => 'site/searchajax',
             ],
         ],
 

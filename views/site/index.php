@@ -7,6 +7,7 @@ use yii\bootstrap\ActiveForm;
 ?>
 
 <div ng-controller="AppCtrl" class="site-index">
+  <input type="hidden" class="tokenclass" name="token" value="<?=md5(Yii::$app->session->getId().'opn');?>"/>
   <div id="index" class="body-content-page">
     <br/>
     <div class="row">
@@ -171,7 +172,7 @@ use yii\bootstrap\ActiveForm;
                     </div>
                     <div class="col-md-2 paddLR0">
                       <div class="form-group field-mainform-golds has-feedback required field-mainlist-golds">
-                        <select id="mainlist-golds" class="form-control" name="sample" ng-model="data.sample">
+                        <select id="mainlist-sample" class="form-control" name="sample" ng-model="data.sample">
                           <option value="" selected="selected">Проба</option>
                           <? foreach (Yii::$app->ListItem->getList(1) as $item): ?>
                             <option value="<?=$item['keyname']; ?>"><?=$item['keyname']; ?></option>
