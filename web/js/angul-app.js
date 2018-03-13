@@ -216,7 +216,8 @@ $(document).on('keyup','#part-of-loan',function(){
 
 var calcFunc = function(data){
 	var cday = parseInt((new Date() - new Date(data['dateStart'])) / (1000 * 60 * 60 * 24));
-	var com = 0, totsum = 0,	minDay = 10, minSumm = 100;
+  if(cday == 0){ cday = 1; }
+  var com = 0, totsum = 0,	minDay = 10, minSumm = 100, tempDay = 0;
 
 	if(parseInt(data['currency']) == 2){ //Если валюта доллар
 			if(parseInt(data['status']) > 0){ //Если статус был проден
@@ -246,8 +247,28 @@ var calcFunc = function(data){
 	 				  	totsum = (parseFloat(data['loan']) + com);
 
 					}else{ //Если сумма ссуды < 1000
-						if((cday % 30) !== 0){ tempDay = ((cday-(cday % 30))/30+1); }
-						com = (tempDay == 0 ? parseFloat(data['percents']) : (tempDay * parseFloat(data['percents'])));
+            /*
+            if(cday < minDay){ cday = minDay; }
+            com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
+            if(com < minSumm)
+            {
+                if((cday % 30) == 0){
+                  if((cday/30) == 1){
+                    com = minSumm;
+                  }else{
+                    com = (minSumm * (cday/30));
+                  }
+                }else{
+                  if((cday/30) == 1){
+                    com = minSumm;
+
+                  }else{
+                    com = (minSumm * (cday/30));
+                    console.log((cday/30));
+                  }
+                }
+            }
+            */
 						totsum = (parseFloat(data['loan']) + com);
 					}
 			}
@@ -256,7 +277,7 @@ var calcFunc = function(data){
 	$('#total-summ').text(Math.round(totsum).toFixed(2)  +' '+curr(data['currency']));
 	$('#countDay').text(cday);
 	$('#min-term').text(minDay);
-	console.log(com);
+
 };
 
 var serverSide = function(data){
