@@ -26,7 +26,6 @@ AppAsset::register($this);
 
 <header>
     <div class="container">
-        asdas
     </div>
 </header>
 

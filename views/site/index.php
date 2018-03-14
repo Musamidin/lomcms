@@ -9,6 +9,15 @@ use yii\bootstrap\ActiveForm;
 <div ng-controller="AppCtrl" class="site-index">
   <input type="hidden" class="tokenclass" name="token" value="<?=md5(Yii::$app->session->getId().'opn');?>"/>
   <div id="index" class="body-content-page">
+    <div ng-init="getinit()" class="row stsbar">
+        <div class="col-md-1"></div>
+        <div class="col-md-2 text-center"><span ng-click="getbystatus(1)" id="sts1" class="stsbtns">Продлен<span class="pull-right badge bg-red">{{stsbar.sts1}}</span></span></div>
+        <div class="col-md-2 text-center"><span ng-click="getbystatus(3)" id="sts3" class="stsbtns">Просрочен<span class="pull-right badge bg-red">{{stsbar.sts3}}</span></span></div>
+        <div class="col-md-2 text-center"><span ng-click="getbystatus(4)" id="sts4" class="stsbtns">Продвинут срок<span class="pull-right badge bg-red">{{stsbar.sts4}}</span></span></div>
+        <div class="col-md-2 text-center"><span ng-click="getbystatus(2)" id="sts2" class="stsbtns">Выкуп<span class="pull-right badge bg-red">{{stsbar.sts2}}</span></span></div>
+        <div class="col-md-2 text-center"><span ng-click="getbystatus(5)" id="sts5" class="stsbtns">Реализован<span class="pull-right badge bg-red">{{stsbar.sts5}}</span></span></div>
+        <div class="col-md-1"></div>
+    </div>
     <br/>
     <div class="row">
     </div>

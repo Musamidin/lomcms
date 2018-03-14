@@ -185,14 +185,17 @@ class SiteController extends Controller
       $do = json_decode($postData);
       if(!empty($do->token) && $do->token == md5(Yii::$app->session->getId().'opn')){
         $data = Yii::$app->HelperFunc->dataProcessing($do);
+        $calcData = Yii::$app->HelperFunc->midasCalc($do);
         //print_r(Yii::$app->user->identity->id);
           try{
             $command = Yii::$app->db->
-            createCommand("SET NOCOUNT ON; EXEC dbo.actionData @id =:id,@loan =:loan,@currency =:currency,@percents =:percents,@description =:description,@other_prod =:other_prod,@gold =:gold,@user_id =:user_id,@fio =:fio,@date_of_issue =:date_of_issue,@passport_id =:passport_id,@passport_issued =:passport_issued,@phone =:phone, @address =:address");
+            createCommand("SET NOCOUNT ON; EXEC dbo.actionData @id =:id,@loan =:loan,@currency =:currency,@percents =:percents,@comission =:comission, @totalsumm =:totalsumm, @description =:description,@other_prod =:other_prod,@gold =:gold,@user_id =:user_id,@fio =:fio,@date_of_issue =:date_of_issue,@passport_id =:passport_id,@passport_issued =:passport_issued,@phone =:phone, @address =:address");
             $command->bindValue(":id",$data['id'])
             ->bindValue(":loan",$data['loan'])
             ->bindValue(":currency",$data['currency'])
             ->bindValue(":percents",$data['percents'])
+            ->bindValue(":comission",$calcData['comission'])
+            ->bindValue(":totalsumm",$calcData['totalsumm'])
             ->bindValue(":description",$data['description'])
             ->bindValue(":other_prod",$data['other_prod'])
             ->bindValue(":gold",$data['gold'])
@@ -240,12 +243,14 @@ class SiteController extends Controller
         $token = $request->get('token');
         $data = [];
         $data['page'] = $request->get('page');
+        $data['sts'] = $request->get('sts');
         $data['shpcount'] = $request->get('shpcount');
         header('Content-Type: application/json');
         if($token == md5(Yii::$app->session->getId().'opn')){
           $retData = Yii::$app->HelperFunc->getData($data);
+          $stsbar = Yii::$app->HelperFunc->getStsBar();
           echo json_encode(['status'=>0,
-                            'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                            'data'=>['stsbar'=>$stsbar[0],'mainlistview' => $retData['mlv'],'count' => $retData['count']],
                             'msg'=>'OK']
                           );
       }else{
@@ -314,6 +319,7 @@ class SiteController extends Controller
       if($do->token === md5(Yii::$app->session->getId().'opn')){
         $calcData = Yii::$app->HelperFunc->midasCalc($do);
         $param['page'] = 1;
+        $data['sts'] = 0;
         $param['shpcount'] = $this->psize;
         try{
           $command = Yii::$app->db->
@@ -327,8 +333,9 @@ class SiteController extends Controller
             $resp = $command->queryAll();
             if($resp[0]['status'] == 0){
                 $retData = Yii::$app->HelperFunc->getData($param);
+                $stsbar = Yii::$app->HelperFunc->getStsBar();
                 echo json_encode(['status'=>0,
-                                'data'=>['mainlistview' => $retData['mlv'],'count' => $retData['count']],
+                                'data'=>['stsbar'=>$stsbar[0],'mainlistview' => $retData['mlv'],'count' => $retData['count']],
                                 'msg'=>'OK']
                               );
             }else{

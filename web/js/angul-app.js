@@ -8,10 +8,12 @@ $scope.totalmainlist = 0;
 $scope.mainlistPerPage = 15; // this should match however many results your API puts on one page
 $scope.pagination = { current: 1 };
 
+$scope.minSumm = 100;
 $scope.list = {};
 $scope.data = {};
 $scope.formData = {};
 $scope.calcData = {};
+$scope.bystatus = 0;
 
 var arrTs = [];
 var phoneBook = [];
@@ -129,7 +131,7 @@ var savedata = function(param){
 				$('#printPreviewModal').modal({ keyboard: false });
 				printGold(param['gold'],curr(param['currency']));
 				$scope.init = function(){ };
-				$scope.getData(1,$scope.mainlistPerPage);
+				$scope.getData(1,$scope.mainlistPerPage,$scope.bystatus);
 			}, function errorCallback(response) {
 					//console.log(response);
 		});
@@ -217,14 +219,14 @@ $(document).on('keyup','#part-of-loan',function(){
 var calcFunc = function(data){
 	var cday = parseInt((new Date() - new Date(data['dateStart'])) / (1000 * 60 * 60 * 24));
   if(cday == 0){ cday = 1; }
-  var com = 0, totsum = 0,	minDay = 10, minSumm = 100, tempDay = 0;
+  var com = 0, totsum = 0,	minDay = 10, minSumm = 100;
+  if(cday < minDay){ cday = minDay; }
 
 	if(parseInt(data['currency']) == 2){ //Если валюта доллар
 			if(parseInt(data['status']) > 0){ //Если статус был проден
 					com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
 					totsum = (parseFloat(data['loan']) + com);
 			}else{
-				 if(cday < minDay){ cday = minDay; }
 				 com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
 				 totsum = (parseFloat(data['loan']) + com);
 			}
@@ -233,42 +235,35 @@ var calcFunc = function(data){
 					if(parseFloat(data['loan']) > 1000){ //Если сумма ссуды > 1000
 						com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
 	 				  totsum = (parseFloat(data['loan']) + com);
-            console.log(cday);
 					}else{ //Если сумма ссуды < 1000
-							if((cday % 30) !== 0){ tempDay = ((cday-(cday % 30))/30+1); }
-							com = (tempDay == 0 ? parseFloat(data['percents']) : (tempDay * parseFloat(data['percents'])));
-		 				  totsum = (parseFloat(data['loan']) + com);
+            com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
+            if(cday <= 30){
+              com = (com < minSumm) ? minSumm : com;
+            }else if(cday <= 60){
+              com = (com < (minSumm * 2)) ? (minSumm * 2) : com;
+            }else if( cday <= 90){
+              com = (com < (minSumm * 3)) ? (minSumm * 3) : com;
+            }else if( cday <= 120){
+              com = (com < (minSumm * 4)) ? (minSumm * 4) : com;
+            }
+              totsum = (parseFloat(data['loan']) + com);
 					}
 			}else{ //Если статус 0 (Первый раз)
 					if(parseFloat(data['loan']) > 1000){ //Если сумма ссуды > 1000
-						if(cday < minDay){ cday = minDay; }
 							com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
 						if(com < minSumm){ com = minSumm; }
 	 				  	totsum = (parseFloat(data['loan']) + com);
-
 					}else{ //Если сумма ссуды < 1000
-            /*
-            if(cday < minDay){ cday = minDay; }
             com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
-            if(com < minSumm)
-            {
-                if((cday % 30) == 0){
-                  if((cday/30) == 1){
-                    com = minSumm;
-                  }else{
-                    com = (minSumm * (cday/30));
-                  }
-                }else{
-                  if((cday/30) == 1){
-                    com = minSumm;
-
-                  }else{
-                    com = (minSumm * (cday/30));
-                    console.log((cday/30));
-                  }
-                }
-            }
-            */
+              if(cday <= 30){
+                com = (com < minSumm) ? minSumm : com;
+              }else if(cday <= 60){
+                com = (com < (minSumm * 2)) ? (minSumm * 2) : com;
+              }else if( cday <= 90){
+                com = (com < (minSumm * 3)) ? (minSumm * 3) : com;
+              }else if( cday <= 120){
+                com = (com < (minSumm * 4)) ? (minSumm * 4) : com;
+              }
 						totsum = (parseFloat(data['loan']) + com);
 					}
 			}
@@ -294,6 +289,8 @@ var serverSide = function(data){
           if(respdata.status == 0){
                 $scope.mainlistview = eval(respdata.data.mainlistview);
                 $scope.totalmainlist = eval(respdata.data.count);
+                $scope.stsbar = eval(respdata.data.stsbar);
+                $scope.getinit = function(){ };
           } else if(respdata.status > 0){
               alert(respdata.msg);
           }
@@ -399,10 +396,10 @@ $(document).on('click', '#add-gold', function(){
 					if(flag){
 						 $('#thing_table').show();
 							var data = {};
-							var appdata;
-							var n=1;
+							var appdata, n = 1;
 							$(formdata).each(function(index, obj){
 										data[obj.name] = obj.value;
+                    data['currs'] = curr($('#mainlist-currency').val());
 							});
 							arrTs.push(data);
 							$('#numCount').val(Number(data.num)+1);
@@ -412,7 +409,7 @@ $(document).on('click', '#add-gold', function(){
 							'</td><td>'+data.sample+'пр.'+
 							'</td><td>'+data.count+'шт.'+
 							'</td><td>'+data.gramm+'гр.'+
-							'</td><td>'+data.summ+' '+ curr($('#mainlist-currency').val()) +
+							'</td><td>'+data.summ+' '+ data.currs +
 							'</td><td>'+
 							'<a href="javascript:void(0);" class="delRow" id="r'+data.num+'"><span class="glyphicon glyphicon-trash"></span></a>'+
 							'</td></tr>';
@@ -429,7 +426,12 @@ $(document).on('click', '#add-gold', function(){
 });
 
 var curr = function(arg){
-	if(Number(arg) == 1){ return 'KGS'; }else if(Number(arg) == 2){ return 'USD'; }
+  if(arg != ''){
+    return (Number(arg) == 1) ? 'KGS' : 'USD';
+  }else{
+    return '';
+  }
+	//if(Number(arg) == 1){ return 'KGS'; }else if(Number(arg) == 2){ return 'USD'; }
 }
 /**END IN TAB GOLDS FUNCTIONS **/
 
@@ -499,25 +501,35 @@ $(document).on('change', '#mainlist-currency', function(){
 });
 
 $(document).on('change', '#mainlist-percents', function(){
-		var val = 0;
-		if($('#mainlist-percents').val() == ''){
-			val = 0;
-		}else{
-			val = $('#mainlist-percents').val();
-		}
-		var result = (Number($('#mainlist-loan').val())/100 * parseFloat(val) * 30);
-		$('#comission').text(Math.round(result)+' Сом');
+      var val = 0;
+      val = ($('#mainlist-percents').val() == '') ? 0 : $('#mainlist-percents').val();
+
+      if($('#mainlist-currency').val() == 1){
+          var result = (Number($('#mainlist-loan').val())/100 * parseFloat(val) * 30);
+          result = (result < $scope.minSumm) ? 100 : result;
+      }else if($('#mainlist-currency').val() == 2){
+        var result = (Number($('#mainlist-loan').val())/100 * parseFloat(val) * 30);
+      }else{
+        result = 0;
+        alert('Выберите валюту!');
+      }
+		$('#comission').text(Math.round(result)+' '+curr($('#mainlist-currency').val()));
 });
 
 $(document).on('keyup', '#mainlist-loan', function(){
-		var val = 0;
-		if($('#mainlist-percents').val() == ''){
-			val = 0;
-		}else{
-			val = $('#mainlist-percents').val();
-		}
-		var result = (Number($('#mainlist-loan').val())/100 * parseFloat(val) * 30);
-		$('#comission').text(Math.round(result)+' Сом');
+  		var val = 0;
+  		val = ($('#mainlist-percents').val() == '') ? 0 : $('#mainlist-percents').val();
+
+      if($('#mainlist-currency').val() == 1){
+  		    var result = (Number($('#mainlist-loan').val())/100 * parseFloat(val) * 30);
+          result = (result < $scope.minSumm) ? 100 : result;
+      }else if($('#mainlist-currency').val() == 2){
+        var result = (Number($('#mainlist-loan').val())/100 * parseFloat(val) * 30);
+      }else{
+        result = 0;
+        alert('Выберите валюту!');
+      }
+		  $('#comission').text(Math.round(result)+' '+curr($('#mainlist-currency').val()));
 });
 /** END CALC FUNCTIONS **/
 
@@ -545,7 +557,7 @@ $scope.printTempPreview = function(pid){
 		}).then(function successCallback(response) {
 				$scope.data = response.data.data;
 				var state = response.data;
-				printGold($scope.data['golds'],curr($scope.data['currency']));
+				printGold($scope.data['golds']);
 				$scope.init = function(){ };
 				$('#printPreviewModal').modal({ keyboard: false });
 			}, function errorCallback(response) {
@@ -577,6 +589,7 @@ var clearCalFormFunc = function(){
     $("#mainlist-currency option[value='Ваюта']").prop('selected', true);
     $("#mainlist-percents option[value='% ставка']").prop('selected', true);
     $('#numCount').val(1);
+    $('#comission').text(0);
 };
 /** END FUNCTIONS **/
 
@@ -585,13 +598,13 @@ $(document).on('keyup','#searcher',function(){
         if(this.value.length > 4){
           search('ticket',this.value);
         }else if(this.value.length == 0){
-          $scope.getData(1,$scope.mainlistPerPage);
+          $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus);
         }
       }else{
         if(this.value.length > 4){
           search('fio',this.value);
         }else if(this.value.length == 0){
-          $scope.getData(1,$scope.mainlistPerPage);
+          $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus);
         }
       }
 });
@@ -614,7 +627,12 @@ var search = function(field,value){
   });
 };
 
-var printGold = function(input,curr){
+$scope.getbystatus = function(sid){
+  $scope.bystatus = sid;
+  $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus);
+};
+
+var printGold = function(input){
 			var strt = '';
       var objs = {};
       if ( jQuery.type(input) == 'string') {
@@ -626,7 +644,7 @@ var printGold = function(input,curr){
 		if(jQuery.isEmptyObject(objs) == false){
 		 strt = '<table class="gld-table" border="1" width="100%"><tbody class="gld-tbody"><tr><th>Группа</th><th>Проба</th><th>Кол.</th><th>Грамм</th><th>Сумма</th></tr></tbody>';
 			$.each(objs, function(key,objs){
-				strt += '<tr><td>'+objs.groups+'</td><td>'+ objs.sample +' пр.</td><td>'+objs.count +' шт.</td><td>'+objs.gramm+' гр.</td><td>'+objs.summ+' '+curr+'</td></tr>';
+				strt += '<tr><td>'+objs.groups+'</td><td>'+ objs.sample +' пр.</td><td>'+objs.count +' шт.</td><td>'+objs.gramm+' гр.</td><td>'+objs.summ+' '+objs.currs+'</td></tr>';
 			});
 			strt += '</table>';
 		}
@@ -634,16 +652,17 @@ var printGold = function(input,curr){
 };
 
 $scope.pageChanged = function(newPage) {
-	       $scope.getData(newPage,$scope.mainlistPerPage);
+	       $scope.getData(newPage,$scope.mainlistPerPage,$scope.bystatus);
 	};
 
-$scope.getData = function(pageNum,showPageCount){
-	$http.get('/getdata?page=' + pageNum +'&shpcount='+ showPageCount+'&token='+ $('#token').val()) // +'&pagenum='+pnum
+$scope.getData = function(pageNum,showPageCount,sts){
+	$http.get('/getdata?page=' + pageNum +'&shpcount='+ showPageCount+'&sts='+ sts +'&token='+ $('#token').val()) // +'&pagenum='+pnum
 				.then(function(result) {
 					var respdata = eval(result.data);
 					if(respdata.status == 0){
 								$scope.mainlistview = eval(respdata.data.mainlistview);
 								$scope.totalmainlist = eval(respdata.data.count);
+                $scope.stsbar = eval(respdata.data.stsbar);
 					} else if(respdata.status > 0){
 							alert(respdata.msg);
 					}
@@ -652,7 +671,7 @@ $scope.getData = function(pageNum,showPageCount){
 				});
 	};
 
-	$scope.getData(1,$scope.mainlistPerPage);
+	$scope.getData(1,$scope.mainlistPerPage,$scope.bystatus);
 
 }).filter("formatDatetime", function ()
 {
