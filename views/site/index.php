@@ -60,7 +60,7 @@ use yii\bootstrap\ActiveForm;
             </td>
             <td>{{ml.description}}</td>
             <td>
-                <div ng-if="ml.status < '2'" class="btn-group">
+                <div ng-if="ml.status != '2' && ml.status != '5'" class="btn-group">
                     <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
                       Действие <span class="caret"></span>
                    </button>
@@ -68,7 +68,7 @@ use yii\bootstrap\ActiveForm;
                       <li><a href="javascript:void(0)" ng-click="onCalc(ml)"><span class="fa fa-calculator"></span>&nbsp;Посчитать</a></li>
                       <li><a href="javascript:void(0)" ng-click="printTempPreview(ml.id)"><span class="fa fa-print"></span>&nbsp;Распечатать</a></li>
                       <li class="divider"></li>
-                      <li ng-if="<?=Yii::$app->user->identity->role; ?> == '1' && ml.astatus == '3' || ml.astatus == '4'"><a href="javascript:void(0)" ng-click="onRealize(ml)"><span class="fa fa-cart-arrow-down"></span>&nbsp;Списать</a></li>
+                      <li ng-if="<?=Yii::$app->user->identity->role; ?> == '1' && ml.status == '3' || ml.status == '4'"><a href="javascript:void(0)" ng-click="onRealize(ml)"><span class="fa fa-cart-arrow-down"></span>&nbsp;Списать</a></li>
                       <li ng-if="<?=Yii::$app->user->identity->role; ?> == '1' && ml.status =='0'"><a href="javascript:void(0)" ng-click="onDelete(ml.id)"><span class="glyphicon glyphicon-trash"></span>&nbsp;Удалить</a></li>
                     </ul>
                </div>

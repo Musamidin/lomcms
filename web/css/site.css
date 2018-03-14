@@ -213,7 +213,9 @@ a.desc:after {
 .mb-row{margin-bottom: 8px;}
 .table-striped > tbody > tr.color1{background: #d0eade; }
 .table-striped > tbody > tr.color2{background: darkgray;}
-.color3{background: khaki;}
+.table-striped > tbody > tr.color3{background: darksalmon;}
+.table-striped > tbody > tr.color4{background: khaki;}
+.table-striped > tbody > tr.color5{background: khaki;}
 #library > .row > .col-md-3 {
   text-align: center;
   border: 1px solid #08c;

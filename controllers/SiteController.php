@@ -183,9 +183,11 @@ class SiteController extends Controller
     {
       $postData = file_get_contents("php://input");
       $do = json_decode($postData);
+      $do->{"dateStart"} = date('Y-m-d');
+      $do->{"status"} = 0;
       if(!empty($do->token) && $do->token == md5(Yii::$app->session->getId().'opn')){
         $data = Yii::$app->HelperFunc->dataProcessing($do);
-        $calcData = Yii::$app->HelperFunc->midasCalc($do);
+        $cData = Yii::$app->HelperFunc->midasCalc($do);
         //print_r(Yii::$app->user->identity->id);
           try{
             $command = Yii::$app->db->
@@ -194,8 +196,8 @@ class SiteController extends Controller
             ->bindValue(":loan",$data['loan'])
             ->bindValue(":currency",$data['currency'])
             ->bindValue(":percents",$data['percents'])
-            ->bindValue(":comission",$calcData['comission'])
-            ->bindValue(":totalsumm",$calcData['totalsumm'])
+            ->bindValue(":comission",$cData['comission'])
+            ->bindValue(":totalsumm",$cData['totalsumm'])
             ->bindValue(":description",$data['description'])
             ->bindValue(":other_prod",$data['other_prod'])
             ->bindValue(":gold",$data['gold'])
@@ -319,7 +321,7 @@ class SiteController extends Controller
       if($do->token === md5(Yii::$app->session->getId().'opn')){
         $calcData = Yii::$app->HelperFunc->midasCalc($do);
         $param['page'] = 1;
-        $data['sts'] = 0;
+        $param['sts'] = 0;
         $param['shpcount'] = $this->psize;
         try{
           $command = Yii::$app->db->
