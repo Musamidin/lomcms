@@ -44,7 +44,7 @@ class SiteController extends Controller
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'getuserreportajax' || $action->id === 'searchajax'){
           $this->enableCsrfValidation = false;
-        }elseif($action->id === 'gethistoryajax'){
+        }elseif($action->id === 'gethistoryajax' || $action->id === 'getlibajax'){
           $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -155,7 +155,8 @@ class SiteController extends Controller
     public function actionSettings()
     {
       if(Yii::$app->user->identity->role == 1){
-        return $this->render('settings');
+        $lib = new Library();
+        return $this->render('settings',['lib'=>$lib]);
       }else{
         return $this->redirect('/');
       }
@@ -516,4 +517,25 @@ class SiteController extends Controller
           return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
         }
     }
+
+    public function actionGetlibajax()
+    {
+        $request = Yii::$app->request;
+        $token = $request->get('token');
+        header('Content-Type: application/json');
+        if($token == md5(Yii::$app->session->getId().'opn')){
+          try{
+            return json_encode(['status'=>0,'data'=>
+            ['article' => Yii::$app->HelperFunc->getSettData(0),
+             'sample' => Yii::$app->HelperFunc->getSettData(1),
+             'percent' => Yii::$app->HelperFunc->getSettData(2)],
+             'msg'=>'OK']);
+          }catch(Exception $e){
+              return json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+          }
+        }else{
+          return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }
+
 }

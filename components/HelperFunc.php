@@ -7,6 +7,7 @@ use app\models\ReprintView;
 use app\models\MainListView;
 use yii\data\Pagination;
 use app\models\Recognition;
+use app\models\Library;
 /**
  *
  */
@@ -173,6 +174,15 @@ class HelperFunc extends Component
     createCommand("SET NOCOUNT ON; EXEC dbo.actionStatusbar");
     return $command->queryAll();
 
+  }
+
+  public function getSettData($status)
+  {
+      $query = Library::find();
+      return $query->where(['status'=>$status])
+             ->asArray()
+             ->orderBy(['datetime'=>SORT_DESC])
+             ->all();
   }
 }
 ?>

@@ -30,6 +30,7 @@ header>.container {
     border: 1px dashed white;
 }
 .row.stsbar {
+    margin: 8px 0;
     padding: 15px;
     background: #35414f url(/css/jquery/images/ui-bg_dots-small_35_35414f_2x2.png) 50% 50% repeat;
     /* width: 99%; */
@@ -287,6 +288,12 @@ div#tabs-1 input {
 .thing-table > tbody > tr > th,td{ text-align: center; padding: 2px;}
 table#temp-table > table > tbody > tr > th,td{ text-align: left; padding: 2px;}
 
+.sett-table > tbody > tr > th{
+  background: #35414f url(/css/jquery/images/ui-bg_dots-small_35_35414f_2x2.png) 50% 50% repeat;
+  color: white;
+  }
+.sett-table > tbody > tr > th,td{ text-align: center; padding: 2px;}
+
 .row.table-box{
   overflow: auto;
   height: 90px;
@@ -376,3 +383,18 @@ div#recognition-data {
     padding: 5px;
 }
 .cr-table{font-size: 12px;}
+.sett-addbtn{
+  border-radius: 3px;
+  position: relative;
+  padding: 5px 5px;
+  margin: 0 0 5px 5px;
+  text-align: center;
+  color: #666;
+  border: 1px solid #ddd;
+  background-color: #f4f4f4;
+  font-size: 12px;
+  height: auto;
+  min-width: auto;
+}
+#tabsSett > div > .row > div.col-md-1{ width: 3%; }
+#tabsSett > div > .row > div.col-md-11{ width: 97%; }

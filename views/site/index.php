@@ -18,7 +18,7 @@ use yii\bootstrap\ActiveForm;
         <div class="col-md-2 text-center"><span ng-click="getbystatus(5)" id="sts5" class="stsbtns">Реализован<span class="pull-right badge bg-red">{{stsbar.sts5}}</span></span></div>
         <div class="col-md-1"></div>
     </div>
-    <br/>
+    
     <div class="row">
     </div>
     <table class="table table-striped ml-table">

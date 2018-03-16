@@ -73,6 +73,7 @@ $config = [
             'getuserreportajax' => 'site/getuserreportajax',
             'searchajax' => 'site/searchajax',
             'gethistoryajax' => 'site/gethistoryajax',
+            'getlibajax' => 'site/getlibajax',
             ],
         ],
 

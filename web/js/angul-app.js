@@ -503,7 +503,6 @@ $scope.getHistoryData = function(pageNum,showPageCount,cid){
   $http.get('/gethistoryajax?page=' + pageNum +'&shpcount='+ showPageCount+'&cid='+ cid+'&token='+ $('#token').val())
         .then(function(result) {
           var respdata = eval(result.data);
-          console.log(respdata);
           if(respdata.status == 0){
                 $scope.clientRating = eval(respdata.data.clientRating);
                 $scope.totalcrating = eval(respdata.data.count);
@@ -511,7 +510,7 @@ $scope.getHistoryData = function(pageNum,showPageCount,cid){
               alert(respdata.msg);
           }
         }, function errorCallback(response) {
-            console.log(response);
+            //console.log(response);
         });
 };
 
@@ -775,15 +774,14 @@ $scope.getData = function(pageNum,showPageCount,sts){
 		return strt;
 	}
 }).controller("AppCtrlSettings", function($scope,$http){
-$scope.poster = {};
-$scope.totalmainlist = 0;
-$scope.mainlistPerPage = 6; // this should match however many results your API puts on one page
-$scope.pagination = { current: 1 };
-$scope.formData = {};
+  $.fn.bootstrapBtn = $.fn.button.noConflict();
 
+$scope.poster = {};
+$scope.settdata = {};
 	/** START TABER **/
 	$( "#tabsSett" ).tabs();
 	/** END TABER **/
+$('#library-param').mask("##########.##", {reverse: true});
 
 tinymce.init({
 				selector:'#tinymceeditor',
@@ -828,6 +826,46 @@ $scope.savetemplate = function(){
 		});
 		//console.log( $scope.poster );
 };
+
+$scope.addPASBtn = function(prop,title){
+
+    $('#dialog-form-pas').dialog({
+        title: title,
+        autoOpen: false,
+        width: 600,
+        modal: true,
+        buttons:{
+          "Сохранить": function(){
+            console.log($scope.settdata);
+            setData(prop,$scope.settdata);
+          }
+        }
+    }).dialog("open");
+};
+
+var setData = function(table,data){
+    if(table == 'percent'){
+
+    }
+};
+
+$scope.getLibData = function(){
+	$http.get('/getlibajax?token='+ $('#token').val())
+				.then(function(result) {
+					var respdata = eval(result.data);
+					if(respdata.status == 0){
+								$scope.percent = eval(respdata.data.percent);
+                $scope.article = eval(respdata.data.article);
+                $scope.sample = eval(respdata.data.sample);
+					} else if(respdata.status > 0){
+							alert(respdata.msg);
+					}
+				}, function errorCallback(response) {
+				  	//console.log(response);
+				});
+};
+
+$scope.getLibData();
 
 }).controller("AppCtrlReport", function($scope,$http){
     $('.input-group.date').datepicker({
