@@ -21,6 +21,7 @@ use app\models\Template;
 use app\models\ReprintView;
 use app\componets\HelperFunc;
 use app\models\Recognition;
+use app\models\ClientHistoryView;
 
 class SiteController extends Controller
 {
@@ -42,6 +43,8 @@ class SiteController extends Controller
         }elseif($action->id === 'recognitionajax' || $action->id === 'getrecognitionajax'){
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'getuserreportajax' || $action->id === 'searchajax'){
+          $this->enableCsrfValidation = false;
+        }elseif($action->id === 'gethistoryajax'){
           $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -478,6 +481,38 @@ class SiteController extends Controller
           }
         }else{
 
+          return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }
+
+    public function actionGethistoryajax()
+    {
+        $request = Yii::$app->request;
+        $token = $request->get('token');
+        $page = $request->get('page');
+        $shpcount = $request->get('shpcount');
+        $cid = $request->get('cid');
+
+        header('Content-Type: application/json');
+        if($token == md5(Yii::$app->session->getId().'opn')){
+          try{
+          $query = ClientHistoryView::find()->where(['client_id'=> $cid]);
+          $countQuery = clone $query;
+          $pagination = new Pagination(['defaultPageSize'=>$shpcount,'totalCount'=> $countQuery->count()]);
+
+          $cRating = $query->offset($pagination->offset)
+          ->limit($pagination->limit)
+          ->asArray()
+          ->orderBy(['status'=>SORT_DESC])
+          ->all();
+            return json_encode(['status'=>0,
+                              'data'=>['clientRating' => $cRating,'count' =>$countQuery->count()],
+                              'msg'=>'OK']
+                            );
+          }catch(Exception $e){
+              return json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+          }
+        }else{
           return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
         }
     }

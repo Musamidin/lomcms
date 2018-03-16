@@ -72,6 +72,7 @@ $config = [
             'getrecognitionajax' => 'site/getrecognitionajax',
             'getuserreportajax' => 'site/getuserreportajax',
             'searchajax' => 'site/searchajax',
+            'gethistoryajax' => 'site/gethistoryajax',
             ],
         ],
 

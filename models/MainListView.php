@@ -22,7 +22,6 @@ use Yii;
  * @property string $dateEnd
  * @property integer $countDay
  * @property integer $status
- * @property integer $sstatus
  * @property string $sysDate
  */
 class MainListView extends \yii\db\ActiveRecord
@@ -70,7 +69,6 @@ class MainListView extends \yii\db\ActiveRecord
             'dateEnd' => 'Date End',
             'countDay' => 'Count Day',
             'status' => 'Status',
-            'astatus' => 'aStatus',
             'sysDate' => 'Sys Date',
         ];
     }

@@ -26,7 +26,6 @@ use Yii;
  * @property integer $status_sms
  * @property integer $status_email
  * @property integer $status
- * @property integer $astatus
  *
  * @property ActionList[] $actionLists
  */
@@ -47,7 +46,7 @@ class MainList extends \yii\db\ActiveRecord
     {
         return [
             [['user_id', 'client_id', 'ticket', 'loan', 'comission', 'percents', 'sysDate', 'actionDate', 'dateStart', 'dateEnd'], 'required'],
-            [['user_id', 'client_id', 'ticket', 'sms', 'email', 'status_sms', 'status_email', 'status', 'astatus'], 'integer'],
+            [['user_id', 'client_id', 'ticket', 'sms', 'email', 'status_sms', 'status_email', 'status'], 'integer'],
             [['golds', 'other_prod', 'description'], 'string'],
             [['loan', 'comission', 'percents'], 'number'],
             [['sysDate', 'actionDate', 'dateStart', 'dateEnd'], 'safe'],
@@ -80,7 +79,6 @@ class MainList extends \yii\db\ActiveRecord
             'status_sms' => 'Status Sms',
             'status_email' => 'Status Email',
             'status' => 'Status',
-            'astatus' => 'aStatus',
         ];
     }
 

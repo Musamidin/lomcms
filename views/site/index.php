@@ -40,7 +40,7 @@ use yii\bootstrap\ActiveForm;
         </tr>
       </tbody>
       <tbody>
-          <tr class="color{{ml.status}}" dir-paginate="ml in mainlistview | itemsPerPage: mainlistPerPage" total-items="totalmainlist" current-page="pagination.current">
+          <tr class="color{{ml.status}}" dir-paginate="ml in mainlistview | itemsPerPage: mainlistPerPage" total-items="totalmainlist" current-page="pagination.current" pagination-id="cust">
             <td>{{ml.sysDate | formatDatetime}}</td>
             <td>{{ml.ticket}}</td>
             <td>{{ml.fio}}</td>
@@ -76,7 +76,7 @@ use yii\bootstrap\ActiveForm;
           </tr>
       </tbody>
   </table>
-    <dir-pagination-controls on-page-change="pageChanged(newPageNumber)">
+    <dir-pagination-controls pagination-id="cust" on-page-change="pageChanged(newPageNumber)">
     </dir-pagination-controls>
     <!--max-size="3" direction-links="true" boundary-links="true"-->
     <!--button ng-click="test(1)">Test</button-->
@@ -288,17 +288,34 @@ use yii\bootstrap\ActiveForm;
 <!-- START Dialog box for Client history data -->
 <div style="display:none;" id="dialog-form-history" title="Контактные номера">
   <div class="row">
-      <div class="col-md-8 paddR0">
-        <div class="form-group field-mainform-phone has-feedback required field-phone-items has-success">
-          <input type="text" id="phone-items" class="form-control ng-pristine ng-valid ng-empty ng-touched" name="phones" placeholder="XXX XX XX XX" ng-model="list.phone" autocomplete="off" aria-invalid="false">
-          <span class="fa fa-phone form-control-feedback"></span>
-        </div>
-      </div>
-      <div class="col-md-4 paddL3">
-        <button class="btn btn-primary addphone" title="Добавить номер"><span class="glyphicon glyphicon-plus-sign"></span></button>
-      </div>
       <div class="col-md-12">
-
+        <table class="table table-striped cr-table">
+          <tbody id="thead">
+            <tr>
+              <th>Дата</th>
+               <th>№ Билета</th>
+               <th>Ф.И.О.</th>
+               <th>Ссуда</th>
+               <th>%-Ставка</th>
+               <th>Залог</th>
+            </tr>
+          </tbody>
+          <tbody>
+              <tr class="color{{cr.status}}" dir-paginate="cr in clientRating | itemsPerPage: cratingPerPage" pagination-id="history-pg" total-items="totalcrating" current-page="cratingPgntion.current">
+                <td>{{cr.actionDate | formatDatetime}}</td>
+                <td>{{cr.ticket}}</td>
+                <td>{{cr.fio}}</td>
+                <td>{{cr.loan}} {{cr.currency | currFilt }}</td>
+                <td>{{cr.percents | fixedto}} %</td>
+                <td>
+                  <span class="arr-down-gold" data-html="true" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{cr.golds | parser: cr.other_prod : cr.id }}">
+                    <span class="glyphicon glyphicon-eye-close"></span></span>
+                </td>
+              </tr>
+          </tbody>
+      </table>
+        <dir-pagination-controls pagination-id="history-pg" on-page-change="historyPageChanged(newPageNumber)">
+        </dir-pagination-controls>
       </div>
   </div>
 </div>

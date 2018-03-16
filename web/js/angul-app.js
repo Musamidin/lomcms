@@ -8,12 +8,18 @@ $scope.totalmainlist = 0;
 $scope.mainlistPerPage = 15; // this should match however many results your API puts on one page
 $scope.pagination = { current: 1 };
 
+$scope.totalcrating = 0;
+$scope.cratingPerPage = 5; // this should match however many results your API puts on one page
+$scope.cratingPgntion = { current: 1 };
+$scope.pageSize = 10;
+
 $scope.minSumm = 100;
 $scope.list = {};
 $scope.data = {};
 $scope.formData = {};
 $scope.calcData = {};
 $scope.bystatus = 0;
+$scope.cid = 0;
 
 var arrTs = [];
 var phoneBook = [];
@@ -484,15 +490,34 @@ $(document).on('click', '.show-cont-btn', function(){
 
 /** START HISTORY FUNCTIONS **/
 $(document).on('click', '#history-btn', function(){
-		$('#contact-phone-dialog').dialog({
+    $scope.cid = $('#client-id').val();
+    $scope.getHistoryData(1,$scope.pageSize,$scope.cid);
+		$('#dialog-form-history').dialog({
 		    autoOpen: false,
-		    buttons: {
-		        "Сохранить": function() {
-		            $(this).dialog('close');
-		        }
-		    }
+        width: 945,
+				modal: true
 		}).dialog( "open" );
 });
+
+$scope.getHistoryData = function(pageNum,showPageCount,cid){
+  $http.get('/gethistoryajax?page=' + pageNum +'&shpcount='+ showPageCount+'&cid='+ cid+'&token='+ $('#token').val())
+        .then(function(result) {
+          var respdata = eval(result.data);
+          console.log(respdata);
+          if(respdata.status == 0){
+                $scope.clientRating = eval(respdata.data.clientRating);
+                $scope.totalcrating = eval(respdata.data.count);
+          } else if(respdata.status > 0){
+              alert(respdata.msg);
+          }
+        }, function errorCallback(response) {
+            console.log(response);
+        });
+};
+
+$scope.historyPageChanged = function(newPage) {
+	    $scope.getHistoryData(newPage,$scope.pageSize,$scope.cid);
+};
 /** END HISTORY FUNCTIONS **/
 
 /** START CALC FUNCTIONS **/
