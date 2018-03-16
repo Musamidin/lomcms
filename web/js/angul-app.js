@@ -9,9 +9,9 @@ $scope.mainlistPerPage = 15; // this should match however many results your API 
 $scope.pagination = { current: 1 };
 
 $scope.totalcrating = 0;
-$scope.cratingPerPage = 5; // this should match however many results your API puts on one page
+$scope.cratingPerPage = 10; // this should match however many results your API puts on one page
 $scope.cratingPgntion = { current: 1 };
-$scope.pageSize = 10;
+//$scope.pageSize = 10;
 
 $scope.minSumm = 100;
 $scope.list = {};
@@ -491,7 +491,7 @@ $(document).on('click', '.show-cont-btn', function(){
 /** START HISTORY FUNCTIONS **/
 $(document).on('click', '#history-btn', function(){
     $scope.cid = $('#client-id').val();
-    $scope.getHistoryData(1,$scope.pageSize,$scope.cid);
+    $scope.getHistoryData(1,$scope.cratingPerPage,$scope.cid);
 		$('#dialog-form-history').dialog({
 		    autoOpen: false,
         width: 945,
@@ -516,7 +516,7 @@ $scope.getHistoryData = function(pageNum,showPageCount,cid){
 };
 
 $scope.historyPageChanged = function(newPage) {
-	    $scope.getHistoryData(newPage,$scope.pageSize,$scope.cid);
+	    $scope.getHistoryData(newPage,$scope.cratingPerPage,$scope.cid);
 };
 /** END HISTORY FUNCTIONS **/
 
