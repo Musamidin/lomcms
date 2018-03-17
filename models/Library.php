@@ -29,8 +29,14 @@ class Library extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['keyname'], 'required'],
-            [['keyname', 'param'], 'string'],
+            [['keyname'], 'required','message' => 'Введите наименование!'],
+            [['param'], 'required','message' => 'Введите значение!'],
+            [['keyname'], 'string'],
+            [
+              ['param'],
+              'number','numberPattern' => '/^\s*[-+]?[0-9]*[.]?[0-9]+([eE][-+]?[0-9]+)?\s*$/',
+              'message' => 'Введите цифровое значение с плавающей точкой!'
+            ],
             [['status'], 'integer'],
             [['datetime'], 'safe'],
         ];

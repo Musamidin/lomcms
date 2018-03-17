@@ -828,7 +828,7 @@ $scope.savetemplate = function(){
 };
 
 $scope.addPASBtn = function(prop,title){
-
+    if(prop == 'percent'){ $('div.hdn').css('display','block'); }else{ $('div.hdn').css('display','none'); }
     $('#dialog-form-pas').dialog({
         title: title,
         autoOpen: false,
@@ -836,17 +836,35 @@ $scope.addPASBtn = function(prop,title){
         modal: true,
         buttons:{
           "Сохранить": function(){
-            console.log($scope.settdata);
-            setData(prop,$scope.settdata);
+            $scope.settdata['table'] = prop;
+            setData($scope.settdata);
           }
         }
     }).dialog("open");
 };
 
-var setData = function(table,data){
-    if(table == 'percent'){
+var setData = function(data){
+    if(data['table'] == 'percent'){
 
     }
+    data['token'] = $('#token').val();
+    $http({
+      method: 'POST',
+      url: '/setdataajax',
+      data: data
+    }).then(function successCallback(response) {
+          $("#dialog-form-pas").dialog('close');
+          var respdata = eval(response.data);
+          if(respdata.status == 0){
+                $scope.getLibData();
+          } else if(respdata.status > 0){
+              alert(respdata.msg);
+          }else{
+            alert(respdata.msg);
+          }
+      }, function errorCallback(response) {
+          //console.log(response);
+    });
 };
 
 $scope.getLibData = function(){

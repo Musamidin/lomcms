@@ -139,7 +139,7 @@ $this->params['breadcrumbs'][] = $this->title;
               </div>
               <div class="col-md-12">
                 <?=$form->field($lib, 'param',['options'=>
-                  ['tag' => 'div','class'=> 'form-group field-mainform-param has-feedback required'],
+                  ['tag' => 'div','class'=> 'hdn form-group field-mainform-param has-feedback required'],
                   'template'=>'{input}<span class="fa fa-money form-control-feedback"></span>{error}{hint}'
                   ])->textInput(['autofocus' => false,'placeholder'=>'Значение','ng-model'=>'settdata.param'])->label('Наименование');
                   ?>
