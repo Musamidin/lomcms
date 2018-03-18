@@ -17,6 +17,7 @@ use app\models\Clients;
 use app\models\MainList;
 use app\models\MainListView;
 use app\models\Library;
+use app\models\User;
 use app\models\Template;
 use app\models\ReprintView;
 use app\componets\HelperFunc;
@@ -46,7 +47,7 @@ class SiteController extends Controller
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'gethistoryajax' || $action->id === 'getlibajax'){
           $this->enableCsrfValidation = false;
-        }elseif($action->id === 'setdataajax'){
+        }elseif($action->id === 'setdataajax' || $action->id === 'realizeajax'){
           $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -530,7 +531,9 @@ class SiteController extends Controller
             return json_encode(['status'=>0,'data'=>
             ['article' => Yii::$app->HelperFunc->getSettData(0),
              'sample' => Yii::$app->HelperFunc->getSettData(1),
-             'percent' => Yii::$app->HelperFunc->getSettData(2)],
+             'percent' => Yii::$app->HelperFunc->getSettData(2),
+             'user' => User::find()->asArray()->all()
+            ],
              'msg'=>'OK']);
           }catch(Exception $e){
               return json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
@@ -556,17 +559,18 @@ class SiteController extends Controller
                 $lib->datetime = date('Y-m-d\TH:i:s');
                 $lib->save();
             }elseif($do['table'] == 'article'){
-              $lib->keyname = $do['keyname'];
-              $lib->param = 'NULL';
-              $lib->status = 0;
-              $lib->datetime = date('Y-m-d\TH:i:s');
-              $flag = ($lib->save()) ? 0 : $lib->errors;
-              
+                $lib->keyname = $do['keyname'];
+                $lib->param = 0;
+                $lib->status = 0;
+                $lib->datetime = date('Y-m-d\TH:i:s');
+                $flag = ($lib->save()) ? 0 : $lib->errors;
+
             }elseif($do['table'] == 'sample'){
-              $lib->keyname = $do['keyname'];
-              $lib->status = 1;
-              $lib->datetime = date('Y-m-d\TH:i:s');
-              $lib->save();
+                $lib->keyname = $do['keyname'];
+                $lib->param = 0;
+                $lib->status = 1;
+                $lib->datetime = date('Y-m-d\TH:i:s');
+                $lib->save();
             }
             return json_encode(['status'=>$flag,'msg'=>$flag]);
           }catch(Exception $e){
@@ -577,4 +581,24 @@ class SiteController extends Controller
         }
     }
 
+    public function actionRealizeajax()
+    {
+          $postData = file_get_contents("php://input");
+          $do = json_decode($postData);
+          header('Content-Type: application/json');
+          if($do->token == md5(Yii::$app->session->getId().'opn')){
+              $command = Yii::$app->db->
+              createCommand("SET NOCOUNT ON; EXEC dbo.actionRealize @id =:id, @status =:status");
+              $command->bindValue(":id",$do->id);
+              $command->bindValue(":status",$do->status);
+              $resp = $command->queryAll();
+              if($resp[0]['status'] == 0){
+                  echo json_encode(['status'=>$resp[0]['status'],'msg'=>$resp[0]['ErrorMessage']]);
+              }else{
+                echo json_encode(['status'=>1,'data'=>null,'msg'=>$resp->errorInfo]);
+              }
+        }else{
+          return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }
 }

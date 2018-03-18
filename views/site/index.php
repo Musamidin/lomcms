@@ -18,7 +18,7 @@ use yii\bootstrap\ActiveForm;
         <div class="col-md-2 text-center"><span ng-click="getbystatus(5)" id="sts5" class="stsbtns">Реализован<span class="pull-right badge bg-red">{{stsbar.sts5}}</span></span></div>
         <div class="col-md-1"></div>
     </div>
-    
+
     <div class="row">
     </div>
     <table class="table table-striped ml-table">
@@ -72,6 +72,7 @@ use yii\bootstrap\ActiveForm;
                       <li ng-if="<?=Yii::$app->user->identity->role; ?> == '1' && ml.status =='0'"><a href="javascript:void(0)" ng-click="onDelete(ml.id)"><span class="glyphicon glyphicon-trash"></span>&nbsp;Удалить</a></li>
                     </ul>
                </div>
+               <span ng-if="ml.status == '5' || ml.status == '2'">{{ml.actionDate | formatDatetime}}</span>
             </td>
           </tr>
       </tbody>
@@ -286,7 +287,7 @@ use yii\bootstrap\ActiveForm;
 </div>
 <!-- END Dialog box for add data -->
 <!-- START Dialog box for Client history data -->
-<div style="display:none;" id="dialog-form-history" title="Контактные номера">
+<div style="display:none;" id="dialog-form-history" title="Кредитная история">
   <div class="row">
       <div class="col-md-12">
         <table class="table table-striped cr-table">
@@ -294,7 +295,7 @@ use yii\bootstrap\ActiveForm;
             <tr>
               <th>Дата</th>
                <th>№ Билета</th>
-               <th>Ф.И.О.</th>
+               <!--th>Ф.И.О.</th-->
                <th>Ссуда</th>
                <th>%-Ставка</th>
                <th>Залог</th>
@@ -304,7 +305,7 @@ use yii\bootstrap\ActiveForm;
               <tr class="color{{cr.status}}" dir-paginate="cr in clientRating | itemsPerPage: cratingPerPage" pagination-id="history-pg" total-items="totalcrating" current-page="cratingPgntion.current">
                 <td>{{cr.actionDate | formatDatetime}}</td>
                 <td>{{cr.ticket}}</td>
-                <td>{{cr.fio}}</td>
+                <!--td>{{cr.fio}}</td-->
                 <td>{{cr.loan}} {{cr.currency | currFilt }}</td>
                 <td>{{cr.percents | fixedto}} %</td>
                 <td>

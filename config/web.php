@@ -75,6 +75,7 @@ $config = [
             'gethistoryajax' => 'site/gethistoryajax',
             'getlibajax' => 'site/getlibajax',
             'setdataajax' => 'site/setdataajax',
+            'realizeajax' => 'site/realizeajax',
             ],
         ],
 

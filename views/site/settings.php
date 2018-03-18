@@ -23,7 +23,35 @@ $this->params['breadcrumbs'][] = $this->title;
             fdgdfgdfgdfgd
         </div>
         <div id="tabs-102">
-            23123123123123
+          <div class="row">
+            <div class="col-md-1">
+              <a class="sett-addbtn btn btn-app bg-olive"  ng-click="addPASBtn('User','Пользователи')"><i class="fa fa-plus-circle"></i></a>
+            </div>
+              <div class="col-md-11">
+                <table class="table table-striped sett-table">
+                  <tbody id="thead">
+                    <tr>
+                      <th>Дата</th>
+                       <th>Ф.И.О.</th>
+                       <th>Логин</th>
+                       <th>Права</th>
+                       <th>Статус</th>
+                       <th>Описание</th>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                      <tr ng-repeat="usr in user">
+                        <td>{{usr.datetime | formatDatetime}}</td>
+                        <td>{{usr.fio}}</td>
+                        <td>{{usr.login}}</td>
+                        <td>{{usr.role}}</td>
+                        <td>{{usr.status}}</td>
+                        <td>{{usr.description}}</td>
+                      </tr>
+                  </tbody>
+              </table>
+              </div>
+          </div>
         </div>
         <div id="tabs-103">
             <textarea name="template" id="tinymceeditor" ng-model="poster.template">Next, start a free trial!</textarea>
@@ -133,14 +161,14 @@ $this->params['breadcrumbs'][] = $this->title;
               <div class="col-md-12">
                   <?=$form->field($lib, 'keyname',['options'=>
                     ['tag' => 'div','class'=> 'form-group field-mainform-keyname has-feedback required'],
-                    'template'=>'{input}<span class="fa fa-money form-control-feedback"></span>{error}{hint}'
+                    'template'=>'{input}<span class="fa fa-paste form-control-feedback"></span>{error}{hint}'
                     ])->textInput(['autofocus' => false,'placeholder'=>'Наименование','ng-model'=>'settdata.keyname'])->label('Наименование');
                     ?>
               </div>
               <div class="col-md-12">
                 <?=$form->field($lib, 'param',['options'=>
                   ['tag' => 'div','class'=> 'hdn form-group field-mainform-param has-feedback required'],
-                  'template'=>'{input}<span class="fa fa-money form-control-feedback"></span>{error}{hint}'
+                  'template'=>'{input}<span class="fa fa-paste form-control-feedback"></span>{error}{hint}'
                   ])->textInput(['autofocus' => false,'placeholder'=>'Значение','ng-model'=>'settdata.param'])->label('Наименование');
                   ?>
               </div>

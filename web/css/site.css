@@ -216,7 +216,7 @@ a.desc:after {
 .table-striped > tbody > tr.color2{background: darkgray;}
 .table-striped > tbody > tr.color3{background: darksalmon;}
 .table-striped > tbody > tr.color4{background: khaki;}
-.table-striped > tbody > tr.color5{background: khaki;}
+.table-striped > tbody > tr.color5{background: chartreuse;}
 #library > .row > .col-md-3 {
   text-align: center;
   border: 1px solid #08c;
@@ -382,6 +382,7 @@ div#recognition-data {
     border-radius: 15px;
     padding: 5px;
 }
+.cr-table > #thead > tr > th{text-align: center;}
 .cr-table{font-size: 12px;}
 .sett-addbtn{
   border-radius: 3px;
@@ -396,6 +397,6 @@ div#recognition-data {
   height: auto;
   min-width: auto;
 }
-#tabsSett > div > .row > div.col-md-1{ width: 3%; }
+#tabsSett > div > .row > div.col-md-1{ width: 3%; padding: 0;}
 #tabsSett > div > .row > div.col-md-11{ width: 97%; }
-.hdn{ display: none; }
+.report-box,.hdn{ display: none; }

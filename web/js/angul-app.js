@@ -210,6 +210,23 @@ $scope.onDelete = function(id){
 			});
 };
 
+$scope.onRealize = function(obj){
+    $http({
+      method: 'POST',
+      url: '/realizeajax',
+      data: { id: obj.id, status: 5, token : $('#token').val() }
+    }).then(function successCallback(response) {
+          var respdata = eval(response.data);
+          if(respdata.status == 0){
+            $scope.getData(1,$scope.mainlistPerPage,0);
+          } else if(respdata.status > 0){
+              alert(respdata.msg);
+          }
+      }, function errorCallback(response) {
+          //console.log(response);
+    });
+};
+
 $(document).on('keyup','#part-of-loan',function(){
 		if(parseInt(this.value) < parseInt($('#loan').text())){
 			$('#btn1').attr('disabled',true).hide();
@@ -289,7 +306,6 @@ var serverSide = function(data){
 			url: '/calcaction',
 			data: data
 		}).then(function successCallback(response) {
-			  var respVal = eval(response);
 					$("#dialog-form-calculate").dialog('close');
           var respdata = eval(response.data);
           if(respdata.status == 0){
@@ -422,8 +438,11 @@ $(document).on('click', '#add-gold', function(){
 
 							$('.thdata').val('');
 							$('#tbody-gold').append(appdata);
-							///$('#currency').val()
-							//console.log(arrTs);
+							$('#mainlist-count,#mainlist-gramm,#mainlist-summ,#mainlist-sample,#mainlist-golds').val('');
+              $("#mainlist-currency option[value='Ваюта']").prop('selected', true);
+              $("#mainlist-percents option[value='% ставка']").prop('selected', true);
+              //$('#numCount').val(1);
+
 				}else{
 						alert("Заполняйте все поля обязательно!");
 				}
@@ -494,7 +513,7 @@ $(document).on('click', '#history-btn', function(){
     $scope.getHistoryData(1,$scope.cratingPerPage,$scope.cid);
 		$('#dialog-form-history').dialog({
 		    autoOpen: false,
-        width: 945,
+        width: 700,
 				modal: true
 		}).dialog( "open" );
 });
@@ -756,6 +775,24 @@ $scope.getData = function(pageNum,showPageCount,sts){
       return 0;
     }
 	}
+}).filter("returnSumm", function()
+{
+	return function(input,comission){
+    if(jQuery.isEmptyObject(input) == false && jQuery.isEmptyObject(comission) == false){
+		    return (parseFloat(input) + parseFloat(comission)).toFixed(2);
+    }else{
+      return 0;
+    }
+	}
+}).filter("daySumm", function()
+{
+	return function(input,comission){
+    if(jQuery.isEmptyObject(input) == false && jQuery.isEmptyObject(comission) == false){
+		    return (parseFloat(comission)/30).toFixed(2);
+    }else{
+      return 0;
+    }
+	}
 }).filter("parser", function(){
 	return function(input,param1,id){
 				var strt = '';
@@ -828,6 +865,7 @@ $scope.savetemplate = function(){
 };
 
 $scope.addPASBtn = function(prop,title){
+    $('form#sett-form :input').val('');
     if(prop == 'percent'){ $('div.hdn').css('display','block'); }else{ $('div.hdn').css('display','none'); }
     $('#dialog-form-pas').dialog({
         title: title,
@@ -844,9 +882,6 @@ $scope.addPASBtn = function(prop,title){
 };
 
 var setData = function(data){
-    if(data['table'] == 'percent'){
-
-    }
     data['token'] = $('#token').val();
     $http({
       method: 'POST',
@@ -875,6 +910,7 @@ $scope.getLibData = function(){
 								$scope.percent = eval(respdata.data.percent);
                 $scope.article = eval(respdata.data.article);
                 $scope.sample = eval(respdata.data.sample);
+                $scope.user = eval(respdata.data.user);
 					} else if(respdata.status > 0){
 							alert(respdata.msg);
 					}
@@ -903,13 +939,15 @@ $scope.getLibData();
     $('.input-group.date').datepicker({
       language: "ru",
       format: 'yyyy-mm-dd',
-      autoclose: true
+      todayHighlight: true,
+      autoclose: 'today',
     }).on('changeDate', function(e) {
         $http.get('/getuserreportajax?datefrom=' + $('.getbydatetime').val()+'T00:00:00' +'&dateto='+ $('.getbydatetime').val()+'T23:59:59'+'&typereport='+$('#typereport').val()+'&token='+ $('#token').val()) // +'&pagenum='+pnum
               .then(function(result) {
                 //console.log(result);
                 var respdata = eval(result.data);
                 if(respdata.status == 0){
+                  $('.report-box').show();
                       $scope.kgs = eval(respdata.data.kgs);
                       $scope.usd = eval(respdata.data.usd);
                       $scope.kassa = eval(respdata.data.kassa);
@@ -951,9 +989,6 @@ $scope.getLibData();
             }
             return sum;
         };
-})
-.controller("AppCtrlLibrary", function($scope,$http){
-
 }).controller("AppCtrlRecognition", function($scope,$http){
   $.fn.bootstrapBtn = $.fn.button.noConflict();
   $scope.totalmainlist = 0;

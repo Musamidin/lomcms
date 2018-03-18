@@ -39,12 +39,12 @@ $this->params['breadcrumbs'][] = $this->title;
           </div>
         </div>
         <br/>
-        <div class="row">
+        <div class="row report-box">
           <div class="col-md-12" id="table2excel">
               <table class="mytformat tableshead table table-striped" border="0">
                     <tbody id="data_responsef">
-                      <tr style="background: #f0eb4e;">
-                        <td colspan="3"><b>ИТОГО ПО ЛОМБАРДУ:</b></td>
+                      <tr style="background: #d2d6de;">
+                        <td colspan="3"><b>Остаток на начало:</b></td>
                         <td><b>{{kassa.strKgs | fixedto}}&nbsp;KGS</b></td>
                         <td><b>{{kassa.strUsd | fixedto}}&nbsp;USD</b></td>
                       </tr>
