@@ -218,7 +218,7 @@ $scope.onRealize = function(obj){
     }).then(function successCallback(response) {
           var respdata = eval(response.data);
           if(respdata.status == 0){
-            $scope.getData(1,$scope.mainlistPerPage,0);
+            $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus);
           } else if(respdata.status > 0){
               alert(respdata.msg);
           }
