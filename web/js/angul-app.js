@@ -20,6 +20,7 @@ $scope.formData = {};
 $scope.calcData = {};
 $scope.bystatus = 0;
 $scope.cid = 0;
+$scope.ticket = 0;
 
 var arrTs = [];
 var phoneBook = [];
@@ -508,18 +509,36 @@ $(document).on('click', '.show-cont-btn', function(){
 /** END CONTACT FUNCTIONS **/
 
 /** START HISTORY FUNCTIONS **/
+$scope.showHistory = function(ticket){
+  $scope.cid = 0;
+  $scope.ticket = ticket;
+  $scope.getHistoryData(1,$scope.cratingPerPage,$scope.cid,$scope.ticket);
+  $('#dialog-form-history').dialog({
+      autoOpen: false,
+      width: 700,
+      modal: true,
+      close:function(){ $scope.ticket = 0; }
+  }).dialog( "open" );
+};
+
 $(document).on('click', '#history-btn', function(){
     $scope.cid = $('#client-id').val();
-    $scope.getHistoryData(1,$scope.cratingPerPage,$scope.cid);
+    $scope.getHistoryData(1,$scope.cratingPerPage,$scope.cid,$scope.ticket);
 		$('#dialog-form-history').dialog({
 		    autoOpen: false,
         width: 700,
-				modal: true
+				modal: true,
+        close:function(){ $scope.ticket = 0; }
 		}).dialog( "open" );
 });
 
-$scope.getHistoryData = function(pageNum,showPageCount,cid){
-  $http.get('/gethistoryajax?page=' + pageNum +'&shpcount='+ showPageCount+'&cid='+ cid+'&token='+ $('#token').val())
+$scope.getallHistory = function(){
+  $scope.ticket = 0;
+  $scope.getHistoryData(0,$scope.cratingPerPage,$scope.cid,$scope.ticket);
+};
+
+$scope.getHistoryData = function(pageNum,showPageCount,cid,ticket){
+  $http.get('/gethistoryajax?page=' + pageNum +'&shpcount='+ showPageCount+'&cid='+ cid + '&ticket='+ ticket + '&token='+ $('#token').val())
         .then(function(result) {
           var respdata = eval(result.data);
           if(respdata.status == 0){
@@ -534,7 +553,12 @@ $scope.getHistoryData = function(pageNum,showPageCount,cid){
 };
 
 $scope.historyPageChanged = function(newPage) {
-	    $scope.getHistoryData(newPage,$scope.cratingPerPage,$scope.cid);
+	    $scope.getHistoryData(newPage,$scope.cratingPerPage,$scope.cid,$scope.ticket);
+};
+
+$scope.sortHistory = function(ticket){
+  $scope.ticket = ticket;
+  $scope.getHistoryData(0,$scope.cratingPerPage,$scope.cid,$scope.ticket);
 };
 /** END HISTORY FUNCTIONS **/
 
@@ -772,7 +796,7 @@ $scope.getData = function(pageNum,showPageCount,sts){
     if(jQuery.isEmptyObject(input) == false){
 		    return parseFloat(input).toFixed(2);
     }else{
-      return 0;
+      return parseFloat(0).toFixed(2);
     }
 	}
 }).filter("returnSumm", function()
@@ -922,14 +946,67 @@ $scope.getLibData = function(){
 $scope.getLibData();
 
 }).controller("AppCtrlReport", function($scope,$http){
-    $('.input-group.date').datepicker({
-      language: "ru",
-      daysOfWeekDisabled: "1",
-      autoclose: true
-    }).on('changeDate', function(e) {
-        alert(e);
-    });
+$.fn.bootstrapBtn = $.fn.button.noConflict();
 
+    $('.input-group.date').datepicker({
+    	minViewMode: 1,
+      format: 'yyyy-mm',
+    	language: "ru",
+    	autoclose: true,
+    	orientation: "bottom right"
+    }).on('changeDate', function(e) {
+
+      				var month = $('.getbydatetime').val().split('-');
+      				var dateFrom = ''+month[0]+'-'+month[1]+'-01T00:00:00';
+      				var dateTo=null;
+      				switch(Number(month[1])){
+      					case 1: dateTo = ''+month[0]+'-'+month[1]+'-31T23:59:59';
+      					break;
+      					case 2: dateTo = month[0]+'-'+month[1]+'-28T23:59:59';
+      					break;
+      					case 3: dateTo = month[0]+'-'+month[1]+'-31T23:59:59';
+      					break;
+      					case 4: dateTo = month[0]+'-'+month[1]+'-30T23:59:59';
+      					break;
+      					case 5: dateTo = month[0]+'-'+month[1]+'-31T23:59:59';
+      					break;
+      					case 6: dateTo = month[0]+'-'+month[1]+'-30T23:59:59';
+      					break;
+      					case 7: dateTo = month[0]+'-'+month[1]+'-31T23:59:59';
+      					break;
+      					case 8: dateTo = month[0]+'-'+month[1]+'-31T23:59:59';
+      					break;
+      					case 9: dateTo = month[0]+'-'+month[1]+'-30T23:59:59';
+      					break;
+      					case 10: dateTo = month[0]+'-'+month[1]+'-31T23:59:59';
+      					break;
+      					case 11: dateTo = month[0]+'-'+month[1]+'-30T23:59:59';
+      					break;
+      					case 12: dateTo = month[0]+'-'+month[1]+'-31T23:59:59';
+      					break;
+      				}
+
+    $http.get('/getreportajax?datefrom=' + dateFrom +'&dateto='+ dateTo +'&token='+ $('#token').val())
+                .then(function(result) {
+                  var respdata = eval(result.data);
+                  if(respdata.status == 0){
+                    $('.col-md-rep > table').show();
+                        $scope.vydacha = eval(respdata.data.vydacha);
+                        $scope.vykup = eval(respdata.data.vykup);
+                        $scope.comission_pog = eval(respdata.data.comission_pog);
+
+                        $scope.comission_perez = eval(respdata.data.comission_perez);
+                        $scope.ch_pog = eval(respdata.data.ch_pog);
+                        $scope.proch_prih = eval(respdata.data.proch_prih);
+                        $scope.proch_rashod = eval(respdata.data.proch_rashod);
+
+                  } else if(respdata.status > 0){
+                      alert(respdata.msg);
+                  }
+                }, function errorCallback(response) {
+                    //console.log(response);
+                });
+    });
 
 
 }).controller("AppCtrlUserReport", function($scope,$http){

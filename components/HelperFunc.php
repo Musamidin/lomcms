@@ -185,5 +185,53 @@ class HelperFunc extends Component
              ->all();
   }
 
+  public function getReport($datefrom,$dateto,$curr)
+  {
+    $resp = [];
+    try{
+      $resp['vydacha'] = Yii::$app->db->createCommand("SELECT * FROM mrLoan('{$datefrom}','{$dateto}',{$curr},0)")->queryAll();
+      $resp['vykup'] = Yii::$app->db->createCommand("SELECT * FROM mrLoan('{$datefrom}','{$dateto}',{$curr},1)")->queryAll();
+      $resp['comission_pog'] = Yii::$app->db->createCommand("SELECT * FROM mrComission('{$datefrom}','{$dateto}',{$curr},2)")->queryAll();
+      $resp['comission_perez'] = Yii::$app->db->createCommand("SELECT * FROM mrComission('{$datefrom}','{$dateto}',{$curr},1)")->queryAll();
+      $resp['ch_pog'] = Yii::$app->db->createCommand("SELECT * FROM mrPartLoan('{$datefrom}','{$dateto}',{$curr},1)")->queryAll();
+      $resp['proch_prih'] = Yii::$app->db->createCommand("SELECT * FROM mrPrp('{$datefrom}','{$dateto}',{$curr},'Приход')")->queryAll();
+      $resp['proch_rashod'] = Yii::$app->db->createCommand("SELECT * FROM mrPrp('{$datefrom}','{$dateto}',{$curr},'Расход')")->queryAll();
+    }catch(Exception $e){
+        $resp = $e->errorInfo;
+    }finally{
+      return $resp;
+    }
+  }
+
+  public function insertjsontoarr($item,$id)
+  {
+      try{
+            $item['mid'] = $id;
+            $item['status'] = 0;
+            $item['actionDate'] = date('Y-m-d\TH:i:s');
+            unset($item['num']);
+            Yii::$app->db->createCommand()->insert('golds',$item)->execute();
+      }catch(Exception $e){
+          print_r($e->errorInfo);
+      }
+  }
+
+  public function insertter($item)
+  {
+      try{
+          $arr = json_decode($item['golds'],true);
+          foreach($arr as $itm){
+            $itm['mid'] = $item['id'];
+            $itm['status'] = $item['status'];
+            unset($itm['num']);
+            //if(isset($itm['currs'])){ unset($itm['currs']); }
+            Yii::$app->db->createCommand()->insert('golds',$itm)->execute();
+            //print_r($itm['groups']);
+          }
+      }catch(Exception $e){
+          print_r($e->errorInfo);
+      }
+  }
+
 }
 ?>

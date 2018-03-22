@@ -49,6 +49,8 @@ class SiteController extends Controller
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'setdataajax' || $action->id === 'realizeajax'){
           $this->enableCsrfValidation = false;
+        }elseif($action->id === 'getreportajax'){
+          $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
     }
@@ -215,8 +217,15 @@ class SiteController extends Controller
             ->bindValue(":passport_issued",$data['passport_issued'])
             ->bindValue(":phone",$data['phone'])
             ->bindValue(":address",$data['address']);
-              $data = $command->queryAll();
-              return json_encode(['status'=>0,'data'=>$data[0],'msg'=>'OK']);
+             $rtdata = $command->queryAll();
+            //print_r(json_decode($data['gold'],true));
+            $gld = json_decode($data['gold'],true);
+           if(!empty($gld)){
+              foreach (json_decode($data['gold'],true) as $itm) {
+                Yii::$app->HelperFunc->insertjsontoarr($itm,$rtdata[0]['id']);
+              }
+            }
+              return json_encode(['status'=>0,'data'=>$rtdata[0],'msg'=>'OK']);
           }catch(Exception $e){
               //print_r($e->errorInfo[2]);
               echo json_encode(['status'=>1,'data'=>null,'msg'=>$e->errorInfo]);
@@ -496,11 +505,20 @@ class SiteController extends Controller
         $page = $request->get('page');
         $shpcount = $request->get('shpcount');
         $cid = $request->get('cid');
+        $ticket = $request->get('ticket');
 
         header('Content-Type: application/json');
         if($token == md5(Yii::$app->session->getId().'opn')){
           try{
-          $query = ClientHistoryView::find()->where(['client_id'=> $cid]);
+            if($ticket == 0){
+              $wher = ['client_id'=> $cid];
+            }elseif($cid == 0 && $ticket != 0){
+              $wher = ['ticket'=> $ticket];
+            }else{
+              $wher = ['client_id'=> $cid,'ticket'=> $ticket];
+            }
+          //$wher = ($ticket == 0) ? ['client_id'=> $cid] : ['client_id'=> $cid,'ticket'=> $ticket];
+          $query = ClientHistoryView::find()->where($wher);
           $countQuery = clone $query;
           $pagination = new Pagination(['defaultPageSize'=>$shpcount,'totalCount'=> $countQuery->count()]);
 
@@ -599,6 +617,37 @@ class SiteController extends Controller
               }
         }else{
           return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }
+
+    public function actionGetreportajax()
+    {
+      $request = Yii::$app->request;
+      $token = $request->get('token');
+      $datefrom = $request->get('datefrom');
+      $dateto = $request->get('dateto');
+          header('Content-Type: application/json');
+        if($token == md5(Yii::$app->session->getId().'opn')){
+              $resp = Yii::$app->HelperFunc->getReport($datefrom,$dateto,1);
+              echo json_encode(['status'=>0,'data'=>$resp]);
+        }else{
+          return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }
+
+    public function actionTest()
+    {
+        try{
+          $resp = Yii::$app->db->createCommand("SELECT id,golds,status FROM [dbo].[mainList] WHERE [status] NOT IN(2,5) AND golds != '[]'")->queryAll();
+          foreach($resp as $item){
+            Yii::$app->HelperFunc->insertter($item);
+          }
+          //
+          // echo '<pre>';
+          // print_r($resp);
+          // echo '</pre>';
+        }catch(Exception $e){
+            print_r( $e->errorInfo);
         }
     }
 }

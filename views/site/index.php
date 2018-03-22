@@ -42,7 +42,7 @@ use yii\bootstrap\ActiveForm;
       <tbody>
           <tr class="color{{ml.status}}" dir-paginate="ml in mainlistview | itemsPerPage: mainlistPerPage" total-items="totalmainlist" current-page="pagination.current" pagination-id="cust">
             <td>{{ml.sysDate | formatDatetime}}</td>
-            <td>{{ml.ticket}}</td>
+            <td><a class="sortbtn" ng-click="showHistory(ml.ticket)" href="javascript:void(0)">{{ml.ticket}}</a></td>
             <td>{{ml.fio}}</td>
             <td>{{ml.passport_id}}</td>
             <td>
@@ -294,20 +294,24 @@ use yii\bootstrap\ActiveForm;
           <tbody id="thead">
             <tr>
               <th>Дата</th>
-               <th>№ Билета</th>
-               <!--th>Ф.И.О.</th-->
+               <th><a class="getallbtn" ng-click="getallHistory()" href="javascript:void(0)">№ Билета</a></th>
                <th>Ссуда</th>
                <th>%-Ставка</th>
+               <th>Кол.Дней</th>
+               <th>Комиссия</th>
+               <th>Часть Пог.</th>
                <th>Залог</th>
             </tr>
           </tbody>
           <tbody>
               <tr class="color{{cr.status}}" dir-paginate="cr in clientRating | itemsPerPage: cratingPerPage" pagination-id="history-pg" total-items="totalcrating" current-page="cratingPgntion.current">
                 <td>{{cr.actionDate | formatDatetime}}</td>
-                <td>{{cr.ticket}}</td>
-                <!--td>{{cr.fio}}</td-->
+                <td><a class="sortbtn" ng-click="sortHistory(cr.ticket)" href="javascript:void(0)">{{cr.ticket}}</a></td>
                 <td>{{cr.loan}} {{cr.currency | currFilt }}</td>
                 <td>{{cr.percents | fixedto}} %</td>
+                <td>{{cr.countDay}}</td>
+                <td>{{cr.comission}}</td>
+                <td>{{cr.part_of_loan | fixedto}}</td>
                 <td>
                   <span class="arr-down-gold" data-html="true" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{cr.golds | parser: cr.other_prod : cr.id }}">
                     <span class="glyphicon glyphicon-eye-close"></span></span>

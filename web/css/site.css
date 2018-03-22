@@ -400,3 +400,21 @@ div#recognition-data {
 #tabsSett > div > .row > div.col-md-1{ width: 3%; padding: 0;}
 #tabsSett > div > .row > div.col-md-11{ width: 97%; }
 .report-box,.hdn{ display: none; }
+a.sortbtn {
+    color: #600ff9;
+    font-weight: bold;
+    border: 1px dashed lightcoral;
+    padding: 1px;
+    background: ghostwhite;
+}
+.col-md-rep {
+    width: 14.28%;
+    float: left;
+}
+.col-md-rep > table{
+  border-right: 1px solid red;
+}
+.report-border{
+  border: 1px solid silver;
+border-radius: 10px;
+}

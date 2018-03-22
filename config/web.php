@@ -51,6 +51,7 @@ $config = [
             'baseUrl' => '/',
             'rules' => [
             'index' => 'site/index',
+            'test' => 'site/test',
             // 'about' => 'site/about',
             // 'contact' => 'site/contact',
             'login' => 'site/login',
@@ -76,6 +77,7 @@ $config = [
             'getlibajax' => 'site/getlibajax',
             'setdataajax' => 'site/setdataajax',
             'realizeajax' => 'site/realizeajax',
+            'getreportajax' => 'site/getreportajax',
             ],
         ],
 

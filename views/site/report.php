@@ -13,7 +13,9 @@ $this->params['breadcrumbs'][] = $this->title;
 <div ng-controller="AppCtrlReport" class="site-report">
     <div id="report" class = "body-content-page">
         <div class="row">
-          <div class="col-md-4"></div>
+          <div class="col-md-4">
+            <input type="hidden" id="token" name="token" value="<?=md5(Yii::$app->session->getId().'opn');?>"/>
+          </div>
           <div class="col-md-4">
             <div class="input-group date">
               <input type="text" class="form-control getbydatetime">
@@ -24,169 +26,146 @@ $this->params['breadcrumbs'][] = $this->title;
           </div>
         </div>
         <br/>
-        <div class="row">
-          <div class="col-md-12">
-            <table style="display:none;" class="table report-table1">
+        <div class="row report-border">
+          <div class="col-md-rep">
+            <table style="display:none;" class="table table-striped">
               <thead>
                 <tr>
-                  <th>Штрих код</th>
-                  <th>Пользователь</th>
-                  <th>Реализатор</th>
-                  <th>Наименование</th>
-                  <th>Группа</th>
-                  <th>Вставка</th>
-                  <th>Проба</th>
-                  <th>Поставка</th>
-                  <th>Размер</th>
-                  <th>Грамм</th>
-                  <th>Курс</th>
-                  <th>Цена покупки</th>
-                  <th>Проданная цена</th>
-                  <th>Прибыль</th>
-                  <th>Комментарии</th>
-                  <th>Дата продажи</th>
+                  <th colspan="2" style="text-align:center;">Выдача</th>
+                </tr>
+                <tr>
+                  <th>Дата</th>
+                  <th>Сумма</th>
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="rep in report1">
-                  <td>{{rep.bar_code}}</td>
-                  <td>{{rep.users}}</td>
-                  <td>{{rep.agent}}</td>
-                  <td>{{rep.name}}</td>
-                  <td>{{rep.groupby}}</td>
-                  <td>{{rep.inser}}</td>
-                  <td>{{rep.sample}}</td>
-                  <td>{{rep.tdelivery}}</td>
-                  <td>{{rep.size}}</td>
-                  <td>{{rep.weight_grams | fixedto }}</td>
-                  <td>{{rep.exchangerate | fixedto }}</td>
-                  <td>{{rep.price_buy | fixedto }} {{rep.buy_currency | currFilt}}</td>
-                  <td>{{rep.price_sold | fixedto }} {{rep.sold_currency | currFilt}}</td>
-                  <td>{{rep.dohod | fixedto }}</td>
-                  <td>{{rep.comment}}</td>
-                  <td>{{rep.date_system}}</td>
-
-                </tr>
-                <tr>
-                  <td colspan="9"></td>
-                  <td>{{report1 | totalSumm:'weight_grams' }}</td>
-                  <td></td>
-                  <td>{{report1 | totalSumm:'price_buy' }}</td>
-                  <td>{{report1 | totalSumm:'price_sold' }}</td>
-                  <td>{{report1 | totalSumm:'dohod' }}</td>
-                  <td colspan="2"></td>
+                <tr ng-repeat="vyda in vydacha">
+                  <td>{{vyda.date}}</td>
+                  <td>{{vyda.summ | fixedto }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="col-md-12">
-            <table style="display:none;" class="table report-table2">
+          <div class="col-md-rep">
+            <table style="display:none;" class="table table-striped">
               <thead>
                 <tr>
-                  <th>Штрих код</th>
-                  <th>Пользователь</th>
-                  <th>Реализатор</th>
-                  <th>Наименование</th>
-                  <th>Группа</th>
-                  <th>Вставка</th>
-                  <th>Проба</th>
-                  <th>Поставка</th>
-                  <th>Размер</th>
-                  <th>Грамм</th>
-                  <th>Курс</th>
-                  <th>Цена покупки</th>
-                  <th>Проданная цена</th>
-                  <th>Прибыль</th>
-                  <th>Комментарии</th>
-                  <th>Дата продажи</th>
+                  <th colspan="2" style="text-align:center;">Выкуп</th>
+                </tr>
+                <tr>
+                  <th>Дата</th>
+                  <th>Сумма</th>
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="rep in report2">
-                  <td>{{rep.bar_code}}</td>
-                  <td>{{rep.users}}</td>
-                  <td>{{rep.agent}}</td>
-                  <td>{{rep.name}}</td>
-                  <td>{{rep.groupby}}</td>
-                  <td>{{rep.inser}}</td>
-                  <td>{{rep.sample}}</td>
-                  <td>{{rep.tdelivery}}</td>
-                  <td>{{rep.size}}</td>
-                  <td>{{rep.weight_grams | fixedto }}</td>
-                  <td>{{rep.exchangerate | fixedto }}</td>
-                  <td>{{rep.price_buy | fixedto }} {{rep.buy_currency | currFilt}}</td>
-                  <td>{{rep.price_sold | fixedto }} {{rep.sold_currency | currFilt}}</td>
-                  <td>{{rep.dohod | fixedto }}</td>
-                  <td>{{rep.comment}}</td>
-                  <td>{{rep.date_system}}</td>
-
-                </tr>
-                <tr>
-                  <td colspan="9"></td>
-                  <td>{{report2 | totalSumm:'weight_grams' }}</td>
-                  <td></td>
-                  <td>{{report2 | totalSumm:'price_buy' }}</td>
-                  <td>{{report2 | totalSumm:'price_sold' }}</td>
-                  <td>{{report2 | totalSumm:'dohod' }}</td>
-                  <td colspan="2"></td>
+                <tr ng-repeat="vyk in vykup">
+                  <td>{{vyk.date}}</td>
+                  <td>{{vyk.summ | fixedto }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="col-md-12">
-            <table style="display:none;" class="table report-table3">
+          <div class="col-md-rep">
+            <table style="display:none;" class="table table-striped">
               <thead>
                 <tr>
-                  <th>Штрих код</th>
-                  <th>Пользователь</th>
-                  <th>Реализатор</th>
-                  <th>Наименование</th>
-                  <th>Группа</th>
-                  <th>Вставка</th>
-                  <th>Проба</th>
-                  <th>Поставка</th>
-                  <th>Размер</th>
-                  <th>Грамм</th>
-                  <th>Курс</th>
-                  <th>Цена покупки</th>
-                  <th>Проданная цена</th>
-                  <th>Прибыль</th>
-                  <th>Комментарии</th>
-                  <th>Дата продажи</th>
+                  <th colspan="2" style="text-align:center;">%-погашения</th>
+                </tr>
+                <tr>
+                  <th>Дата</th>
+                  <th>Сумма</th>
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="rep in report3">
-                  <td>{{rep.bar_code}}</td>
-                  <td>{{rep.users}}</td>
-                  <td>{{rep.agent}}</td>
-                  <td>{{rep.name}}</td>
-                  <td>{{rep.groupby}}</td>
-                  <td>{{rep.inser}}</td>
-                  <td>{{rep.sample}}</td>
-                  <td>{{rep.tdelivery}}</td>
-                  <td>{{rep.size}}</td>
-                  <td>{{rep.weight_grams | fixedto }}</td>
-                  <td>{{rep.exchangerate | fixedto }}</td>
-                  <td>{{rep.price_buy | fixedto }} {{rep.buy_currency | currFilt}}</td>
-                  <td>{{rep.price_sold | fixedto }} {{rep.sold_currency | currFilt}}</td>
-                  <td>{{rep.dohod | fixedto }}</td>
-                  <td>{{rep.comment}}</td>
-                  <td>{{rep.date_system}}</td>
-
-                </tr>
-                <tr>
-                  <td colspan="9"></td>
-                  <td>{{report3 | totalSumm:'weight_grams' }}</td>
-                  <td></td>
-                  <td>{{report3 | totalSumm:'price_buy' }}</td>
-                  <td>{{report3 | totalSumm:'price_sold' }}</td>
-                  <td>{{report3 | totalSumm:'dohod' }}</td>
-                  <td colspan="2"></td>
+                <tr ng-repeat="compog in comission_pog">
+                  <td>{{compog.date}}</td>
+                  <td>{{compog.summ | fixedto }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <div class="col-md-rep">
+            <table style="display:none;" class="table table-striped">
+              <thead>
+                <tr>
+                  <th colspan="2" style="text-align:center;">продление</th>
+                </tr>
+                <tr>
+                  <th>Дата</th>
+                  <th>Сумма</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="comperez in comission_perez">
+                  <td>{{comperez.date}}</td>
+                  <td>{{comperez.summ | fixedto }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-rep">
+            <table style="display:none;" class="table table-striped">
+              <thead>
+                <tr>
+                  <th colspan="2" style="text-align:center;">Ч/П</th>
+                </tr>
+                <tr>
+                  <th>Дата</th>
+                  <th>Сумма</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="chpog in ch_pog">
+                  <td>{{chpog.date}}</td>
+                  <td>{{chpog.summ | fixedto }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-rep">
+            <table style="display:none;" class="table table-striped">
+              <thead>
+                <tr>
+                  <th colspan="2" style="text-align:center;">прочие приходы</th>
+                </tr>
+                <tr>
+                  <th>Дата</th>
+                  <th>Сумма</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="prochpr in proch_prih">
+                  <td>{{prochpr.date}}</td>
+                  <td>{{prochpr.summ | fixedto }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-rep">
+            <table style="display:none;" class="table table-striped">
+              <thead>
+                <tr>
+                  <th colspan="2" style="text-align:center;">прочие расходы</th>
+                </tr>
+                <tr>
+                  <th>Дата</th>
+                  <th>Сумма</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="prochrd in proch_rashod">
+                  <td>{{prochrd.date}}</td>
+                  <td>{{prochrd.summ | fixedto }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
         </div>
     </div>
 </div>
+<style>
+table.table.report-table1 {
+  border-collapse: separate;
+}
+</style>
