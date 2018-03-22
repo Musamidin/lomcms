@@ -990,7 +990,7 @@ $.fn.bootstrapBtn = $.fn.button.noConflict();
                 .then(function(result) {
                   var respdata = eval(result.data);
                   if(respdata.status == 0){
-                    $('.col-md-rep > table').show();
+                    $('.col-md-rep > table,.col-md-12.gram-box').show();
                         $scope.vydacha = eval(respdata.data.vydacha);
                         $scope.vykup = eval(respdata.data.vykup);
                         $scope.comission_pog = eval(respdata.data.comission_pog);
@@ -999,7 +999,8 @@ $.fn.bootstrapBtn = $.fn.button.noConflict();
                         $scope.ch_pog = eval(respdata.data.ch_pog);
                         $scope.proch_prih = eval(respdata.data.proch_prih);
                         $scope.proch_rashod = eval(respdata.data.proch_rashod);
-
+                        $scope.curr_golds = eval(respdata.data.curr_golds);
+                        console.log($scope.curr_golds);
                   } else if(respdata.status > 0){
                       alert(respdata.msg);
                   }

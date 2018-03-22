@@ -142,7 +142,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </table>
           </div>
           <div class="col-md-rep">
-            <table style="display:none;" class="table table-striped">
+            <table style="display:none;border-right: none;" class="table table-striped">
               <thead>
                 <tr>
                   <th colspan="2" style="text-align:center;">прочие расходы</th>
@@ -160,12 +160,22 @@ $this->params['breadcrumbs'][] = $this->title;
               </tbody>
             </table>
           </div>
-
+          <div class="col-md-12 gram-box">
+            <table style="border-right: none;" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Проба</th>
+                  <th>Грамм</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="golds in curr_golds">
+                  <td>{{golds.sample}}</td>
+                  <td>{{golds.gramm | fixedto }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
     </div>
 </div>
-<style>
-table.table.report-table1 {
-  border-collapse: separate;
-}
-</style>

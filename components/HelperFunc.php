@@ -8,6 +8,7 @@ use app\models\MainListView;
 use yii\data\Pagination;
 use app\models\Recognition;
 use app\models\Library;
+use app\models\Golds;
 /**
  *
  */
@@ -189,6 +190,11 @@ class HelperFunc extends Component
   {
     $resp = [];
     try{
+      $resp['curr_golds'] = Golds::find()->select('SUM(gramm) AS gramm,[sample]')
+      ->where(['BETWEEN','actionDate',$datefrom,$dateto])
+      ->andWhere('status IN(0,1,3,4)')
+      ->groupBy('[sample]')
+      ->asArray()->all();
       $resp['vydacha'] = Yii::$app->db->createCommand("SELECT * FROM mrLoan('{$datefrom}','{$dateto}',{$curr},0)")->queryAll();
       $resp['vykup'] = Yii::$app->db->createCommand("SELECT * FROM mrLoan('{$datefrom}','{$dateto}',{$curr},1)")->queryAll();
       $resp['comission_pog'] = Yii::$app->db->createCommand("SELECT * FROM mrComission('{$datefrom}','{$dateto}',{$curr},2)")->queryAll();
@@ -196,8 +202,9 @@ class HelperFunc extends Component
       $resp['ch_pog'] = Yii::$app->db->createCommand("SELECT * FROM mrPartLoan('{$datefrom}','{$dateto}',{$curr},1)")->queryAll();
       $resp['proch_prih'] = Yii::$app->db->createCommand("SELECT * FROM mrPrp('{$datefrom}','{$dateto}',{$curr},'Приход')")->queryAll();
       $resp['proch_rashod'] = Yii::$app->db->createCommand("SELECT * FROM mrPrp('{$datefrom}','{$dateto}',{$curr},'Расход')")->queryAll();
+
     }catch(Exception $e){
-        $resp = $e->errorInfo;
+        return $e->errorInfo;
     }finally{
       return $resp;
     }
@@ -216,7 +223,7 @@ class HelperFunc extends Component
       }
   }
 
-  public function insertter($item)
+  public function insertter($item) //for test
   {
       try{
           $arr = json_decode($item['golds'],true);

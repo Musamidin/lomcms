@@ -22,6 +22,7 @@ use app\models\Template;
 use app\models\ReprintView;
 use app\componets\HelperFunc;
 use app\models\Recognition;
+use app\models\Golds;
 use app\models\ClientHistoryView;
 
 class SiteController extends Controller
