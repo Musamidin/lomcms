@@ -149,11 +149,14 @@ var savedata = function(param){
 $scope.onCalc = function(data){
   $('#part-of-loan').val('');
 	$.each(data,function(key,val){
-		if(key == 'loan' || key == 'ticket' || key == 'dateStart' || key == 'dateEnd' || key == 'percents'){
+		if(key == 'loan' || key == 'ticket' || key == 'dateStart' || key == 'dateEnd'){
 			$('#'+key).text(val);
 		}else if(key == 'currency'){
 			$('#loan').append(' '+curr(val));
+		}else if(key == 'percents'){
+			$('#'+key).text(Number(val).toFixed(2));
 		}
+
 	});
 	calcFunc(data);
 	$("#dialog-form-calculate").dialog({
@@ -241,6 +244,7 @@ $(document).on('keyup','#part-of-loan',function(){
 });
 
 var calcFunc = function(data){
+  $('.lbl-view.din').show();
 	var cday = parseInt((new Date() - new Date(data['dateStart'])) / (1000 * 60 * 60 * 24));
   if(cday == 0){ cday = 1; }
   var com = 0, totsum = 0,	minDay = 10, minSumm = 100;
@@ -257,8 +261,10 @@ var calcFunc = function(data){
 	}else if(parseInt(data['currency']) == 1){ // KGS Сом
 			if(parseInt(data['status']) > 0){ //Если статус был проден
 					if(parseFloat(data['loan']) > 1000){ //Если сумма ссуды > 1000
+            cday = parseInt((new Date() - new Date(data['dateStart'])) / (1000 * 60 * 60 * 24));
 						com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
 	 				  totsum = (parseFloat(data['loan']) + com);
+            $('.lbl-view.din').hide();
 					}else{ //Если сумма ссуды < 1000
             com = (parseFloat(data['loan']) / 100 * parseFloat(data['percents']) * parseInt(cday));
             if(cday <= 30){
@@ -328,7 +334,7 @@ $(document).on('click', '#exchangeModal', function(){
 	//$scope.init();
 	//$( "#dialog-form-print" ).dialog( "open" );
 	// $scope.calcData['fio'] = "Musa";
-	console.log($scope.calcData);
+	//console.log($scope.calcData);
 });
 /***END Print Dialog Box ****/
 
@@ -478,7 +484,7 @@ $(document).on('click', '.add-cont-btn', function(){
 				tbl = '<tr id="rn'+$scope.formData.phone+'"><td>'+$scope.formData.phone+'</td><td><a href="javascript:void(0)" title="Удалить" class="delphone" id="rn'+$scope.formData.phone+'"><span class="glyphicon glyphicon-trash"></span><a/></td></tr>';
 				$('#phone-table').show();
 				$('#tbody-phone').append(tbl);
-				console.log(phoneBook);
+				//console.log(phoneBook);
 		 }
 	 }
 });
@@ -493,7 +499,7 @@ $(document).on('click', '.delphone', function(){
 		//delete phoneBook[thisid-1];
 		$('#'+this.id).closest('tr').remove();
 		if(jQuery.isEmptyObject(phoneBook)){ $('#phone-table').hide(); }
-		console.log(phoneBook);
+		//console.log(phoneBook);
 		return false;
 });
 
@@ -1000,7 +1006,9 @@ $.fn.bootstrapBtn = $.fn.button.noConflict();
                         $scope.proch_prih = eval(respdata.data.proch_prih);
                         $scope.proch_rashod = eval(respdata.data.proch_rashod);
                         $scope.curr_golds = eval(respdata.data.curr_golds);
-                        console.log($scope.curr_golds);
+                        $scope.tickets = eval(respdata.data.tickets);
+                        $scope.data = eval(respdata.data);
+                        //console.log($scope.data);
                   } else if(respdata.status > 0){
                       alert(respdata.msg);
                   }
@@ -1124,7 +1132,7 @@ $scope.addlog = function(){
               	$scope.data[obj.name] = obj.value;
         			});
   						$scope.data['token'] = $('#token').val();
-              console.log($scope.data);
+              //console.log($scope.data);
               savedatatodb($scope.data);
   						// var resp = checker($scope.calcData);
   						// if(resp[0] == false){

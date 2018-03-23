@@ -161,6 +161,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </table>
           </div>
           <div class="col-md-12 gram-box">
+          <div class="col-md-4">
             <table style="border-right: none;" class="table table-striped">
               <thead>
                 <tr>
@@ -176,6 +177,43 @@ $this->params['breadcrumbs'][] = $this->title;
               </tbody>
             </table>
           </div>
+          <div class="col-md-4">
+            <table style="border-right: none;" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Залоговые билеты</th>
+                  <th>Сумма</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="tick in tickets">
+                  <td>{{tick.ticketcount}}</td>
+                  <td>{{tick.summ | fixedto }} {{tick.currency | currFilt}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-md-4">
+            <table style="border-right: none;" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Касса на начало периода</th>
+                  <th>Касса на конец периода</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{data.strKgs | fixedto}} KGS</td>
+                  <td>{{data.currKgs | fixedto }} KGS</td>
+                </tr>
+                <tr>
+                  <td>{{data.strUsd | fixedto}} USD</td>
+                  <td>{{data.currUsd | fixedto }} USD</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
         </div>
     </div>
 </div>

@@ -418,9 +418,10 @@ a.sortbtn {
   border: 1px solid silver;
 border-radius: 10px;
 }
-.col-md-12.gram-box{
+.gram-box.gram-box{
   display: none;
   border: 1px solid silver;
   border-radius: 10px;
 }
-.col-md-12.gram-box > table > thead > tr > th{ text-align: center; }
+.gram-box > div > table > thead > tr > th{ text-align: center; }
+.table>thead>tr>th {text-align: center;}

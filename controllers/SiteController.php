@@ -630,6 +630,7 @@ class SiteController extends Controller
           header('Content-Type: application/json');
         if($token == md5(Yii::$app->session->getId().'opn')){
               $resp = Yii::$app->HelperFunc->getReport($datefrom,$dateto,1);
+              //print_r(Yii::$app->db->createCommand("SELECT [dbo].[startAndEndKassa]('{$datefrom}',1) AS KGS")->queryScalar());
               echo json_encode(['status'=>0,'data'=>$resp]);
         }else{
           return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));

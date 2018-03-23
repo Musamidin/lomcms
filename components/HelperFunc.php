@@ -9,6 +9,7 @@ use yii\data\Pagination;
 use app\models\Recognition;
 use app\models\Library;
 use app\models\Golds;
+use app\models\MainList;
 /**
  *
  */
@@ -50,7 +51,7 @@ class HelperFunc extends Component
     }elseif($do->currency == 1){ //Если валюта KGS
         if($do->status > 0){ //Если статус (был проден)
             if(floatval($do->loan) > 1000){ //Если сумма ссуды > 1000
-
+              $cdays = date_diff(date_create($do->dateStart),date_create())->days;
               $com = (floatval($do->loan) / 100 * floatval($do->percents) * $cdays);
               $totSumm = (floatval($do->loan) + $com);
             }else{ //Если сумма ссуды < 1000
@@ -190,11 +191,17 @@ class HelperFunc extends Component
   {
     $resp = [];
     try{
+      $resp['tickets'] = Yii::$app->db->createCommand("SELECT * FROM getTicketsCountAndSumm('{$datefrom}','{$dateto}')")->queryAll();
       $resp['curr_golds'] = Golds::find()->select('SUM(gramm) AS gramm,[sample]')
       ->where(['BETWEEN','actionDate',$datefrom,$dateto])
-      ->andWhere('status IN(0,1,3,4)')
-      ->groupBy('[sample]')
+      ->andWhere('status IN(0,1,3,4)')->groupBy('[sample]')
       ->asArray()->all();
+      $resp['strKgs'] = Yii::$app->db->createCommand("SELECT [dbo].[startAndEndKassa]('{$datefrom}',1) AS KGS")->queryScalar();
+      $resp['strUsd'] = Yii::$app->db->createCommand("SELECT [dbo].[startAndEndKassa]('{$datefrom}',2) AS USD")->queryScalar();
+
+      $resp['currKgs'] = Yii::$app->db->createCommand("SELECT [dbo].[currentKassa]('{$datefrom}','{$dateto}',1) AS totalKassa")->queryScalar();
+      $resp['currUsd'] = Yii::$app->db->createCommand("SELECT [dbo].[currentKassa]('{$datefrom}','{$dateto}',2) AS totalKassa")->queryScalar();
+
       $resp['vydacha'] = Yii::$app->db->createCommand("SELECT * FROM mrLoan('{$datefrom}','{$dateto}',{$curr},0)")->queryAll();
       $resp['vykup'] = Yii::$app->db->createCommand("SELECT * FROM mrLoan('{$datefrom}','{$dateto}',{$curr},1)")->queryAll();
       $resp['comission_pog'] = Yii::$app->db->createCommand("SELECT * FROM mrComission('{$datefrom}','{$dateto}',{$curr},2)")->queryAll();

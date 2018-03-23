@@ -373,7 +373,7 @@ use yii\bootstrap\ActiveForm;
         </div>
       </div>
       <div class="col-md-6">
-        <span class="lbl-view">Минимальный срок:<span id="min-term">10</span> Дней</span>
+        <span class="lbl-view din">Минимальный срок:<span id="min-term">10</span> Дней</span>
       </div>
     </div>
   </div>
