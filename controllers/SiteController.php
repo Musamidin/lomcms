@@ -219,7 +219,7 @@ class SiteController extends Controller
             ->bindValue(":phone",$data['phone'])
             ->bindValue(":address",$data['address']);
              $rtdata = $command->queryAll();
-            //print_r(json_decode($data['gold'],true));
+            //print_r($rtdata[0]['id']);
             $gld = json_decode($data['gold'],true);
            if(!empty($gld)){
               foreach (json_decode($data['gold'],true) as $itm) {
@@ -372,8 +372,9 @@ class SiteController extends Controller
 
     public function actionDeleteaction()
     {
-          //$data['page'] = 1;
+          $data['page'] = 1;
           $data['shpcount'] = $this->psize;
+          $data['sts'] = 0;
           $postData = file_get_contents("php://input");
           $do = json_decode($postData);
           header('Content-Type: application/json');
@@ -640,8 +641,8 @@ class SiteController extends Controller
     public function actionTest()
     {
         try{
-          $resp = Yii::$app->db->createCommand("SELECT * FROM [dbo].[mainList] WHERE golds IS NOT NULL")->queryAll(); //status IN(0,1,3,4) AND codeid = 7 AND currency = 'KGS'
-          //$resp = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sp_orders_tickets] WHERE codeid = 1536")->queryAll();
+          //$resp = Yii::$app->db->createCommand("SELECT * FROM [dbo].[mainList] WHERE golds IS NOT NULL")->queryAll(); //status IN(0,1,3,4) AND codeid = 7 AND currency = 'KGS'
+          $resp = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sp_orders_tickets] WHERE status IN(0,1,3,4) AND currency = 'KGS' and ns = 0")->queryAll();
           foreach($resp as $item){
             Yii::$app->HelperFunc->insertter($item);
             //print_r(date('Y-m-d',strtotime($item['dateStart'])));

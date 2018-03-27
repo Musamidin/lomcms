@@ -135,10 +135,14 @@ var savedata = function(param){
 				$("#dialog-form-clients").dialog( "close" );
 				$scope.data = response.data.data;
 				var state = response.data;
-				$('#printPreviewModal').modal({ keyboard: false });
-				printGold(param['gold'],curr(param['currency']));
-				$scope.init = function(){ };
-				$scope.getData(1,$scope.mainlistPerPage,$scope.bystatus);
+        if(state.status == 0){
+          $('#printPreviewModal').modal({ keyboard: false });
+          printGold(param['gold'],curr(param['currency']));
+          $scope.init = function(){ };
+          $scope.getData(1,$scope.mainlistPerPage,$scope.bystatus);
+        }else{
+          alert(state.msg);
+        }
 			}, function errorCallback(response) {
 					//console.log(response);
 		});
