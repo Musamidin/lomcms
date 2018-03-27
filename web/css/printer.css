@@ -5,3 +5,4 @@
 table.gld-table{width: 100%; border-collapse: collapse; }
 table.gld-table > tbody > tr > th,td{text-align: center;}
 body{font-size: 11px;}
+.print-gold>table>tbody>tr>th, td {font-size: 10pt;}
