@@ -31,7 +31,7 @@ class HelperFunc extends Component
     return $data;
   }
 
-  public function midasCalc($do)
+  public function midasCalc($do,$usingDay)
   {
     $retVal = [];
     $com = 0;
@@ -69,7 +69,8 @@ class HelperFunc extends Component
             }
         }else{ //Если статус 0 (Первый раз)
             if(floatval($do->loan) > 1000){ //Если сумма ссуды > 1000
-              $com = (floatval($do->loan) / 100 * floatval($do->percents) * $cdays);
+              $ud = ($usingDay == 30) ? 30 : $cdays;
+              $com = (floatval($do->loan) / 100 * floatval($do->percents) * $ud);
               if($com < $minSumm){ $com = $minSumm; }
               $totSumm = (floatval($do->loan) + $com);
             }else{ //Если сумма ссуды < 1000
@@ -98,9 +99,10 @@ class HelperFunc extends Component
     $data = [];
     try{
       if($param['sts'] == 0){
-          $data['count'] = MainListView::find()->count();
+          $data['count'] = MainListView::find()->where('status NOT IN(-1)')->count();
           $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
           $data['mlv'] = MainListView::find()
+          ->where('status NOT IN(-1)')
           ->offset($pagination->offset)
           ->limit($pagination->limit)
           ->asArray()
@@ -203,7 +205,7 @@ class HelperFunc extends Component
       $resp['currUsd'] = Yii::$app->db->createCommand("SELECT [dbo].[currentKassa]('{$datefrom}','{$dateto}',2) AS totalKassa")->queryScalar();
 
       $resp['vydacha'] = Yii::$app->db->createCommand("SELECT * FROM mrLoan('{$datefrom}','{$dateto}',{$curr},0)")->queryAll();
-      $resp['vykup'] = Yii::$app->db->createCommand("SELECT * FROM mrLoan('{$datefrom}','{$dateto}',{$curr},1)")->queryAll();
+      $resp['vykup'] = Yii::$app->db->createCommand("SELECT * FROM mrLoan('{$datefrom}','{$dateto}',{$curr},2)")->queryAll();
       $resp['comission_pog'] = Yii::$app->db->createCommand("SELECT * FROM mrComission('{$datefrom}','{$dateto}',{$curr},2)")->queryAll();
       $resp['comission_perez'] = Yii::$app->db->createCommand("SELECT * FROM mrComission('{$datefrom}','{$dateto}',{$curr},1)")->queryAll();
       $resp['ch_pog'] = Yii::$app->db->createCommand("SELECT * FROM mrPartLoan('{$datefrom}','{$dateto}',{$curr},1)")->queryAll();
@@ -230,18 +232,75 @@ class HelperFunc extends Component
       }
   }
 
-  public function insertter($item) //for test
+  public function insertter($items) //for test
   {
       try{
-          $arr = json_decode($item['golds'],true);
+        // $do = (object)[];
+        // $do->{"dateStart"} = date('Y-m-d',strtotime($items['dateStart']));
+        // $do->{"status"} = $items['status'];
+        // $do->{"loan"} = $items['loan'];
+        // $do->{"percents"} = $items['percents'];
+        // $do->{"currency"} = 1;//$items['currency'];
+        // $cData = Yii::$app->HelperFunc->midasCalc($do,30);
+        // //print_r($do);
+        // $command = Yii::$app->db->
+        // createCommand("SET NOCOUNT ON; EXEC dbo.actionData @loan =:loan,@currency =:currency,@percents =:percents,@comission =:comission, @totalsumm =:totalsumm, @description =:description,@other_prod =:other_prod,@gold =:gold,@user_id =:user_id,@ticket =:ticket,@cid =:cid,@dateStart=:dateStart");
+        // //$command->bindValue(":id",$items['id'])
+        // $command->bindValue(":loan",$items['loan'])
+        // ->bindValue(":currency",2)
+        // ->bindValue(":percents",$items['percents'])
+        // ->bindValue(":comission",$cData['comission'])
+        // ->bindValue(":totalsumm",$cData['totalsumm'])
+        // ->bindValue(":description",$items['thing_bail_description'])
+        // ->bindValue(":other_prod",$items['thing_bail'])
+        // ->bindValue(":gold",$items['golds'])
+        // ->bindValue(":user_id",2)
+        // ->bindValue(":ticket",$items['tickets_number'])
+        // ->bindValue(":cid",$items['clients_id'])
+        // ->bindValue(":dateStart",date('Y-m-d',strtotime($items['dateStart'])));
+        //usleep(2000000);
+        // ->bindValue(":fio",$items['fio'])
+        // ->bindValue(":date_of_issue",$items['date_of_issue'])
+        // ->bindValue(":passport_id",$items['passport_id'])
+        // ->bindValue(":passport_issued",$items['passport_issued'])
+        // ->bindValue(":phone",$data['phone'])
+        // ->bindValue(":address",$data['address']);
+         //$rtdata = $command->queryAll();
+         //print_r($rtdata);
+        //$tarr = [];
+        //$tarr2 = [];
+          $arr = json_decode($items['golds'],true);
           foreach($arr as $itm){
-            $itm['mid'] = $item['id'];
-            $itm['status'] = $item['status'];
+            $itm['mid'] = $items['id'];
+            $itm['status'] = $items['status'];
             unset($itm['num']);
-            //if(isset($itm['currs'])){ unset($itm['currs']); }
             Yii::$app->db->createCommand()->insert('golds',$itm)->execute();
-            //print_r($itm['groups']);
+            print_r($itm['groups']);
           }
+          // foreach($arr['things'] as $item){
+          //   //print_r($item);
+          //     foreach($item as $k=>$v){
+          //         if($k == 'bail_type'){
+          //          $tarr['groups'] = $v;
+          //         }elseif($k == 'thcurrency'){
+          //           $tarr['currs'] = $v;
+          //         }elseif($k == 'thcount'){
+          //           $tarr['count'] = $v;
+          //         }elseif($k == 'thgramm'){
+          //           $tarr['gramm'] = $v;
+          //         }elseif($k == 'rsumm'){
+          //           $tarr['summ'] = $v;
+          //         }elseif($k == 'sample'){
+          //           $tarr['sample'] = $v;
+          //         }
+          //     }
+          //   array_push($tarr2,$tarr);
+          // }
+          //print_r($items['codeid']);
+          //update
+          //Yii::$app->db2->createCommand("UPDATE sp_orders_tickets SET golds='".print_r(json_encode($tarr2),true)."' WHERE codeid =".$items['codeid']."")->execute();
+          //
+          //->update('sp_orders_tickets',['golds'=>json_encode($tarr2)],'codeid=:id',[':id'=>$item['codeid']]);
       }catch(Exception $e){
           print_r($e->errorInfo);
       }

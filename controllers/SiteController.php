@@ -197,7 +197,7 @@ class SiteController extends Controller
       $do->{"status"} = 0;
       if(!empty($do->token) && $do->token == md5(Yii::$app->session->getId().'opn')){
         $data = Yii::$app->HelperFunc->dataProcessing($do);
-        $cData = Yii::$app->HelperFunc->midasCalc($do);
+        $cData = Yii::$app->HelperFunc->midasCalc($do,30);
         //print_r(Yii::$app->user->identity->id);
           try{
             $command = Yii::$app->db->
@@ -336,7 +336,7 @@ class SiteController extends Controller
       Возвращает массив ([comission] => 253.5 [totalsumm] => 15253.5 [countDay] => 13)
       */
       if($do->token === md5(Yii::$app->session->getId().'opn')){
-        $calcData = Yii::$app->HelperFunc->midasCalc($do);
+        $calcData = Yii::$app->HelperFunc->midasCalc($do,0);
         $param['page'] = 1;
         $param['sts'] = 0;
         $param['shpcount'] = $this->psize;
@@ -519,7 +519,7 @@ class SiteController extends Controller
               $wher = ['client_id'=> $cid,'ticket'=> $ticket];
             }
           //$wher = ($ticket == 0) ? ['client_id'=> $cid] : ['client_id'=> $cid,'ticket'=> $ticket];
-          $query = ClientHistoryView::find()->where($wher);
+          $query = ClientHistoryView::find()->where($wher)->andWhere('status NOT IN(-1)');
           $countQuery = clone $query;
           $pagination = new Pagination(['defaultPageSize'=>$shpcount,'totalCount'=> $countQuery->count()]);
 
@@ -640,14 +640,16 @@ class SiteController extends Controller
     public function actionTest()
     {
         try{
-          $resp = Yii::$app->db->createCommand("SELECT id,golds,status FROM [dbo].[mainList] WHERE [status] NOT IN(2,5) AND golds != '[]'")->queryAll();
+          $resp = Yii::$app->db->createCommand("SELECT * FROM [dbo].[mainList] WHERE golds IS NOT NULL")->queryAll(); //status IN(0,1,3,4) AND codeid = 7 AND currency = 'KGS'
+          //$resp = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sp_orders_tickets] WHERE codeid = 1536")->queryAll();
           foreach($resp as $item){
             Yii::$app->HelperFunc->insertter($item);
+            //print_r(date('Y-m-d',strtotime($item['dateStart'])));
           }
           //
-          // echo '<pre>';
-          // print_r($resp);
-          // echo '</pre>';
+          echo '<pre>';
+          //print_r($resp);
+          echo '</pre>';
         }catch(Exception $e){
             print_r( $e->errorInfo);
         }
