@@ -220,12 +220,12 @@ class SiteController extends Controller
             ->bindValue(":address",$data['address']);
              $rtdata = $command->queryAll();
             //print_r($rtdata[0]['id']);
-            $gld = json_decode($data['gold'],true);
-           if(!empty($gld)){
-              foreach (json_decode($data['gold'],true) as $itm) {
-                Yii::$app->HelperFunc->insertjsontoarr($itm,$rtdata[0]['id']);
-              }
-            }
+           //  $gld = json_decode($data['gold'],true);
+           // if(!empty($gld)){
+           //    foreach (json_decode($data['gold'],true) as $itm) {
+           //      Yii::$app->HelperFunc->insertjsontoarr($itm,$rtdata[0]['id']);
+           //    }
+           //  }
               return json_encode(['status'=>0,'data'=>$rtdata[0],'msg'=>'OK']);
           }catch(Exception $e){
               //print_r($e->errorInfo[2]);

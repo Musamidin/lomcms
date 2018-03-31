@@ -32,7 +32,7 @@ header>.container {
 .row.stsbar {
     margin: 8px 0;
     padding: 15px;
-    background: #35414f url(/css/jquery/images/ui-bg_dots-small_35_35414f_2x2.png) 50% 50% repeat;
+    background: #4f77a7 /*url(/css/jquery/images/ui-bg_dots-small_35_35414f_2x2.png) 50% 50% repeat;*/
     /* width: 99%; */
 }
 #sts1.stsbtns { background: #d0eade; }
@@ -46,15 +46,24 @@ header>.container {
     background: white;
 }
 .navbar-inverse {
-    background-image: -webkit-linear-gradient(top,#3c3c3c 0,#222 100%);
-    background-image: -o-linear-gradient(top,#3c3c3c 0,#222 100%);
-    background-image: -webkit-gradient(linear,left top,left bottom,from(#3c3c3c),to(#222));
-    background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff3c3c3c', endColorstr='#ff222222', GradientType=0);
+    background-image: -webkit-linear-gradient(top,#337ab7 0,#3c8dbc 100%);
+    background-image: -o-linear-gradient(top,#337ab7 0,#3c8dbc 100%);
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#337ab7),to(#3c8dbc));
+    background-image: linear-gradient(to bottom,#337ab7 0,#3c8dbc 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#337ab7', endColorstr='#3c8dbc', GradientType=0);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
     background-repeat: repeat-x;
 }
 nav > .container { width: 100%;}
+.navbar-inverse .navbar-brand {
+    color: #57ff03;
+}
+.navbar-inverse .navbar-nav > li > a {
+    color: #57ff03;
+}
+.navbar-inverse .btn-link {
+    color: #57ff03;
+}
 .wrap {
     height: auto;
 }
@@ -320,7 +329,7 @@ ul.ui-autocomplete {
 i.iconer { color: red; }
 .viewer-hr{margin: 1px; border-top: 1px solid #f9c6c6;}
 .arr-down-ph,.arr-down-gold{cursor: pointer;}
-.ml-table > tbody#thead > tr > th{ padding: 10px; background: #35414f;color: white;text-align: center;}
+.ml-table > tbody#thead > tr > th{ padding: 10px; background: #4f77a7;color: white;text-align: center;}
 .ml-table > tbody > tr > td{text-align: center;}
 .popover-content { padding: 5px 5px; }
 .temp-hr{
