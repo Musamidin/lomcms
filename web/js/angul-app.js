@@ -26,6 +26,14 @@ var arrTs = [];
 var phoneBook = [];
 var arrData = [];
 
+$('#mainlist-loan').keyup(function () {
+     if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
+       this.value = this.value.replace(/[^0-9\.]/g, '');
+    }
+});
+
+$('.money').mask("##########.##", {reverse: true});
+
 $('body').popover({
     selector: '[data-toggle="popover"]'
 });

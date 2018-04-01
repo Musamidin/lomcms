@@ -198,7 +198,7 @@ use yii\bootstrap\ActiveForm;
                     </div>
                     <div class="col-md-2 paddLR0">
                       <div class="form-group field-mainform-gramm has-feedback required field-mainlist-gramm required">
-                        <input type="text" id="mainlist-gramm" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="gramm" placeholder="Грам" ng-model="data.gramm" aria-required="true">
+                        <input type="text" id="mainlist-gramm" class="money form-control ng-pristine ng-untouched ng-valid ng-empty" name="gramm" placeholder="Грам" ng-model="data.gramm" aria-required="true">
                         <span class="fa fa-dashboard form-control-feedback"></span>
                       </div>
                     </div>
