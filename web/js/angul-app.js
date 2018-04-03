@@ -125,24 +125,6 @@ $(document).on('click', '#exchangeModal', function(){
               }, function errorCallback(response) {
                   //console.log(response);
             });
-
-	  	 			// $.ajax({
-		        // 		cache: false,
-		        // 		type: "POST",
-		        // 		url: "/setData",
-		        // 		data: { data: $('#exchange-box :input').serializeArray() },
-		        // 	success: function(response) {
-		        //       var  obj = JSON.parse(response);
-		        //       if(obj.status == 'OK'){
-		        //  		    alert('Данные сохранились в журнале!');
-		        //         $("#dialog-form-exchange").dialog("close");
-		        //             $(':input','#exchange-box').removeAttr('selected').not(':button, :submit, :reset, :radio, :checkbox').val('');
-		        //             $('#exchangedSumm').html('0 Сом');
-		        //       }else{
-		        //         alert('Произошла ОШИБКА! Обратитесь к разработчику');
-		        //       }
-		        //     }
-        		// });
 	  	 	}
 	  	 }
 	}
@@ -411,8 +393,8 @@ var calcFunc = function(data){
 					}
 			}
 	}
-	$('#real-comission').text(com.toFixed(2) +' '+curr(data['currency']));
-	$('#total-summ').text(Math.round(totsum).toFixed(2)  +' '+curr(data['currency']));
+	$('#real-comission').text(Math.ceil(com).toFixed(2) +' '+curr(data['currency']));
+	$('#total-summ').text(Math.ceil(totsum).toFixed(2)  +' '+curr(data['currency']));
 	$('#countDay').text(cday);
 	$('#min-term').text(minDay);
 
@@ -694,7 +676,7 @@ $(document).on('change', '#mainlist-percents', function(){
         result = 0;
         alert('Выберите валюту!');
       }
-		$('#comission').text(Math.round(result)+' '+curr($('#mainlist-currency').val()));
+		$('#comission').text(Math.ceil(result)+' '+curr($('#mainlist-currency').val()));
 });
 
 $(document).on('keyup', '#mainlist-loan', function(){
@@ -710,7 +692,7 @@ $(document).on('keyup', '#mainlist-loan', function(){
         result = 0;
         alert('Выберите валюту!');
       }
-		  $('#comission').text(Math.round(result)+' '+curr($('#mainlist-currency').val()));
+		  $('#comission').text(Math.ceil(result)+' '+curr($('#mainlist-currency').val()));
 });
 /** END CALC FUNCTIONS **/
 
