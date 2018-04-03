@@ -10,6 +10,7 @@ use app\models\Recognition;
 use app\models\Library;
 use app\models\Golds;
 use app\models\MainList;
+use app\models\RecView;
 /**
  *
  */
@@ -88,8 +89,8 @@ class HelperFunc extends Component
             }
         }
     }
-    $retVal['comission'] = $com;
-    $retVal['totalsumm'] = round($totSumm);
+    $retVal['comission'] = ceil($com);
+    $retVal['totalsumm'] = ceil($totSumm);
     $retVal['countDay'] = $cdays;
     return $retVal;
   }
@@ -130,14 +131,30 @@ class HelperFunc extends Component
   {
     $data = [];
     try{
-          $data['count'] = Recognition::find()->count();
-          $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
-          $data['rnlist'] = Recognition::find()
-          ->offset($pagination->offset)
-          ->limit($pagination->limit)
-          ->asArray()
-          ->orderBy(['date_system'=>SORT_DESC])
-          ->all();
+          if($param['datetime'] == 0){
+            $data['count'] = RecView::find()->count();
+            $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+            $data['rnlist'] = RecView::find()
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->asArray()
+            ->orderBy(['date_system'=>SORT_DESC])
+            ->all();
+          }else{
+            $query = RecView::find()->where(['BETWEEN','date_system',$param['datetime'].'T00:00:00',$param['datetime'].'T23:59:59']);
+            $cQuery = clone $query;
+            $data['count'] = $cQuery->count();
+            $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+            $data['rnlist'] = $query
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->asArray()
+            ->orderBy(['date_system'=>SORT_DESC])
+            ->all();
+          }
+          //$query = RecView::find()->where(['BETWEEN','actionDate',$datefrom,$dateto]);
+          //$countQuery = clone $query;
+
           return $data;
     }catch(Exception $e){
         return $e->errorInfo;

@@ -50,7 +50,9 @@ class SiteController extends Controller
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'setdataajax' || $action->id === 'realizeajax'){
           $this->enableCsrfValidation = false;
-        }elseif($action->id === 'getreportajax'){
+        }elseif($action->id === 'getreportajax' || $action->id === 'exchangeajax'){
+          $this->enableCsrfValidation = false;
+        }elseif($action->id === 'deleteajax'){
           $this->enableCsrfValidation = false;
         }
         return parent::beforeAction($action);
@@ -219,13 +221,6 @@ class SiteController extends Controller
             ->bindValue(":phone",$data['phone'])
             ->bindValue(":address",$data['address']);
              $rtdata = $command->queryAll();
-            //print_r($rtdata[0]['id']);
-           //  $gld = json_decode($data['gold'],true);
-           // if(!empty($gld)){
-           //    foreach (json_decode($data['gold'],true) as $itm) {
-           //      Yii::$app->HelperFunc->insertjsontoarr($itm,$rtdata[0]['id']);
-           //    }
-           //  }
               return json_encode(['status'=>0,'data'=>$rtdata[0],'msg'=>'OK']);
           }catch(Exception $e){
               //print_r($e->errorInfo[2]);
@@ -404,7 +399,7 @@ class SiteController extends Controller
         $token = $request->get('token');
         $data['page'] = $request->get('page');
         $data['shpcount'] = $request->get('shpcount');
-
+        $data['datetime'] = $request->get('datetime');;
         header('Content-Type: application/json');
         if($token == md5(Yii::$app->session->getId().'opn')){
           $retData = Yii::$app->HelperFunc->getRecognition($data);
@@ -638,21 +633,79 @@ class SiteController extends Controller
         }
     }
 
+    public function actionExchangeajax()
+    {
+          $postData = file_get_contents("php://input");
+          $do = json_decode($postData);
+          header('Content-Type: application/json');
+          if($do->token == md5(Yii::$app->session->getId().'opn')){
+            $rec = new Recognition();
+            $curr = ($do->getExchange == 1) ? 2 : 1;
+            //print_r($do);
+            $rec->user_id = Yii::$app->user->identity->id;
+            $rec->date_system = date('Y-m-d\TH:i:s');
+            $rec->status = 'Приход';
+            $rec->comments = 'Конвертация по курсу '.floatval($do->exch_curr).'';
+            $rec->summ = $do->exch_summ;
+            $rec->currency = $curr;
+            $rec->save();
+            $recr = new Recognition();
+            $recr->user_id = Yii::$app->user->identity->id;
+            $recr->date_system = date('Y-m-d\TH:i:s');
+            $recr->status = 'Расход';
+            $recr->comments = 'Конвертация по курсу '.floatval($do->exch_curr).'';
+            $recr->summ = $do->exchangedSumm;
+            $recr->currency = $do->getExchange;
+            $recr->save();
+              // if($rec->save()){
+                   echo json_encode(['status'=>0,'msg'=>'OK']);
+              // }else{
+                //echo json_encode(['status'=>1,'msg'=>'some ERROR!']);
+              //}
+        }else{
+          return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }
+
+    public function actionDeleteajax()
+    {
+          $postData = file_get_contents("php://input");
+          $do = json_decode($postData);
+          $data = [];
+          $data['page'] = 1;
+          $data['shpcount'] = 15;
+          $data['datetime'] = 0;
+          header('Content-Type: application/json');
+          if($do->token == md5(Yii::$app->session->getId().'opn')){
+            $rec = Recognition::findOne($do->id);
+            $rec->delete();
+            $retData = Yii::$app->HelperFunc->getRecognition($data);
+            echo json_encode(['status'=>0,
+                                'data'=>['rnlist' => $retData['rnlist'],'count' => $retData['count']],
+                                'msg'=>'OK']
+                              );
+
+            print_r($recData);
+        }else{
+          return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }
+
     public function actionTest()
     {
-        try{
-          //$resp = Yii::$app->db->createCommand("SELECT * FROM [dbo].[mainList] WHERE golds IS NOT NULL")->queryAll(); //status IN(0,1,3,4) AND codeid = 7 AND currency = 'KGS'
-          $resp = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sp_orders_tickets] WHERE status IN(0,1,3,4) AND currency = 'KGS' and ns = 0")->queryAll();
-          foreach($resp as $item){
-            Yii::$app->HelperFunc->insertter($item);
-            //print_r(date('Y-m-d',strtotime($item['dateStart'])));
-          }
-          //
-          echo '<pre>';
-          //print_r($resp);
-          echo '</pre>';
-        }catch(Exception $e){
-            print_r( $e->errorInfo);
-        }
+        // try{
+        //   //$resp = Yii::$app->db->createCommand("SELECT * FROM [dbo].[mainList] WHERE golds IS NOT NULL")->queryAll(); //status IN(0,1,3,4) AND codeid = 7 AND currency = 'KGS'
+        //   $resp = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sp_orders_tickets] WHERE status IN(0,1,3,4) AND currency = 'KGS' and ns = 0")->queryAll();
+        //   foreach($resp as $item){
+        //     Yii::$app->HelperFunc->insertter($item);
+        //     //print_r(date('Y-m-d',strtotime($item['dateStart'])));
+        //   }
+        //   //
+        //   echo '<pre>';
+        //   //print_r($resp);
+        //   echo '</pre>';
+        // }catch(Exception $e){
+        //     print_r( $e->errorInfo);
+        // }
     }
 }

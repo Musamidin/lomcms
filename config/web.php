@@ -79,6 +79,8 @@ $config = [
             'setdataajax' => 'site/setdataajax',
             'realizeajax' => 'site/realizeajax',
             'getreportajax' => 'site/getreportajax',
+            'exchangeajax' => 'site/exchangeajax',
+            'deleteajax' => 'site/deleteajax'
             ],
         ],
 

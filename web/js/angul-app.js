@@ -21,17 +21,22 @@ $scope.calcData = {};
 $scope.bystatus = 0;
 $scope.cid = 0;
 $scope.ticket = 0;
+$scope.exchangeData = {};
 
 var arrTs = [];
 var phoneBook = [];
 var arrData = [];
 
+$('.digi').keyup(function () {
+     if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
+       this.value = this.value.replace(/[^0-9\.]/g, '');
+    }
+});
 $('#mainlist-loan').keyup(function () {
      if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
        this.value = this.value.replace(/[^0-9\.]/g, '');
     }
 });
-
 $('.money').mask("##########.##", {reverse: true});
 
 $('body').popover({
@@ -47,6 +52,102 @@ $('body').on('click', function (e) {
         }
     });
 });
+
+/***********************************************************/
+$(document).on('click', '#exchangeModal', function(){
+      $("#dialog-form-exchange").dialog({
+          title: "Конвертация",
+          autoOpen: false,
+          width: 690,
+          modal: true,
+          close: function( event, ui ) {
+            $("#exchange-box :input").find("input[type=text], textarea").val("");
+          },
+          buttons: [{
+            text: "Сохранить",
+            id : "btn-exchange",
+            click: saveExchanged
+          }]
+      }).dialog("open");
+});
+
+/*****************Exchange section****************/
+	$(document).on('change', '#getExchange', function(){
+		exchangeCalc();
+	});
+/*****************Exchange section****************/
+	$(document).on('keyup', '.onchanging', function(){
+		exchangeCalc();
+	});
+/*****************Function Exchange section****************/
+	function exchangeCalc()
+  {
+  		if($('#getExchange').val() != ''){
+  			if($('#getExchange').val() == 1){
+  				var esumm = (Number($('#exch_summ').val()) * Number($('#exch_curr').val()));
+  				$('#exchangedSumm').html('Конвертированная сумма:&nbsp;'+ Math.ceil(esumm).toFixed(2)+ '&nbsp;Сом');
+  				$('#exchangedSummVal').val(Math.ceil(esumm).toFixed(2));
+  			}
+  			if($('#getExchange').val() == 2){
+  				var esumm = (Number($('#exch_summ').val()) / Number($('#exch_curr').val()));
+  				$('#exchangedSumm').html('Конвертированная сумма:&nbsp;'+ Math.ceil(esumm).toFixed(2)+ '&nbsp;Доллар');
+  				$('#exchangedSummVal').val(Math.ceil(esumm).toFixed(2));
+  			}
+  		}
+	}
+/*****************Function SaveExchange Data section****************/
+	function saveExchanged()
+	{
+	  	 if($('#exch_summ').val() == '' || $('#exch_curr').val() == ''|| $('#getExchange').val() == ''){
+	  	 	alert('Укажите все объязательные поля!');
+	  	 }else{
+	  	 	if($('#exchangedSummVal').val() == ''){
+	  	 		alert("Произошла ошибка, пожалуйста перезапустите страницу");
+	  	 	}else{
+            $($('#exchange-box :input').serializeArray()).each(function(index, obj){
+              $scope.exchangeData[obj.name] = obj.value;
+            });
+            $scope.exchangeData['token'] = $('#token').val();
+            $http({
+              method: 'POST',
+              url: '/exchangeajax',
+              data: $scope.exchangeData
+            }).then(function successCallback(response) {
+
+                $("#dialog-form-exchange").dialog( "close" );
+                $scope.data = response.data.data;
+                var state = response.data;
+                if(state.status == 0){
+
+                }else{
+                  alert(state.msg);
+                }
+              }, function errorCallback(response) {
+                  //console.log(response);
+            });
+
+	  	 			// $.ajax({
+		        // 		cache: false,
+		        // 		type: "POST",
+		        // 		url: "/setData",
+		        // 		data: { data: $('#exchange-box :input').serializeArray() },
+		        // 	success: function(response) {
+		        //       var  obj = JSON.parse(response);
+		        //       if(obj.status == 'OK'){
+		        //  		    alert('Данные сохранились в журнале!');
+		        //         $("#dialog-form-exchange").dialog("close");
+		        //             $(':input','#exchange-box').removeAttr('selected').not(':button, :submit, :reset, :radio, :checkbox').val('');
+		        //             $('#exchangedSumm').html('0 Сом');
+		        //       }else{
+		        //         alert('Произошла ОШИБКА! Обратитесь к разработчику');
+		        //       }
+		        //     }
+        		// });
+	  	 	}
+	  	 }
+	}
+
+/***********************************************************/
 
 /**START OPEN DIALOG BOX **/
 $(document).on('click', '.addModal', function(){
@@ -341,15 +442,6 @@ var serverSide = function(data){
 };
 /** END Calculate function **/
 
-/***Print Dialog BOX***/
-$(document).on('click', '#exchangeModal', function(){
-	//$scope.init();
-	//$( "#dialog-form-print" ).dialog( "open" );
-	// $scope.calcData['fio'] = "Musa";
-	//console.log($scope.calcData);
-});
-/***END Print Dialog Box ****/
-
 /** MASK **/
  $("#clients-phone").mask("999999999",{placeholder:"XXX XX XX XX"});
 /** END MASK **/
@@ -401,6 +493,8 @@ $( "#clients-fio" ).autocomplete({
 /*********** END autocomplete ********/
 
 /**********START DATE PICKER***************/
+$('#clients-date_of_issue').mask("9999-99-99", {placeholder: 'Дата выдачи (пасспорт) г-м-д'});
+/*
 $('#clients-date_of_issue').datepicker({
 	format: "yyyy-mm-dd",
 	startView: 3,
@@ -408,6 +502,7 @@ $('#clients-date_of_issue').datepicker({
 	autoclose: true,
 	orientation: "bottom right"
 }).on('hide', function() { });
+*/
 /********END DATE PICKER****************/
 
 /**IN TAB GOLDS FUNCTIONS **/
@@ -458,7 +553,8 @@ $(document).on('click', '#add-gold', function(){
 							$('.thdata').val('');
 							$('#tbody-gold').append(appdata);
 							$('#mainlist-count,#mainlist-gramm,#mainlist-summ,#mainlist-sample,#mainlist-golds').val('');
-              $("#mainlist-currency option[value='Ваюта']").prop('selected', true);
+              //$("#mainlist-currency option[value='Ваюта']").prop('selected', true);
+              $("#mainlist-currency option[value='1']").prop('selected', true);
               $("#mainlist-percents option[value='% ставка']").prop('selected', true);
               //$('#numCount').val(1);
 
@@ -671,7 +767,7 @@ var clearCalFormFunc = function(){
 		$('#tbody-gold').html('');
 		$('#thing_table').hide();
     $('#credit-data :input,textarea').val('');
-    $("#mainlist-currency option[value='Ваюта']").prop('selected', true);
+    $("#mainlist-currency option[value='1']").prop('selected', true);
     $("#mainlist-percents option[value='% ставка']").prop('selected', true);
     $('#numCount').val(1);
     $('#comission').text(0);
@@ -1088,117 +1184,137 @@ $.fn.bootstrapBtn = $.fn.button.noConflict();
             return sum;
         };
 }).controller("AppCtrlRecognition", function($scope,$http){
-  $.fn.bootstrapBtn = $.fn.button.noConflict();
-  $scope.totalmainlist = 0;
-  $scope.mainlistPerPage = 15; // this should match however many results your API puts on one page
-  $scope.pagination = { current: 1 };
+      $.fn.bootstrapBtn = $.fn.button.noConflict();
+      $scope.totalmainlist = 0;
+      $scope.mainlistPerPage = 15; // this should match however many results your API puts on one page
+      $scope.pagination = { current: 1 };
 
-  $scope.data = {};
+      $scope.data = {};
 
-$scope.pageChanged = function(newPage) {
-  	   $scope.getrecognitionajax(newPage,$scope.mainlistPerPage);
-};
+      $scope.pageChanged = function(newPage) {
+        	   $scope.getrecognitionajax(newPage,$scope.mainlistPerPage,0);
+      };
 
-$scope.getrecognitionajax = function(pageNum,showPageCount){
+      $scope.getrecognitionajax = function(pageNum,showPageCount,datetime){
 
-  $http.get('/getrecognitionajax?page=' + pageNum +'&shpcount='+ showPageCount+'&token='+ $('#token').val()) // +'&pagenum='+pnum
-				.then(function(result) {
-					var respdata = eval(result.data);
-					if(respdata.status == 0){
-								$scope.rnlist = eval(respdata.data.rnlist);
-								$scope.totalmainlist = eval(respdata.data.count);
-					} else if(respdata.status > 0){
-							alert(respdata.msg);
-					}
-				}, function errorCallback(response) {
-				  	//console.log(response);
-				});
-};
+        $http.get('/getrecognitionajax?page=' + pageNum +'&shpcount='+ showPageCount+'&token='+ $('#token').val()+'&datetime='+datetime)
+      				.then(function(result) {
+      					var respdata = eval(result.data);
+      					if(respdata.status == 0){
+      								$scope.rnlist = eval(respdata.data.rnlist);
+      								$scope.totalmainlist = eval(respdata.data.count);
+      					} else if(respdata.status > 0){
+      							alert(respdata.msg);
+      					}
+      				}, function errorCallback(response) {
+      				  	//console.log(response);
+      				});
+      };
 
-$scope.getrecognitionajax(1,$scope.mainlistPerPage);
+      $scope.getrecognitionajax(1,$scope.mainlistPerPage,0);
 
-    $('.input-group.date.rep-dpicker').datepicker({
-      language: "ru",
-      autoclose: true
-    }).on('changeDate', function(e) {
-        alert(e);
-    });
+      $('.input-group.date.rep-dpicker').datepicker({
+          language: "ru",
+          format: 'yyyy-mm-dd',
+          todayHighlight: true,
+          autoclose: 'today',
+      }).on('changeDate', function(e) {
+              $scope.getrecognitionajax(1,$scope.mainlistPerPage,$('.getbydatetime').val());
+      });
 
-$scope.addlog = function(){
+      $scope.addlog = function(){
+            $('#recognition-data :input').val('');
+            $("#dialog-form-recognition").dialog({
+        				title: "Регистрация (Расход/Приход)",
+        				autoOpen: false,
+        				width: 690,
+        				modal: true,
+        				open: function(){
+        				},
+        				close: function( event, ui ) {
+        					//$("#addWindowItem").find("input[type=text], textarea").val("");
+        				},
+        				buttons: [{
+        					text: "Далее",
+        					id : "btn1",
+        					click: function() {
+        						$($('#recognition-data :input').serializeArray()).each(function(index, obj){
+                    	$scope.data[obj.name] = obj.value;
+              			});
+        						$scope.data['token'] = $('#token').val();
+                    //console.log($scope.data);
+                    savedatatodb($scope.data);
+        						// var resp = checker($scope.calcData);
+        						// if(resp[0] == false){
+        						// 	alert(resp[1]);
+        						// }else{
+        						// 	savedatatodb($scope.calcData);
+        						// }
+        					}
+        				}]
+        		}).dialog("open");
+      };
 
-      $("#dialog-form-recognition").dialog({
-  				title: "Регистрация (Расход/Приход)",
-  				autoOpen: false,
-  				width: 690,
-  				modal: true,
-  				open: function(){
-  				},
-  				close: function( event, ui ) {
-  					//$("#addWindowItem").find("input[type=text], textarea").val("");
-  				},
-  				buttons: [{
-  					text: "Далее",
-  					id : "btn1",
-  					click: function() {
-  						$($('#recognition-data :input').serializeArray()).each(function(index, obj){
-              	$scope.data[obj.name] = obj.value;
-        			});
-  						$scope.data['token'] = $('#token').val();
-              //console.log($scope.data);
-              savedatatodb($scope.data);
-  						// var resp = checker($scope.calcData);
-  						// if(resp[0] == false){
-  						// 	alert(resp[1]);
-  						// }else{
-  						// 	savedatatodb($scope.calcData);
-  						// }
-  					}
-  				}]
-  		}).dialog("open");
-};
+      var savedatatodb = function(data){
+          $http({
+            method: 'POST',
+            url: '/recognitionajax',
+            data: data
+          }).then(function successCallback(response) {
 
-var savedatatodb = function(data){
-    $http({
-      method: 'POST',
-      url: '/recognitionajax',
-      data: data
-    }).then(function successCallback(response) {
+              $("#dialog-form-recognition").dialog('close');
+                var respdata = eval(response.data);
+      					if(respdata.status == 0){
+      								$scope.rnlist = eval(respdata.data.rnlist);
+      								$scope.totalmainlist = eval(respdata.data.count);
+      					} else if(respdata.status > 0){
+      							alert(respdata.msg);
+      					}
+            }, function errorCallback(response) {
+                //console.log(response);
+          });
+      };
 
-        $("#dialog-form-recognition").dialog('close');
-          var respdata = eval(response.data);
-					if(respdata.status == 0){
-								$scope.rnlist = eval(respdata.data.rnlist);
-								$scope.totalmainlist = eval(respdata.data.count);
-					} else if(respdata.status > 0){
-							alert(respdata.msg);
-					}
-      }, function errorCallback(response) {
-          //console.log(response);
-    });
-};
-/*****************************************************/
+      $scope.onDelete = function(obj){
+            $http({
+              method: 'POST',
+              url: '/deleteajax',
+              data: { id:obj.id, token: $('#token').val() }
+            }).then(function successCallback(response) {
+                  var respdata = eval(response.data);
+                  if(respdata.status == 0){
+                    $scope.rnlist = eval(respdata.data.rnlist);
+                    $scope.totalmainlist = eval(respdata.data.count);
+                  } else if(respdata.status > 0){
+                      alert(respdata.msg);
+                  }
+              }, function errorCallback(response) {
+                  //console.log(response);
+            });
+      };
+      /*****************************************************/
 
-  $(document).on('change', '#transfer', function(){
-      if($(this).val() != ''){
-        $('#status_inout').val('Расход');
-        $('#status_inout').hide();
-        //$('#comments').val($('#comments').val()+'-'+$(this).val());
-      }else{
-        $('#status_inout').val('');
-        $('#status_inout').show();
-      }
-  });
-/*****************************************************/
+      $(document).on('change', '#transfer', function(){
+          if($(this).val() != ''){
+            $('#status_inout').val('Расход');
+            $('#status_inout').hide();
+            //$('#comments').val($('#comments').val()+'-'+$(this).val());
+          }else{
+            $('#status_inout').val('');
+            $('#status_inout').show();
+          }
+      });
+    /*****************************************************/
 
-  $(document).on('click', '#trf', function(){
-      if($(this).prop('checked') == true){
-        $('#transfer').show();
-      }else{
-        $('#transfer').hide();
-        $('#transfer').val('');
-        $('#status_inout').val('');
-        $('#status_inout').show();
-      }
-  });
+      $(document).on('click', '#trf', function(){
+          if($(this).prop('checked') == true){
+            $('#transfer').show();
+          }else{
+            $('#transfer').hide();
+            $('#transfer').val('');
+            $('#status_inout').val('');
+            $('#status_inout').show();
+          }
+      });
 
 });

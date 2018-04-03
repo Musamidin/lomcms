@@ -307,7 +307,7 @@ table#temp-table > table > tbody > tr > th,td{ text-align: left; padding: 2px;}
   overflow: auto;
   height: 90px;
 }
-#clients-date_of_issue{cursor: pointer;}
+/*#clients-date_of_issue{cursor: pointer;} */
 ul.ui-autocomplete {
     z-index: 1100;
 }

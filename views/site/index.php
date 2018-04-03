@@ -101,7 +101,7 @@ use yii\bootstrap\ActiveForm;
               <?=$form->field($clients, 'date_of_issue',['options'=>
                   ['tag' => 'div','class'=> 'form-group field-mainform-date_of_issue has-feedback required'],
                   'template'=>'{input}<span class="glyphicon glyphicon-calendar form-control-feedback"></span>{error}{hint}'
-                  ])->textInput(['autofocus' => false,'placeholder'=>'Дата выдачи (пасспорт) д/м/г','ng-model'=>'formData.date_of_issue','readonly'=>'readonly'])->label('Дата выдачи (пасспорт) д/м/г');
+                  ])->textInput(['autofocus' => false,'title'=>'Дата выдачи (пасспорт) г-м-д','ng-model'=>'formData.date_of_issue'])->label('Дата выдачи (пасспорт) д/м/г');
                   ?>
             </div>
           </div>
@@ -192,7 +192,7 @@ use yii\bootstrap\ActiveForm;
                     </div>
                     <div class="col-md-2 paddLR0">
                       <div class="form-group field-mainform-count has-feedback required field-mainlist-count required">
-                        <input type="text" id="mainlist-count" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="count" placeholder="Кол-тво" ng-model="data.count" aria-required="true">
+                        <input type="text" id="mainlist-count" class="digi form-control ng-pristine ng-untouched ng-valid ng-empty" name="count" placeholder="Кол-тво" ng-model="data.count" aria-required="true">
                         <span class="fa fa-cubes form-control-feedback"></span>
                       </div>
                     </div>
@@ -204,7 +204,7 @@ use yii\bootstrap\ActiveForm;
                     </div>
                     <div class="col-md-2 paddLR0">
                       <div class="form-group field-mainform-summ has-feedback required field-mainlist-summ required">
-                        <input type="text" id="mainlist-summ" class="form-control ng-pristine ng-untouched ng-valid ng-empty" name="summ" placeholder="Сумма" ng-model="data.summ" aria-required="true">
+                        <input type="text" id="mainlist-summ" class="digi form-control ng-pristine ng-untouched ng-valid ng-empty" name="summ" placeholder="Сумма" ng-model="data.summ" aria-required="true">
                         <span class="fa fa-money form-control-feedback"></span>
                         <input type="hidden" name="num" value="1" id="numCount">
                       </div>
@@ -247,12 +247,10 @@ use yii\bootstrap\ActiveForm;
                       ?>
                 </div>
                 <div class="col-md-4 paddLR0">
-                  <?= $form->field($mainList, 'currency',['options'=>
-                      ['tag' => 'div','class'=> 'form-group field-mainform-currency has-feedback required'],
-                      'template'=>'{input}<span class="form-control-feedback"></span>{error}{hint}'
-                      ])->dropDownList(['1'=>'KGS','2'=>'USD'],
-                      ['prompt' => 'Ваюта','ng-model' => 'calcData.currency']
-                      )->label(false); ?>
+                  <select id="mainlist-currency" class="form-control" name="MainList[currency]" ng-model="calcData.currency">
+                    <option selected="selected" value="1">KGS</option>
+                    <option value="2">USD</option>
+                  </select>
                 </div>
               </div>
               <div class="col-md-6">
@@ -358,7 +356,7 @@ use yii\bootstrap\ActiveForm;
     <br/>
     <div class="row">
       <div class="col-md-6">
-        <span class="lbl-view">Начислена:<span id="real-comission"></span></span>
+        <span class="lbl-view">Начислено:<span id="real-comission"></span></span>
       </div>
       <div class="col-md-6">
         <span class="lbl-view">Итого к выплате:<span id="total-summ"></span></span>
@@ -398,6 +396,40 @@ use yii\bootstrap\ActiveForm;
   </div>
 </div>
 <!--End Small Modal Window-->
+
+<div style="text-align:center;display:none;" id="dialog-form-exchange">
+  <!--p class="validateTips">All form fields are required.</p-->
+  <style type="text/css">
+    .ui-autocomplete {z-index:1200;}
+  </style>
+  <form id="exchangeForm">
+  <div id="exchange-box">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="input-group">
+            <input type="text" id="exch_summ" name="exch_summ" placeholder="Сумму" class="onchanging money input-sm form-control"/>
+            <span class="input-group-addon input-sm"></span>
+            <input type="text" id="exch_curr" name="exch_curr" placeholder="Курс" class="onchanging money input-sm form-control"/>
+            <span class="input-group-addon input-sm"></span>
+            <select id="getExchange" name="getExchange" class="input-sm form-control">
+              <option></option>
+              <option value="1">KGS</option>
+              <option value="2">USD</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+      <br/>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert alert-success" id="exchangedSumm">Конвертированная сумма:&nbsp;0</div>
+          <input type="hidden" id="exchangedSummVal" name="exchangedSumm" value=""/>
+        </div>
+      </div>
+  </div>
+  </form>
+</div>
 
 </div>
 <br/>

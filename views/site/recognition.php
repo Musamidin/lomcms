@@ -47,14 +47,14 @@ $this->params['breadcrumbs'][] = $this->title;
               <tbody>
                 <tr dir-paginate="rn in rnlist | itemsPerPage: mainlistPerPage" total-items="totalmainlist" current-page="pagination.current">
                   <td>{{rn.date_system | formatDatetime}}</td>
-                  <td>{{rn.user_id}}</td>
+                  <td>{{rn.fio}}</td>
                   <td>{{rn.status}}</td>
                   <td>{{rn.summ | fixedto}}</td>
                   <td>{{rn.currency | currFilt }}</td>
                   <td>{{rn.comments}}</td>
                   <td>
                     <div ng-if="<?=Yii::$app->user->identity->role; ?> == '1'">
-                    <a href="javascript:void(0)" title="Удалить" ng-click="onDelete(ml)"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="javascript:void(0)" title="Удалить" ng-click="onDelete(rn)"><span class="glyphicon glyphicon-trash"></span></a>
                   </div>
                   </td>
                 </tr>
