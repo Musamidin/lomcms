@@ -475,7 +475,7 @@ $( "#clients-fio" ).autocomplete({
 /*********** END autocomplete ********/
 
 /**********START DATE PICKER***************/
-$('#clients-date_of_issue').mask("9999-99-99", {placeholder: 'Дата выдачи (пасспорт) г-м-д'});
+$('#clients-date_of_issue').mask("99/99/9999", {placeholder: 'Дата выдачи (пасспорт) д/м/г'});
 /*
 $('#clients-date_of_issue').datepicker({
 	format: "yyyy-mm-dd",
