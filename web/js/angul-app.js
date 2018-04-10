@@ -847,6 +847,16 @@ $scope.getData = function(pageNum,showPageCount,sts){
         return '';
       }
     }
+}).filter("shortDateFormat", function ()
+{
+    return function (input) {
+      if(jQuery.isEmptyObject(input) == false){
+				var d = input.split('-');
+        return d[2]+'/'+d[1]+'/'+d[0];
+      }else{
+        return '';
+      }
+    }
 }).filter("phone", function ()
 {
     return function (input,param) {

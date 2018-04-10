@@ -685,7 +685,7 @@ class SiteController extends Controller
                                 'msg'=>'OK']
                               );
 
-            print_r($recData);
+            //print_r($recData);
         }else{
           return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
         }
