@@ -693,19 +693,19 @@ class SiteController extends Controller
 
     public function actionTest()
     {
-        // try{
-        //   //$resp = Yii::$app->db->createCommand("SELECT * FROM [dbo].[mainList] WHERE golds IS NOT NULL")->queryAll(); //status IN(0,1,3,4) AND codeid = 7 AND currency = 'KGS'
-        //   $resp = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sp_orders_tickets] WHERE status IN(0,1,3,4) AND currency = 'KGS' and ns = 0")->queryAll();
-        //   foreach($resp as $item){
-        //     Yii::$app->HelperFunc->insertter($item);
-        //     //print_r(date('Y-m-d',strtotime($item['dateStart'])));
-        //   }
-        //   //
-        //   echo '<pre>';
-        //   //print_r($resp);
-        //   echo '</pre>';
-        // }catch(Exception $e){
-        //     print_r( $e->errorInfo);
-        // }
+        try{
+          $resp = Yii::$app->db->createCommand("SELECT * FROM [dbo].[mainList] WHERE golds IS NOT NULL")->queryAll(); //status IN(0,1,3,4) AND codeid = 7 AND currency = 'KGS'
+          //$resp = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sp_orders_tickets] WHERE ns = 4 AND currency='USD'")->queryAll();
+          foreach($resp as $item){
+            Yii::$app->HelperFunc->insertter($item);
+            //print_r($item);
+          }
+          //
+          echo '<pre>';
+          //print_r($resp);
+          echo '</pre>';
+        }catch(Exception $e){
+            print_r( $e->errorInfo);
+        }
     }
 }

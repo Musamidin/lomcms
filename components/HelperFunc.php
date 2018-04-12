@@ -252,29 +252,29 @@ class HelperFunc extends Component
   public function insertter($items) //for test
   {
       try{
-        $do = (object)[];
-        $do->{"dateStart"} = date('Y-m-d',strtotime($items['dateStart']));
-        $do->{"status"} = $items['status'];
-        $do->{"loan"} = $items['loan'];
-        $do->{"percents"} = $items['percents'];
-        $do->{"currency"} = 1;//$items['currency'];
-        $cData = Yii::$app->HelperFunc->midasCalc($do,30);
-        //print_r($do);
-        $command = Yii::$app->db->
-        createCommand("SET NOCOUNT ON; EXEC dbo.actionDataInport @loan =:loan,@currency =:currency,@percents =:percents,@comission =:comission, @totalsumm =:totalsumm, @description =:description,@other_prod =:other_prod,@gold =:gold,@user_id =:user_id,@ticket =:ticket,@cid =:cid,@dateStart=:dateStart");
-        //$command->bindValue(":id",$items['id'])
-        $command->bindValue(":loan",$items['loan'])
-        ->bindValue(":currency",1)
-        ->bindValue(":percents",$items['percents'])
-        ->bindValue(":comission",$cData['comission'])
-        ->bindValue(":totalsumm",$cData['totalsumm'])
-        ->bindValue(":description",$items['thing_bail_description'])
-        ->bindValue(":other_prod",$items['thing_bail'])
-        ->bindValue(":gold",$items['golds'])
-        ->bindValue(":user_id",2)
-        ->bindValue(":ticket",$items['tickets_number'])
-        ->bindValue(":cid",$items['clients_id'])
-        ->bindValue(":dateStart",date('Y-m-d',strtotime($items['dateStart'])));
+        // $do = (object)[];
+        // $do->{"dateStart"} = date('Y-m-d',strtotime($items['dateStart']));
+        // $do->{"status"} = $items['status'];
+        // $do->{"loan"} = $items['loan'];
+        // $do->{"percents"} = $items['percents'];
+        // $do->{"currency"} = 2;//$items['currency'];
+        // $cData = Yii::$app->HelperFunc->midasCalc($do,30);
+        // //print_r($do);
+        // $command = Yii::$app->db->
+        // createCommand("SET NOCOUNT ON; EXEC dbo.actionDataInport @loan =:loan,@currency =:currency,@percents =:percents,@comission =:comission, @totalsumm =:totalsumm, @description =:description,@other_prod =:other_prod,@gold =:gold,@user_id =:user_id,@ticket =:ticket,@cid =:cid,@dateStart=:dateStart");
+        // //$command->bindValue(":id",$items['id'])
+        // $command->bindValue(":loan",$items['loan'])
+        // ->bindValue(":currency",2)
+        // ->bindValue(":percents",$items['percents'])
+        // ->bindValue(":comission",$cData['comission'])
+        // ->bindValue(":totalsumm",$cData['totalsumm'])
+        // ->bindValue(":description",$items['thing_bail_description'])
+        // ->bindValue(":other_prod",$items['thing_bail'])
+        // ->bindValue(":gold",$items['golds'])
+        // ->bindValue(":user_id",2)
+        // ->bindValue(":ticket",$items['tickets_number'])
+        // ->bindValue(":cid",$items['clients_id'])
+        // ->bindValue(":dateStart",date('Y-m-d',strtotime($items['dateStart'])));
 
         // ->bindValue(":fio",$items['fio'])
         // ->bindValue(":date_of_issue",$items['date_of_issue'])
@@ -282,18 +282,18 @@ class HelperFunc extends Component
         // ->bindValue(":passport_issued",$items['passport_issued'])
         // ->bindValue(":phone",$data['phone'])
         // ->bindValue(":address",$data['address']);
-         $rtdata = $command->queryAll();
-         print_r($rtdata);
-        //$tarr = [];
-        //$tarr2 = [];
-          // $arr = json_decode($items['golds'],true);
-          // foreach($arr as $itm){
-          //   $itm['mid'] = $items['id'];
-          //   $itm['status'] = $items['status'];
-          //   unset($itm['num']);
-          //   Yii::$app->db->createCommand()->insert('golds',$itm)->execute();
-          //   print_r($itm['groups']);
-          // }
+         //$rtdata = $command->queryAll();
+         //print_r($rtdata);
+        $tarr = [];
+        $tarr2 = [];
+        $arr = json_decode($items['golds'],true);
+          foreach($arr as $itm){
+            $itm['mid'] = $items['id'];
+            $itm['status'] = $items['status'];
+            unset($itm['num']);
+            Yii::$app->db->createCommand()->insert('golds',$itm)->execute();
+            print_r($itm['groups']);
+          }
           // foreach($arr['things'] as $item){
           //   //print_r($item);
           //     foreach($item as $k=>$v){
