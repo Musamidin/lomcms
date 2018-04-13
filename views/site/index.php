@@ -49,8 +49,8 @@ use yii\bootstrap\ActiveForm;
               <span class="arr-down-ph" data-html="true" data-container="body" data-trigger="hover" data-toggle="popover" data-placement="bottom" data-content="{{ml.phone | phone:1}}">
                 <span class="glyphicon glyphicon-chevron-down"></span></span>
             </td>
-            <td>{{ml.dateStart}}</td>
-            <td>{{ml.dateEnd}}</td>
+            <td>{{ml.dateStart | shortDateFormat}}</td>
+            <td>{{ml.dateEnd | shortDateFormat}}</td>
             <td>{{ml.loan}} {{ml.currency | currFilt }}</td>
             <td>{{ml.comission}}</td>
             <td>{{ml.percents | fixedto}} %</td>

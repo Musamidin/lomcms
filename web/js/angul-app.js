@@ -930,8 +930,10 @@ $scope.getData = function(pageNum,showPageCount,sts){
 		if(jQuery.isEmptyObject(objs) == false){
 			 strt = '<table class="thing-table" id="thing'+id+'"><tbody id="thing-tbody"><tr><th>Группа</th><th>Проба</th><th>Кол.</th><th>Грамм</th><th>Сумма</th></tr></tbody>';
 				$.each(objs, function(key,objs){
-					strt += '<tr><td>'+objs.groups+'</td><td>'+ objs.sample +' пр.</td><td>'+objs.count +' шт.</td><td>'+objs.gramm+' гр.</td><td>'+objs.summ+'</td></tr>';
-				});
+          if(jQuery.isEmptyObject(objs) == false){
+					   strt += '<tr><td>'+objs.groups+'</td><td>'+ objs.sample +' пр.</td><td>'+objs.count +' шт.</td><td>'+objs.gramm+' гр.</td><td>'+objs.summ+'</td></tr>';
+          }
+        });
 				strt += '</table><hr class="viewer-hr"/>';
 		}else{
 			$('#thing'+id).hide();
