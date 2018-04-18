@@ -419,6 +419,7 @@ class SiteController extends Controller
         header('Content-Type: application/json');
         if($do->token == md5(Yii::$app->session->getId().'opn')){
           $param['page'] = 1;
+          $param['datetime'] = 0;
           $param['shpcount'] = $this->psize;
             try{
               $rn = new Recognition();

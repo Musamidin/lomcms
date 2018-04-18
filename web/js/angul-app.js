@@ -1236,6 +1236,7 @@ $.fn.bootstrapBtn = $.fn.button.noConflict();
                     	$scope.data[obj.name] = obj.value;
               			});
         						$scope.data['token'] = $('#token').val();
+                    $scope.data['datetime'] = 0;
                     //console.log($scope.data);
                     savedatatodb($scope.data);
         						// var resp = checker($scope.calcData);
