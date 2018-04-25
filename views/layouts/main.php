@@ -42,6 +42,7 @@ AppAsset::register($this);
               'items' => [
                    ['label' => 'Отчёт', 'url' => ['/userreport']],
                    '<li class="divider"></li>',
+                   ['label' => 'СМС Отчёт', 'url' => ['/smsreport']],
                    ['label' => 'Учет прочих р/п', 'url' => ['/recognition']],
               ],
             ],
@@ -50,7 +51,6 @@ AppAsset::register($this);
                    ['label' => 'Настройки', 'url' => ['/settings']],
                    '<li class="divider"></li>',
                    ['label' => 'Отчёт', 'url' => ['/report']],
-                   ['label' => 'СМС Отчёт', 'url' => ['/smsreport']],
               ],
             ]
         ];

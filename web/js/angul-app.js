@@ -1312,4 +1312,43 @@ $.fn.bootstrapBtn = $.fn.button.noConflict();
           }
       });
 
+}).controller("AppCtrlSmsReport", function($scope,$http){
+      $.fn.bootstrapBtn = $.fn.button.noConflict();
+      $scope.totalmainlist = 0;
+      $scope.mainlistPerPage = 30; // this should match however many results your API puts on one page
+      $scope.pagination = { current: 1 };
+
+      $scope.data = {};
+
+      $scope.pageChanged = function(newPage) {
+        	   $scope.getrecognitionajax(newPage,$scope.mainlistPerPage,0);
+      };
+
+      $scope.getrecognitionajax = function(pageNum,showPageCount,datetime){
+
+        $http.get('/getsmsreportajax?page=' + pageNum +'&shpcount='+ showPageCount+'&token='+ $('#token').val()+'&datetime='+datetime)
+      				.then(function(result) {
+      					var respdata = eval(result.data);
+      					if(respdata.status == 0){
+      								$scope.smslist = eval(respdata.data.smslist);
+      								$scope.totalmainlist = eval(respdata.data.count);
+      					} else if(respdata.status > 0){
+      							alert(respdata.msg);
+      					}
+      				}, function errorCallback(response) {
+      				  	//console.log(response);
+      				});
+      };
+
+      $scope.getrecognitionajax(1,$scope.mainlistPerPage,0);
+
+      $('.input-group.date.rep-dpicker').datepicker({
+          language: "ru",
+          format: 'yyyy-mm-dd',
+          todayHighlight: true,
+          autoclose: 'today',
+      }).on('changeDate', function(e) {
+              $scope.getrecognitionajax(1,$scope.mainlistPerPage,$('.getbydatetime').val());
+      });
+
 });

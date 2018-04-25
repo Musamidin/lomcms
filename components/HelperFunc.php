@@ -11,6 +11,9 @@ use app\models\Library;
 use app\models\Golds;
 use app\models\MainList;
 use app\models\RecView;
+use app\models\SentSmsBaseMa;
+use app\models\SentSmsBaseMg;
+use app\models\SentSmsBaseMk;
 /**
  *
  */
@@ -168,48 +171,75 @@ class HelperFunc extends Component
     try{
           if($param['datetime'] == 0){
             if(Yii::$app->params['companyID'] == 1){
-              $data['count'] = $app->db2->createCommand("SELECT COUNT(id) FROM [dbo].[sentSmsBaseMa]")->all();
+              $data['count'] = SentSmsBaseMa::find()->count();
               $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
 
-              $data['smslist'] = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sentSmsBaseMa]")->offset($pagination->offset)
+              $data['smslist'] = SentSmsBaseMa::find()
+              ->offset($pagination->offset)
               ->limit($pagination->limit)
               ->asArray()
               ->orderBy(['id'=>SORT_DESC])
               ->all();
             }elseif(Yii::$app->params['companyID'] == 2){
-              $data['count'] = $app->db2->createCommand("SELECT * FROM [dbo].[sentSmsBaseMg]")->count();
+              $data['count'] = SentSmsBaseMg::find()->count();
               $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
 
-              $data['smslist'] = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sentSmsBaseMg]")->offset($pagination->offset)
+              $data['smslist'] = SentSmsBaseMg::find()
+              ->offset($pagination->offset)
               ->limit($pagination->limit)
               ->asArray()
               ->orderBy(['id'=>SORT_DESC])
               ->all();
             }elseif(Yii::$app->params['companyID'] == 3){
-              $data['count'] = $app->db2->createCommand("SELECT * FROM [dbo].[sentSmsBaseMk]")->count();
+              $data['count'] = SentSmsBaseMk::find()->count();
               $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
 
-              $data['smslist'] = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sentSmsBaseMk]")->offset($pagination->offset)
+              $data['smslist'] = SentSmsBaseMk::find()
+              ->offset($pagination->offset)
               ->limit($pagination->limit)
               ->asArray()
               ->orderBy(['id'=>SORT_DESC])
               ->all();
             }
           }else{
-            $query = RecView::find()->where(['BETWEEN','date_system',$param['datetime'].'T00:00:00',$param['datetime'].'T23:59:59']);
-            $cQuery = clone $query;
-            $data['count'] = $cQuery->count();
-            $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
-            $data['rnlist'] = $query
-            ->offset($pagination->offset)
-            ->limit($pagination->limit)
-            ->asArray()
-            ->orderBy(['date_system'=>SORT_DESC])
-            ->all();
-          }
-          //$query = RecView::find()->where(['BETWEEN','actionDate',$datefrom,$dateto]);
-          //$countQuery = clone $query;
+            if(Yii::$app->params['companyID'] == 1){
+              $query = SentSmsBaseMa::find()->where(['BETWEEN','datetime',$param['datetime'].'T00:00:00',$param['datetime'].'T23:59:59']);
+              $cQuery = clone $query;
+              $data['count'] = $cQuery->count();
+              $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
 
+              $data['smslist'] = $query
+              ->offset($pagination->offset)
+              ->limit($pagination->limit)
+              ->asArray()
+              ->orderBy(['id'=>SORT_DESC])
+              ->all();
+            }elseif(Yii::$app->params['companyID'] == 2){
+              $query = SentSmsBaseMg::find()->where(['BETWEEN','datetime',$param['datetime'].'T00:00:00',$param['datetime'].'T23:59:59']);
+              $cQuery = clone $query;
+              $data['count'] = $cQuery->count();
+              $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+
+              $data['smslist'] = $query
+              ->offset($pagination->offset)
+              ->limit($pagination->limit)
+              ->asArray()
+              ->orderBy(['id'=>SORT_DESC])
+              ->all();
+            }elseif(Yii::$app->params['companyID'] == 3){
+              $query = SentSmsBaseMk::find()->where(['BETWEEN','datetime',$param['datetime'].'T00:00:00',$param['datetime'].'T23:59:59']);
+              $cQuery = clone $query;
+              $data['count'] = $cQuery->count();
+              $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+
+              $data['smslist'] = $query
+              ->offset($pagination->offset)
+              ->limit($pagination->limit)
+              ->asArray()
+              ->orderBy(['id'=>SORT_DESC])
+              ->all();
+            }
+          }
           return $data;
     }catch(Exception $e){
         return $e->errorInfo;

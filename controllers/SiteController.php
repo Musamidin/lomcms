@@ -52,8 +52,8 @@ class SiteController extends Controller
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'getreportajax' || $action->id === 'exchangeajax'){
           $this->enableCsrfValidation = false;
-        //}elseif($action->id === 'getsmsreportajax'){
-          //$this->enableCsrfValidation = false;
+        }elseif($action->id === 'getsmsreportajax'){
+          $this->enableCsrfValidation = false;
         }elseif($action->id === 'deleteajax'){
           $this->enableCsrfValidation = false;
         }
@@ -401,7 +401,7 @@ class SiteController extends Controller
         $token = $request->get('token');
         $data['page'] = $request->get('page');
         $data['shpcount'] = $request->get('shpcount');
-        $data['datetime'] = $request->get('datetime');;
+        $data['datetime'] = $request->get('datetime');
         header('Content-Type: application/json');
         if($token == md5(Yii::$app->session->getId().'opn')){
           $retData = Yii::$app->HelperFunc->getRecognition($data);
@@ -696,13 +696,13 @@ class SiteController extends Controller
 
     public function actionGetsmsreportajax()
     {
-      $postData = file_get_contents("php://input");
-      $do = json_decode($postData);
+      $request = Yii::$app->request;
+      $token = $request->get('token');
       header('Content-Type: application/json');
-      //if($do->token == md5(Yii::$app->session->getId().'opn')){
-        $param['page'] = 1;
-        $param['datetime'] = 0;
-        $param['shpcount'] = $this->psize;
+      if($token == md5(Yii::$app->session->getId().'opn')){
+        $param['page'] = $request->get('page');
+        $param['datetime'] = $request->get('datetime');
+        $param['shpcount'] = $request->get('shpcount');
           try{
             $rdata = Yii::$app->HelperFunc->getSMSReport($param);
             echo json_encode(['status'=>0,
@@ -712,9 +712,9 @@ class SiteController extends Controller
           }catch(Exception $e){
               return json_encode(array('status'=>1,'message'=>$e->errorInfo));
           }
-        // }else{
-        //   return json_encode(array('status'=>2,'message'=>'Error(Invalid token!)'));
-        // }
+        }else{
+           return json_encode(array('status'=>2,'message'=>'Error(Invalid token!)'));
+        }
 
     }
 
