@@ -162,6 +162,61 @@ class HelperFunc extends Component
     }
   }
 
+  public function getSMSReport($param)
+  {
+    $data = [];
+    try{
+          if($param['datetime'] == 0){
+            if(Yii::$app->params['companyID'] == 1){
+              $data['count'] = $app->db2->createCommand("SELECT COUNT(id) FROM [dbo].[sentSmsBaseMa]")->all();
+              $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+
+              $data['smslist'] = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sentSmsBaseMa]")->offset($pagination->offset)
+              ->limit($pagination->limit)
+              ->asArray()
+              ->orderBy(['id'=>SORT_DESC])
+              ->all();
+            }elseif(Yii::$app->params['companyID'] == 2){
+              $data['count'] = $app->db2->createCommand("SELECT * FROM [dbo].[sentSmsBaseMg]")->count();
+              $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+
+              $data['smslist'] = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sentSmsBaseMg]")->offset($pagination->offset)
+              ->limit($pagination->limit)
+              ->asArray()
+              ->orderBy(['id'=>SORT_DESC])
+              ->all();
+            }elseif(Yii::$app->params['companyID'] == 3){
+              $data['count'] = $app->db2->createCommand("SELECT * FROM [dbo].[sentSmsBaseMk]")->count();
+              $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+
+              $data['smslist'] = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sentSmsBaseMk]")->offset($pagination->offset)
+              ->limit($pagination->limit)
+              ->asArray()
+              ->orderBy(['id'=>SORT_DESC])
+              ->all();
+            }
+          }else{
+            $query = RecView::find()->where(['BETWEEN','date_system',$param['datetime'].'T00:00:00',$param['datetime'].'T23:59:59']);
+            $cQuery = clone $query;
+            $data['count'] = $cQuery->count();
+            $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+            $data['rnlist'] = $query
+            ->offset($pagination->offset)
+            ->limit($pagination->limit)
+            ->asArray()
+            ->orderBy(['date_system'=>SORT_DESC])
+            ->all();
+          }
+          //$query = RecView::find()->where(['BETWEEN','actionDate',$datefrom,$dateto]);
+          //$countQuery = clone $query;
+
+          return $data;
+    }catch(Exception $e){
+        return $e->errorInfo;
+      //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+    }
+  }
+
   public function getUserReport($param)
   {
     $resp = [];

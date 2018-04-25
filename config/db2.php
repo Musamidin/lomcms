@@ -1,7 +1,7 @@
 <?php
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'sqlsrv:Server=91.213.233.55;Database=lombard81;ConnectionPooling=0',
+    'dsn' => 'sqlsrv:Server=10.220.100.10;Database=smsNotifyBase;ConnectionPooling=0',
     'username' => 'sa',
     'password' => 'cs@open3',
     'charset' => 'utf8',

@@ -52,6 +52,8 @@ class SiteController extends Controller
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'getreportajax' || $action->id === 'exchangeajax'){
           $this->enableCsrfValidation = false;
+        //}elseif($action->id === 'getsmsreportajax'){
+          //$this->enableCsrfValidation = false;
         }elseif($action->id === 'deleteajax'){
           $this->enableCsrfValidation = false;
         }
@@ -692,18 +694,42 @@ class SiteController extends Controller
         }
     }
 
+    public function actionGetsmsreportajax()
+    {
+      $postData = file_get_contents("php://input");
+      $do = json_decode($postData);
+      header('Content-Type: application/json');
+      //if($do->token == md5(Yii::$app->session->getId().'opn')){
+        $param['page'] = 1;
+        $param['datetime'] = 0;
+        $param['shpcount'] = $this->psize;
+          try{
+            $rdata = Yii::$app->HelperFunc->getSMSReport($param);
+            echo json_encode(['status'=>0,
+                            'data'=>['smslist' => $rdata['smslist'],'count' => $rdata['count']],
+                            'msg'=>'OK']
+                          );
+          }catch(Exception $e){
+              return json_encode(array('status'=>1,'message'=>$e->errorInfo));
+          }
+        // }else{
+        //   return json_encode(array('status'=>2,'message'=>'Error(Invalid token!)'));
+        // }
+
+    }
+
     public function actionTest()
     {
         try{
-          $resp = Yii::$app->db->createCommand("SELECT * FROM [dbo].[mainList] WHERE golds IS NOT NULL")->queryAll(); //status IN(0,1,3,4) AND codeid = 7 AND currency = 'KGS'
+          //$resp = Yii::$app->db->createCommand("SELECT * FROM [dbo].[mainList] WHERE golds IS NOT NULL")->queryAll(); //status IN(0,1,3,4) AND codeid = 7 AND currency = 'KGS'
           //$resp = Yii::$app->db2->createCommand("SELECT * FROM [dbo].[sp_orders_tickets] WHERE ns = 4 AND currency='USD'")->queryAll();
-          foreach($resp as $item){
-            Yii::$app->HelperFunc->insertter($item);
+          //foreach($resp as $item){
+          //  Yii::$app->HelperFunc->insertter($item);
             //print_r($item);
-          }
+          //}
           //
           echo '<pre>';
-          //print_r($resp);
+          echo 'test';//print_r($resp);
           echo '</pre>';
         }catch(Exception $e){
             print_r( $e->errorInfo);

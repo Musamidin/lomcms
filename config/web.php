@@ -80,7 +80,8 @@ $config = [
             'realizeajax' => 'site/realizeajax',
             'getreportajax' => 'site/getreportajax',
             'exchangeajax' => 'site/exchangeajax',
-            'deleteajax' => 'site/deleteajax'
+            'deleteajax' => 'site/deleteajax',
+            'getsmsreportajax' => 'site/getsmsreportajax',
             ],
         ],
 
