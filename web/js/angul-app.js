@@ -27,16 +27,38 @@ var arrTs = [];
 var phoneBook = [];
 var arrData = [];
 
+$(document).on('click', '.statistic', function(){
+  $http({
+    method: 'POST',
+    url: '/getstatisticajax',
+    data: { token : $('#token').val() }
+  }).then(function successCallback(response) {
+      var state = response.data;
+      if(state.status == 0){
+        $('#statisticModal').modal({ keyboard: false });
+        $scope.init1 = function(){ };
+        $scope.datas = response.data.data;
+      }else{
+        alert(state.msg);
+      }
+    }, function errorCallback(response) {
+        //console.log(response);
+  });
+
+});
+
 $('.digi').keyup(function () {
      if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
        this.value = this.value.replace(/[^0-9\.]/g, '');
     }
 });
+
 $('#mainlist-loan').keyup(function () {
      if (this.value != this.value.replace(/[^0-9\.]/g, '')) {
        this.value = this.value.replace(/[^0-9\.]/g, '');
     }
 });
+
 $('.money').mask("##########.##", {reverse: true});
 
 $('body').popover({

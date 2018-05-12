@@ -321,6 +321,36 @@ class HelperFunc extends Component
     }
   }
 
+  public function getStatReport($datefrom,$dateto,$curr)
+  {
+    $resp = [];
+    try{
+      $resp['tickets'] = Yii::$app->db->createCommand("SELECT * FROM getTicketsCountAndSumm('{$datefrom}','{$dateto}')")->queryAll();
+      $resp['curr_golds'] = Golds::find()->select('SUM(gramm) AS gramm,[sample]')
+      ->where(['BETWEEN','actionDate',$datefrom,$dateto])
+      ->andWhere('status IN(0,1,3,4)')->groupBy('[sample]')
+      ->asArray()->all();
+      $resp['strKgs'] = Yii::$app->db->createCommand("SELECT [dbo].[startAndEndKassa]('{$datefrom}',1) AS KGS")->queryScalar();
+      $resp['strUsd'] = Yii::$app->db->createCommand("SELECT [dbo].[startAndEndKassa]('{$datefrom}',2) AS USD")->queryScalar();
+
+      $resp['currKgs'] = Yii::$app->db->createCommand("SELECT [dbo].[currentKassa]('{$datefrom}','{$dateto}',1) AS totalKassa")->queryScalar();
+      $resp['currUsd'] = Yii::$app->db->createCommand("SELECT [dbo].[currentKassa]('{$datefrom}','{$dateto}',2) AS totalKassa")->queryScalar();
+
+      // $resp['vydacha'] = Yii::$app->db->createCommand("SELECT * FROM mrLoan('{$datefrom}','{$dateto}',{$curr},0)")->queryAll();
+      // $resp['vykup'] = Yii::$app->db->createCommand("SELECT * FROM mrLoan('{$datefrom}','{$dateto}',{$curr},2)")->queryAll();
+      // $resp['comission_pog'] = Yii::$app->db->createCommand("SELECT * FROM mrComission('{$datefrom}','{$dateto}',{$curr},2)")->queryAll();
+      // $resp['comission_perez'] = Yii::$app->db->createCommand("SELECT * FROM mrComission('{$datefrom}','{$dateto}',{$curr},1)")->queryAll();
+      // $resp['ch_pog'] = Yii::$app->db->createCommand("SELECT * FROM mrPartLoan('{$datefrom}','{$dateto}',{$curr},1)")->queryAll();
+      // $resp['proch_prih'] = Yii::$app->db->createCommand("SELECT * FROM mrPrp('{$datefrom}','{$dateto}',{$curr},'Приход')")->queryAll();
+      // $resp['proch_rashod'] = Yii::$app->db->createCommand("SELECT * FROM mrPrp('{$datefrom}','{$dateto}',{$curr},'Расход')")->queryAll();
+
+    }catch(Exception $e){
+        return $e->errorInfo;
+    }finally{
+      return $resp;
+    }
+  }
+
   public function insertjsontoarr($item,$id)
   {
       try{

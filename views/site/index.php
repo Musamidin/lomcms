@@ -431,5 +431,54 @@ use yii\bootstrap\ActiveForm;
   </form>
 </div>
 
+<!--Small Modal Static Window-->
+<div id="statisticModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm" style="width:400px;">
+    <div class="modal-content">
+      <div class="modal-body" ng-init="init1()" id="stat-id">
+        <div class="row">
+          <div class="col-md-7">Количество залоговых билетов:</div>
+          <div class="col-md-5">{{datas.tickets[0].ticketcount}}</div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col-md-7">Сумма залоговых билетов:</div>
+          <div class="col-md-5">{{datas.tickets[0].summ}} KGS</div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col-md-4">Касса на начало:</div>
+          <div class="col-md-8">{{datas.strKgs|fixedto}} KGS | {{datas.strUsd|fixedto}} USD</div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col-md-4">Касса на конец:</div>
+          <div class="col-md-8">{{datas.currKgs|fixedto}} KGS | {{datas.currUsd|fixedto}} USD</div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col-md-12">
+            <table style="border-right: none;" class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Проба</th>
+                  <th>Грамм</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="golds in datas.curr_golds">
+                  <td>{{golds.sample}}</td>
+                  <td>{{golds.gramm | fixedto }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--End Small Modal Static Window-->
+
 </div>
 <br/>

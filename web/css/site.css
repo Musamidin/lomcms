@@ -238,8 +238,8 @@ a.desc:after {
   margin: 10px;
 }
 .mar-left {
-    margin-right: 20px;
-    margin-left: 20px;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 .min-w { min-width: 350px; }
 div#credit-data {

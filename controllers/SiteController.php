@@ -52,7 +52,7 @@ class SiteController extends Controller
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'getreportajax' || $action->id === 'exchangeajax'){
           $this->enableCsrfValidation = false;
-        }elseif($action->id === 'getsmsreportajax'){
+        }elseif($action->id === 'getsmsreportajax' || $action->id === 'getstatisticajax'){
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'deleteajax'){
           $this->enableCsrfValidation = false;
@@ -467,6 +467,20 @@ class SiteController extends Controller
                               'data'=>['kgs' => $retKgs,'usd' => $retUsd,'kassa'=>$kassa],
                               'msg'=>'OK']
                             );
+        }else{
+          return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+        }
+    }
+
+    public function actionGetstatisticajax()
+    {
+      $postData = file_get_contents("php://input");
+      $do = json_decode($postData);
+        header('Content-Type: application/json');
+        if($do->token == md5(Yii::$app->session->getId().'opn')){
+           $resp = Yii::$app->HelperFunc->getStatReport(date('2018-01-01\T00:00:00'),date('Y-m-d\TH:i:s'),1);
+            return json_encode(['status'=>0,'data'=>$resp,'msg'=>'OK']);
+
         }else{
           return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
         }

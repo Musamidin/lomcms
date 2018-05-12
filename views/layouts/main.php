@@ -23,7 +23,13 @@ AppAsset::register($this);
 </head>
 <body>
 <?php $this->beginBody() ?>
-
+<?php
+$sms = Yii::$app->db2->createCommand("SELECT smsBalance FROM [dbo].[smsBalance]")->queryOne();
+$data['datefrom'] = date('Y-m-d\TH:i:s');
+$data['dateto'] = date('Y-m-d\TH:i:s');
+$kassa = Yii::$app->HelperFunc->getTotalKassa($data);
+//print_r($kassa);
+?>
 <header>
     <div class="container">
     </div>
@@ -36,16 +42,17 @@ AppAsset::register($this);
       $options = [];
       if(Yii::$app->user->identity->role == 1){
         $options = [
-            //['label' => 'Главная', 'url' => ['/site/index']],
             //['label' => 'Отчет', 'url' => ['/report']],
             ['label' => 'Меню',
               'items' => [
+                   '<li>'.Html::a('Касса: <span class="badge bg-green">'.number_format($kassa['currKgs'],2).'</span> KGS',null, ['href' => '#','class'=>'statistic']).'</li>',
                    ['label' => 'Отчёт', 'url' => ['/userreport']],
                    '<li class="divider"></li>',
                    ['label' => 'СМС Отчёт', 'url' => ['/smsreport']],
                    ['label' => 'Учет прочих р/п', 'url' => ['/recognition']],
               ],
             ],
+            ['label' =>  'SMS: '.number_format($sms['smsBalance'],2).' Сом' ],
             ['label' => 'Админ',
               'items' => [
                    ['label' => 'Настройки', 'url' => ['/settings']],
@@ -107,6 +114,7 @@ AppAsset::register($this);
     <span class="glyphicon glyphicon-random" aria-hidden="true"></span>&nbsp;&nbsp;Конвертация</button>
       </form>';
       }
+
         NavBar::end();
     }
         ?>

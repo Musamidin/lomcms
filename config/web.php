@@ -82,6 +82,7 @@ $config = [
             'exchangeajax' => 'site/exchangeajax',
             'deleteajax' => 'site/deleteajax',
             'getsmsreportajax' => 'site/getsmsreportajax',
+            'getstatisticajax' => 'site/getstatisticajax'
             ],
         ],
 
