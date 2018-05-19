@@ -35,7 +35,50 @@ class HelperFunc extends Component
     return $data;
   }
 
-  public function midasCalc($do,$usingDay)
+  public function midasCalcOnCreate($do,$cdays)
+  {
+    $retVal = [];
+    $com = 0;
+    $totSumm = 0;
+    $minSumm = 100;
+
+    if($do->currency == 2){ //Если валюта USD
+          $com = (floatval($do->loan) / 100 * floatval($do->percents) * $cdays);
+          $totSumm = (floatval($do->loan) + $com);
+
+    }elseif($do->currency == 1){ //Если валюта KGS
+        if($do->status > 0){ //Если статус (был проден)
+            if(floatval($do->loan) > 1000){ //Если сумма ссуды > 1000
+              $com = (floatval($do->loan) / 100 * floatval($do->percents) * $cdays);
+              $totSumm = (floatval($do->loan) + $com);
+            }else{ //Если сумма ссуды < 1000
+              $com = (floatval($do->loan) / 100 * floatval($do->percents) * $cdays);
+              if($cdays <= 30){
+                $com = ($com < $minSumm) ? $minSumm : $com;
+              }
+              $totSumm = (floatval($do->loan) + $com);
+            }
+        }else{ //Если статус 0 (Первый раз)
+            if(floatval($do->loan) > 1000){ //Если сумма ссуды > 1000
+              $com = (floatval($do->loan) / 100 * floatval($do->percents) * $cdays);
+              if($com < $minSumm){ $com = $minSumm; }
+              $totSumm = (floatval($do->loan) + $com);
+            }else{ //Если сумма ссуды < 1000
+              $com = (floatval($do->loan) / 100 * floatval($do->percents) * $cdays);
+              if($cdays <= 30){
+                $com = ($com < $minSumm) ? $minSumm : $com;
+              }
+              $totSumm = (floatval($do->loan) + $com);
+            }
+        }
+    }
+    $retVal['comission'] = ceil($com);
+    $retVal['totalsumm'] = ceil($totSumm);
+    $retVal['countDay'] = $cdays;
+    return $retVal;
+  }
+
+  public function midasCalcOnCalc($do)
   {
     $retVal = [];
     $com = 0;
@@ -73,8 +116,7 @@ class HelperFunc extends Component
             }
         }else{ //Если статус 0 (Первый раз)
             if(floatval($do->loan) > 1000){ //Если сумма ссуды > 1000
-              $ud = ($usingDay == 30) ? 30 : $cdays;
-              $com = (floatval($do->loan) / 100 * floatval($do->percents) * $ud);
+              $com = (floatval($do->loan) / 100 * floatval($do->percents) * $cdays);
               if($com < $minSumm){ $com = $minSumm; }
               $totSumm = (floatval($do->loan) + $com);
             }else{ //Если сумма ссуды < 1000

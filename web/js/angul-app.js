@@ -558,8 +558,8 @@ $(document).on('click', '#add-gold', function(){
 							$('#tbody-gold').append(appdata);
 							$('#mainlist-count,#mainlist-gramm,#mainlist-summ,#mainlist-sample,#mainlist-golds').val('');
               //$("#mainlist-currency option[value='Ваюта']").prop('selected', true);
-              $("#mainlist-currency option[value='1']").prop('selected', true);
-              $("#mainlist-percents option[value='% ставка']").prop('selected', true);
+              //$("#mainlist-currency option[value='1']").prop('selected', true);
+              //$("#mainlist-percents option[value='% ставка']").prop('selected', true);
               //$('#numCount').val(1);
 
 				}else{

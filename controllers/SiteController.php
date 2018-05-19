@@ -201,7 +201,7 @@ class SiteController extends Controller
       $do->{"status"} = 0;
       if(!empty($do->token) && $do->token == md5(Yii::$app->session->getId().'opn')){
         $data = Yii::$app->HelperFunc->dataProcessing($do);
-        $cData = Yii::$app->HelperFunc->midasCalc($do,30);
+        $cData = Yii::$app->HelperFunc->midasCalcOnCreate($do,30); //do (data) 30 - count days
         //print_r(Yii::$app->user->identity->id);
           try{
             $command = Yii::$app->db->
@@ -223,7 +223,7 @@ class SiteController extends Controller
             ->bindValue(":phone",$data['phone'])
             ->bindValue(":address",$data['address']);
              $rtdata = $command->queryAll();
-              return json_encode(['status'=>0,'data'=>$rtdata[0],'msg'=>'OK']);
+              return json_encode(['status'=>0,'data'=>$rtdata[0],'msg'=>'OK','test'=>$cData,'test2'=>$Data]);
           }catch(Exception $e){
               //print_r($e->errorInfo[2]);
               echo json_encode(['status'=>1,'data'=>null,'msg'=>$e->errorInfo]);
@@ -333,7 +333,7 @@ class SiteController extends Controller
       Возвращает массив ([comission] => 253.5 [totalsumm] => 15253.5 [countDay] => 13)
       */
       if($do->token === md5(Yii::$app->session->getId().'opn')){
-        $calcData = Yii::$app->HelperFunc->midasCalc($do,0);
+        $calcData = Yii::$app->HelperFunc->midasCalcOnCalc($do);
         $param['page'] = 1;
         $param['sts'] = 0;
         $param['shpcount'] = $this->psize;
