@@ -25,7 +25,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <div id="tabs-102">
           <div class="row">
             <div class="col-md-1">
-              <a class="sett-addbtn btn btn-app bg-olive"  ng-click="addPASBtn('User','Пользователи')"><i class="fa fa-plus-circle"></i></a>
+              <a class="sett-addbtn btn btn-app bg-olive"  ng-click="addUserBtn()"><i class="fa fa-plus-circle"></i></a>
             </div>
               <div class="col-md-11">
                 <table class="table table-striped sett-table">
@@ -46,7 +46,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         <td>{{usr.login}}</td>
                         <td>{{usr.role}}</td>
                         <td>{{usr.status}}</td>
-                        <td>{{usr.description}}</td>
+                        <td ng-if="<?=Yii::$app->user->identity->role; ?> == '1'">
+                            
+                        </td>
                       </tr>
                   </tbody>
               </table>
@@ -59,7 +61,6 @@ $this->params['breadcrumbs'][] = $this->title;
             <button ng-click="savetemplate()" class="btn btn-info">Сохранить шаблон</button>
             <br/>
             <br/>
-            <button ng-click="test()" class="btn btn-info">Test</button>
             <div class="currView"></div>
         </div>
         <div id="tabs-104">
@@ -170,6 +171,31 @@ $this->params['breadcrumbs'][] = $this->title;
                   ['tag' => 'div','class'=> 'hdn form-group field-mainform-param has-feedback required'],
                   'template'=>'{input}<span class="fa fa-paste form-control-feedback"></span>{error}{hint}'
                   ])->textInput(['autofocus' => false,'placeholder'=>'Значение','ng-model'=>'settdata.param'])->label('Наименование');
+                  ?>
+              </div>
+              <?php ActiveForm::end(); ?>
+          </div>
+      </div>
+    </div>
+    <!-- END Dialog box for Client history data -->
+
+    <!-- START Dialog box for Client history data -->
+    <div style="display:none;" id="dialog-form-user" title="Пользователи">
+      <div class="row">
+          <div class="col-md-12">
+              <?php $form = ActiveForm::begin(['id' => 'sett-form-user']); ?>
+              <div class="col-md-6">
+                  <?=$form->field($user, 'fio',['options'=>
+                    ['tag' => 'div','class'=> 'form-group field-mainform-fio has-feedback required'],
+                    'template'=>'{input}<span class="fa fa-paste form-control-feedback"></span>{error}{hint}'
+                    ])->textInput(['autofocus' => false,'placeholder'=>'Ф.И.О.','ng-model'=>'settudata.fio'])->label('Наименование');
+                    ?>
+              </div>
+              <div class="col-md-6">
+                <?=$form->field($user, 'login',['options'=>
+                  ['tag' => 'div','class'=> 'form-group field-mainform-login has-feedback required'],
+                  'template'=>'{input}<span class="fa fa-paste form-control-feedback"></span>{error}{hint}'
+                  ])->textInput(['autofocus' => false,'placeholder'=>'Моб.Номер: XXX XX XX XX','ng-model'=>'settudata.login'])->label('Наименование');
                   ?>
               </div>
               <?php ActiveForm::end(); ?>

@@ -995,11 +995,11 @@ tinymce.init({
 					});
 				}
 	 });
-
+/*
 $scope.test = function(){
 	tinymce.activeEditor.setContent('<span>some</span> html');
 };
-
+*/
 $scope.savetemplate = function(){
 		$scope.poster = {};
 		$scope.poster['temp'] = tinymce.activeEditor.getContent();
@@ -1054,6 +1054,22 @@ var setData = function(data){
       }, function errorCallback(response) {
           //console.log(response);
     });
+};
+
+$scope.addUserBtn = function(){
+    $('form#sett-form-user :input').val('');
+    $('#dialog-form-user').dialog({
+        title: 'Пользователи',
+        autoOpen: false,
+        width: 800,
+        modal: true,
+        buttons:{
+          "Сохранить": function(){
+            //$scope.settdata['table'] = prop;
+            //setData($scope.settdata);
+          }
+        }
+    }).dialog("open");
 };
 
 $scope.getLibData = function(){

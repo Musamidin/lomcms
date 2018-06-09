@@ -65,4 +65,14 @@ class UserIdentity extends User implements \yii\web\IdentityInterface
     {
         return $this->password === md5($password);
     }
+    /**
+     * Validates status
+     *
+     * @param string $status status to validate
+     * @return bool if status provided is valid for current user
+     */
+    public function validateStatus()
+    {
+        return $this->status === 0;
+    }
 }

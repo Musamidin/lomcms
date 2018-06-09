@@ -166,7 +166,8 @@ class SiteController extends Controller
     {
       if(Yii::$app->user->identity->role == 1){
         $lib = new Library();
-        return $this->render('settings',['lib'=>$lib]);
+        $users = new User();
+        return $this->render('settings',['lib'=>$lib,'user'=>$users]);
       }else{
         return $this->redirect('/');
       }
@@ -223,7 +224,7 @@ class SiteController extends Controller
             ->bindValue(":phone",$data['phone'])
             ->bindValue(":address",$data['address']);
              $rtdata = $command->queryAll();
-              return json_encode(['status'=>0,'data'=>$rtdata[0],'msg'=>'OK','test'=>$cData,'test2'=>$Data]);
+              return json_encode(['status'=>0,'data'=>$rtdata[0],'msg'=>'OK']);
           }catch(Exception $e){
               //print_r($e->errorInfo[2]);
               echo json_encode(['status'=>1,'data'=>null,'msg'=>$e->errorInfo]);
