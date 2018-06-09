@@ -497,6 +497,7 @@ class SiteController extends Controller
           try{
                 $mlv = MainListView::find()
                 ->filterWhere(['LIKE', $do->field, $do->key])
+                ->andWhere(['NOT IN','status', -1])
                 ->asArray()
                 ->orderBy(['last_up_date'=>SORT_DESC])
                 ->all();
