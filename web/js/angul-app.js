@@ -305,25 +305,25 @@ $scope.onCalc = function(data){
 				text: "Закрыть кредит",
 				//icon: "ui-icon-seek-next",
 				id : "btn1",
-				click: function(eve) {
+				click: function() {
           $('#btn1,#btn2').hide();
           if($('#part-of-loan').val() != ''){
             alert('Для выкупа ссуды удалите введеную вами частичную сумму!');
           }else{
             data['fstatus'] = 2;
             //eve.target.disabled = true;
-            serverSide(data,eve);
+            serverSide(data);
           }
 				}
 			},{
 				text: "Продлить кредит",
 				//icon: "ui-icon-seek-next",
 				id : "btn2",
-				click: function(eve) {
+				click: function() {
 					$('#btn1,#btn2').hide();
           data['fstatus'] = 1;
           //eve.target.disabled = true;
-					serverSide(data,eve);
+					serverSide(data);
 				}
 			}]
 	}).dialog("open");
