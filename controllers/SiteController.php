@@ -224,6 +224,7 @@ class SiteController extends Controller
             ->bindValue(":phone",$data['phone'])
             ->bindValue(":address",$data['address']);
              $rtdata = $command->queryAll();
+             //sleep(5);
               return json_encode(['status'=>0,'data'=>$rtdata[0],'msg'=>'OK']);
           }catch(Exception $e){
               //print_r($e->errorInfo[2]);
@@ -351,6 +352,7 @@ class SiteController extends Controller
             if($resp[0]['status'] == 0){
                 $retData = Yii::$app->HelperFunc->getData($param);
                 $stsbar = Yii::$app->HelperFunc->getStsBar();
+                //sleep(5);
                 echo json_encode(['status'=>0,
                                 'data'=>['stsbar'=>$stsbar[0],'mainlistview' => $retData['mlv'],'count' => $retData['count']],
                                 'msg'=>'OK']

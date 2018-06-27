@@ -27,6 +27,15 @@ var arrTs = [];
 var phoneBook = [];
 var arrData = [];
 
+var date = new Date();
+var compDate = [
+    date.getYear(), date.getMonth(),
+    date.getDate(), date.getHours(),
+    date.getMinutes(), date.getSeconds(),
+    date.getMilliseconds()
+];
+var uniqid = compDate.join("");
+
 $(document).on('click', '.statistic', function(){
   $http({
     method: 'POST',
@@ -171,7 +180,7 @@ $(document).on('click', '.addModal', function(){
 				buttons: [{
 					text: "Далее",
 					//icon: "ui-icon-seek-next",
-					id : "btn1",
+					id : "nextbtn1",
 					click: function() {
 						$($('#client-data :input').serializeArray()).each(function(index, obj){
             	$scope.calcData[obj.name.slice(8,-1)] = obj.value;
@@ -189,6 +198,7 @@ $(document).on('click', '.addModal', function(){
 							alert(resp[1]);
 						}else{
 							savedata($scope.calcData);
+              $('#nextbtn1').hide();
 						}
 					}
 				}]
@@ -242,9 +252,9 @@ var savedata = function(param){
 		$http({
 			method: 'POST',
 			url: '/issuanceofcredit',
-			data: param
+			data: param,
+      timeout: 1500
 		}).then(function successCallback(response) {
-
 				$("#dialog-form-clients").dialog( "close" );
 				$scope.data = response.data.data;
 				var state = response.data;
@@ -257,6 +267,10 @@ var savedata = function(param){
           alert(state.msg);
         }
 			}, function errorCallback(response) {
+          if(response.status === -1){
+            $("#dialog-form-clients").dialog( "close" );
+            window.location.reload();
+          }
 					//console.log(response);
 		});
 };
@@ -291,22 +305,25 @@ $scope.onCalc = function(data){
 				text: "Закрыть кредит",
 				//icon: "ui-icon-seek-next",
 				id : "btn1",
-				click: function() {
+				click: function(eve) {
+          $('#btn1,#btn2').hide();
           if($('#part-of-loan').val() != ''){
             alert('Для выкупа ссуды удалите введеную вами частичную сумму!');
           }else{
             data['fstatus'] = 2;
-            serverSide(data);
+            //eve.target.disabled = true;
+            serverSide(data,eve);
           }
 				}
 			},{
 				text: "Продлить кредит",
 				//icon: "ui-icon-seek-next",
 				id : "btn2",
-				click: function() {
+				click: function(eve) {
 					$('#btn1,#btn2').hide();
           data['fstatus'] = 1;
-					serverSide(data);
+          //eve.target.disabled = true;
+					serverSide(data,eve);
 				}
 			}]
 	}).dialog("open");
@@ -428,7 +445,8 @@ var serverSide = function(data){
 		$http({
 			method: 'POST',
 			url: '/calcaction',
-			data: data
+			data: data,
+      timeout: 1500
 		}).then(function successCallback(response) {
 					$("#dialog-form-calculate").dialog('close');
           var respdata = eval(response.data);
@@ -442,6 +460,10 @@ var serverSide = function(data){
           }
 			}, function errorCallback(response) {
 					//console.log(response);
+          if(response.status === -1){
+            $("#dialog-form-calculate").dialog('close');
+            window.location.reload();
+          }
 		});
 };
 /** END Calculate function **/
