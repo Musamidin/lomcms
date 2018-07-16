@@ -366,14 +366,20 @@ $scope.onRealize = function(obj){
 };
 
 $(document).on('keyup','#part-of-loan',function(){
+
 		if(parseInt(this.value) < parseInt($('#loan').text())){
 			$('#btn1').attr('disabled',true).hide();
-		}else if(this.value == ''){
-			$('#btn1').attr('disabled',false).show();
+      $('#btn2').attr('disabled',false).show();
 		}else if(parseInt(this.value) > parseInt($('#loan').text())){
 			alert('Часть от ссуды не может быть больше чем выданная ссуда!');
 			$('#btn1').attr('disabled',true).hide();
-			//$(this).val(parseInt($('#loan').text()));
+      $('#btn2').attr('disabled',true).hide();
+		}else if(parseInt(this.value) == parseInt($('#loan').text())){
+        $('#btn2').attr('disabled',true).hide();
+        $('#btn1').attr('disabled',false).show();
+    }else if(this.value == ''){
+			$('#btn1').attr('disabled',false).show();
+      $('#btn2').attr('disabled',false).show();
 		}
 });
 
