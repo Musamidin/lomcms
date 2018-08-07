@@ -857,7 +857,9 @@ var printGold = function(input){
 		if(jQuery.isEmptyObject(objs) == false){
 		 strt = '<table class="gld-table" border="1" width="100%"><tbody class="gld-tbody"><tr style="font-size: 10pt;"><th>Группа</th><th>Проба</th><th>Кол.</th><th>Грамм</th><th>Сумма</th></tr></tbody>';
 			$.each(objs, function(key,objs){
+				if(jQuery.isEmptyObject(objs) == false){
 				strt += '<tr style="font-size: 10pt;"><td>'+objs.groups+'</td><td>'+ objs.sample +' пр.</td><td>'+objs.count +' шт.</td><td>'+objs.gramm+' гр.</td><td>'+objs.summ+' '+objs.currs+'</td></tr>';
+				}
 			});
 			strt += '</table>';
 		}
