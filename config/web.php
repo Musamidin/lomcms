@@ -32,7 +32,15 @@ $config = [
             // send all mails to a file by default. You have to set
             // 'useFileTransport' to false and configure a transport
             // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.yandex.ru',
+                'username' => 'sales@myservice.kg',
+                'password' => 'sales@open',
+                'port' => '465',
+                'encryption' => 'ssl',                                  
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -59,6 +67,7 @@ $config = [
             'logout' => 'site/logout',
             'settings' => 'site/settings',
             'report' => 'site/report',
+			'detailreport' => 'site/detailreport',
             'smsreport' => 'site/smsreport',
             'userreport' => 'site/userreport',
             'recognition' => 'site/recognition',
@@ -82,7 +91,9 @@ $config = [
             'exchangeajax' => 'site/exchangeajax',
             'deleteajax' => 'site/deleteajax',
             'getsmsreportajax' => 'site/getsmsreportajax',
-            'getstatisticajax' => 'site/getstatisticajax'
+            'getstatisticajax' => 'site/getstatisticajax',
+            'getconsolidatedreportajax' => 'site/getconsolidatedreportajax',
+            'downloadconsreport' => 'site/downloadconsreport'
             ],
         ],
 

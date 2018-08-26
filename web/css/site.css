@@ -434,3 +434,4 @@ border-radius: 10px;
 }
 .gram-box > div > table > thead > tr > th{ text-align: center; }
 .table>thead>tr>th {text-align: center;}
+#report-grid > div > table > thead > tr > th { line-height: 1.5; }

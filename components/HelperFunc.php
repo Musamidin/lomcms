@@ -14,11 +14,41 @@ use app\models\RecView;
 use app\models\SentSmsBaseMa;
 use app\models\SentSmsBaseMg;
 use app\models\SentSmsBaseMk;
+use app\models\ConsolidatedReportView;
 /**
  *
  */
 class HelperFunc extends Component
 {
+
+  public function setStatus($val){
+      $ret = '';
+      switch ($val) {
+        case 0: $ret = 'Выдано';
+          # code...
+          break;
+        case 1: $ret = 'Продлен';
+          # code...
+          break;
+        case 2: $ret = 'Выкуп';
+          # code...
+          break;
+        case 3: $ret = 'Просрочен';
+          # code...
+          break;
+        case 4: $ret = 'Продвинут срок';
+          # code...
+          break;
+        case 5: $ret = 'Реализован';
+          # code...
+          break;      
+        default: $ret = '';
+          # code...
+          break;
+      }
+      return $ret;
+  }
+
   public function dataProcessing($param)
   {
       $data = [];
@@ -171,6 +201,45 @@ class HelperFunc extends Component
       //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
     }
   }
+
+  public function getDataCons($param)
+  {
+      $data = [];
+      try{
+
+          if($param['sts'] == -1){
+
+              $data['count'] = ConsolidatedReportView::find()->count();
+              $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+              $data['crv'] = ConsolidatedReportView::find()
+              ->offset($pagination->offset)
+              ->limit($pagination->limit)
+              ->asArray()
+              ->orderBy(['last_up_date'=>SORT_DESC])
+              ->all();
+
+          }else{
+
+              $data['count'] = ConsolidatedReportView::find()->filterWhere(['status'=> $param['sts']])->count();
+              $pagination = new Pagination(['defaultPageSize'=>$param['shpcount'],'totalCount'=> $data['count']]);
+              $data['crv'] = ConsolidatedReportView::find()
+              ->offset($pagination->offset)
+              ->limit($pagination->limit)
+              ->filterWhere(['status'=> $param['sts']])
+              ->asArray()
+              ->orderBy(['last_up_date'=>SORT_DESC])
+              ->all();
+
+          }
+          
+          return $data;
+
+      }catch(Exception $e){
+          return $e->errorInfo;
+        //echo json_encode(['status'=>1, 'msg'=>$e->errorInfo]);
+      }
+  }
+
 
   public function getRecognition($param)
   {

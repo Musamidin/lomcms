@@ -1121,6 +1121,42 @@ $scope.getLibData = function(){
 
 $scope.getLibData();
 
+}).controller("AppCtrlDetailReport", function($scope,$http){
+	$.fn.bootstrapBtn = $.fn.button.noConflict();
+	$scope.totalmainlist = 0;
+	$scope.mainlistPerPage = 15; // this should match however many results your API puts on one page
+	$scope.pagination = { current: 1 };
+
+	var sts = $('#report-status').val();
+
+	$(document).on('change', '#report-status', function(){
+		sts = this.value;
+		$scope.getconsrepajax(1,sts);
+	});
+
+    $scope.pageChanged = function(newPage) {
+        	   $scope.getconsrepajax(newPage,sts);
+    };
+
+    $scope.getconsrepajax = function(pageNum,sts){
+    	$http.get('/getconsolidatedreportajax?page='+ pageNum +'&sts=' + sts + '&token='+ $('#token').val())
+                .then(function(result) {
+                  var respdata = eval(result.data);
+                  if(respdata.status == 0){
+                    $('#report-grid').show();
+                        $scope.mainlistview = eval(respdata.data.mainlistview);
+                        $scope.totalmainlist = eval(respdata.data.count);
+                        console.log($scope.mainlistview);
+                  } else if(respdata.status > 0){
+                      alert(respdata.msg);
+                  }
+                }, function errorCallback(response) {
+                    //console.log(response);
+        });
+    };
+
+    $scope.getconsrepajax(1,sts);
+
 }).controller("AppCtrlReport", function($scope,$http){
 $.fn.bootstrapBtn = $.fn.button.noConflict();
 

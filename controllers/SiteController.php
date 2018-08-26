@@ -21,9 +21,16 @@ use app\models\User;
 use app\models\Template;
 use app\models\ReprintView;
 use app\componets\HelperFunc;
+//use app\componets\Spreadsheet;
 use app\models\Recognition;
 use app\models\Golds;
 use app\models\ClientHistoryView;
+//use yii\data\ArrayDataProvider;
+use app\models\ConsolidatedReportView;
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 class SiteController extends Controller
 {
@@ -53,6 +60,8 @@ class SiteController extends Controller
         }elseif($action->id === 'getreportajax' || $action->id === 'exchangeajax'){
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'getsmsreportajax' || $action->id === 'getstatisticajax'){
+          $this->enableCsrfValidation = false; 
+        }elseif($action->id === 'getconsolidatedreportajax'){
           $this->enableCsrfValidation = false;
         }elseif($action->id === 'deleteajax'){
           $this->enableCsrfValidation = false;
@@ -145,6 +154,11 @@ class SiteController extends Controller
     public function actionReport()
     {
       return $this->render('report');
+    }
+
+    public function actionDetailreport()
+    {
+      return $this->render('detailreport');
     }
 
     public function actionUserreport()
@@ -255,6 +269,28 @@ class SiteController extends Controller
     }
 
     /* MainList AJAX Controllers */
+
+    public function actionGetconsolidatedreportajax()
+    {
+        $request = Yii::$app->request;
+        $token = $request->get('token');
+        $data = [];
+        $data['sts'] = $request->get('sts');
+        $data['page'] = $request->get('page');
+        $data['shpcount'] = 15;
+        header('Content-Type: application/json');
+        if($token == md5(Yii::$app->session->getId().'opn')){
+          $retData = Yii::$app->HelperFunc->getDataCons($data);
+          
+          echo json_encode(['status'=>0,
+                            'data'=>['mainlistview' => $retData['crv'],'count' => $retData['count']],
+                            'msg'=>'OK']
+                          );
+      }else{
+        return json_encode(array('status'=>3,'message'=>'Error(Invalid token!)'));
+      }
+    }
+
     public function actionGetdata()
     {
         $request = Yii::$app->request;
@@ -736,6 +772,65 @@ class SiteController extends Controller
 
     }
 
+    public function actionDownloadconsreport()
+    {
+      try{
+          $data = ConsolidatedReportView::find()
+              ->asArray()
+              ->orderBy(['last_up_date'=>SORT_DESC])
+              ->all();
+          $rarray = [];
+          foreach($data as $row){
+
+                foreach ($row as $key => $value) {
+                    if($key == 'status'){
+                      $row[$key] = Yii::$app->HelperFunc->setStatus($value);
+                    }else{
+                      $row[$key] = $value;
+                    }
+                }
+            $rarray[] = $row;
+          }
+            $styleArray = [
+                'font' => ['bold' => true],
+                'text-align'=> 'center',
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['argb' => '#000000'],
+                    ],
+                ],    
+            ];
+
+          $headers = ['Пользователь','Ф.И.О.','Док. ID','Дата выд. док.','Орган выд. док.','Адрес','моб.номер','Номер З.Б.','Ссуда','% - ставка','Дата начало','Дата выплаты','Статус','Дата','Дата получения ссуды','Дата посл. при.'];
+          $abc = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'];
+          $spreadsheet = new Spreadsheet();
+
+          $sheet = $spreadsheet->getActiveSheet();
+
+          $sheet->getStyle('A1:P1')->applyFromArray($styleArray);
+            for($i = 0; $i < count($abc); $i++){
+
+              $sheet->getColumnDimension($abc[$i])->setAutoSize(true);
+
+            }
+          $sheet->fromArray($headers,NULL,'A1');
+
+          $sheet->fromArray($rarray,NULL,'A2');
+
+          // redirect output to client browser
+          header('Content-Type: application/vnd.ms-excel');
+          header('Content-Disposition: attachment;filename="report-'.date('d.m.Y H:i:s').'.xlsx"');
+          header('Cache-Control: max-age=0');
+
+          $writer = new Xlsx($spreadsheet);
+          $writer->save('php://output');
+
+        }catch(Exception $e){
+            print_r( $e);
+        }
+    }
+
     public function actionTest()
     {
         try{
@@ -746,11 +841,66 @@ class SiteController extends Controller
             //print_r($item);
           //}
           //
-          echo '<pre>';
-          echo 'test';//print_r($resp);
-          echo '</pre>';
+          //echo '<pre>';
+          //echo 'test';//print_r($resp);
+          //echo '</pre>';
+          //->setHtmlBody('<b>текст сообщения в формате HTML</b>')
+          //->attach('D:\Root_Admin_Mullbury2.txt')
+
+          // $msg = Yii::$app->mailer->compose()
+          // ->setFrom('sales@myservice.kg')
+          // ->setTo('musa@cs.kg')
+          // ->setSubject('Тема сообщения')
+          // ->setHtmlBody('<b>текст сообщения в формате HTML</b>')
+          // ->attach('D:\Root_Admin_Mullbury2.txt')
+          // //->setTextBody('Текст сообщения')
+          // ->send();
+          // print_r($msg);
+
+
+          $data = ConsolidatedReportView::find()
+              ->asArray()
+              ->orderBy(['last_up_date'=>SORT_DESC])
+              ->all();
+
+            $styleArray = [
+                'font' => ['bold' => true],
+                'text-align'=> 'center',
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                        'color' => ['argb' => '#000000'],
+                    ],
+                ],    
+            ];
+
+          $headers = ['Пользователь','Ф.И.О.','Док. ID','Дата выд. док.','Орган выд. док.','Адрес','моб.номер','Номер З.Б.','Ссуда','% - ставка','Дата начало','Дата выплаты','Статус','Дата','Дата получения ссуды','Дата посл. при.'];
+          $abc = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q'];
+          $spreadsheet = new Spreadsheet();
+
+          $sheet = $spreadsheet->getActiveSheet();
+
+          $sheet->getStyle('A1:P1')->applyFromArray($styleArray);
+            for($i = 0; $i < count($abc); $i++){
+
+              $sheet->getColumnDimension($abc[$i])->setAutoSize(true);
+
+              $i++;
+            }
+          $sheet->fromArray($headers,NULL,'A1');
+
+          $sheet->fromArray($data,NULL,'A2');
+
+          // redirect output to client browser
+          header('Content-Type: application/vnd.ms-excel');
+          header('Content-Disposition: attachment;filename="report-'.date('d.m.Y H:i:s').'.xlsx"');
+          header('Cache-Control: max-age=0');
+
+          $writer = new Xlsx($spreadsheet);
+          $writer->save('php://output');
+
         }catch(Exception $e){
-            print_r( $e->errorInfo);
+            print_r( $e);
         }
     }
 }
