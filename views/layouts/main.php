@@ -58,6 +58,7 @@ $kassa = Yii::$app->HelperFunc->getTotalKassa($data);
                    ['label' => 'Настройки', 'url' => ['/settings']],
                    '<li class="divider"></li>',
                    ['label' => 'Отчёт', 'url' => ['/report']],
+                   ['label' => 'Отчёт для ревизий', 'url' => ['/detailreport']],
               ],
             ]
         ];
